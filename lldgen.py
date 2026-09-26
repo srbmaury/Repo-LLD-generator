@@ -194,6 +194,41 @@ def project_roots(root: Path, package_depth: int, single_diagram: bool) -> list[
     return [root]
 
 
+@dataclass
+class Diagram:
+    filename: str
+    source: str
+    type_count: int
+    relative: str
+
+
+def clone(repo_url: str, destination: Path, timeout: int | None = None) -> Path:
+    """Shallow-clone repo_url and return the directory the URL points at."""
+    clone_url, ref, subpath = normalize_url(repo_url)
+    command = ["git", "clone", "--depth", "1", "--single-branch"]
+    if ref: command += ["--branch", ref]
+    command += [clone_url, str(destination)]
+    env = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
+    subprocess.run(command, check=True, timeout=timeout, env=env,
+                   stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    scan_root = destination / subpath if subpath else destination
+    if not scan_root.exists(): raise ValueError(f"URL subpath does not exist: {subpath}")
+    return scan_root
+
+
+def generate(scan_root: Path, package_depth: int = 2, single_diagram: bool = False) -> list[Diagram]:
+    diagrams = []
+    for project in project_roots(scan_root, package_depth, single_diagram):
+        java_files = list(project.rglob("*.java"))
+        types = [item for path in java_files for item in parse_java(path)]
+        if not types: continue
+        relative = project.relative_to(scan_root)
+        name = "root" if str(relative) == "." else str(relative).replace("/", "-")
+        filename = re.sub(r"[^\w.-]", "_", name) + ".puml"
+        diagrams.append(Diagram(filename, plantuml(types, name), len(types), str(relative)))
+    return diagrams
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("repo_url", help="GitHub/GitLab repository or tree URL")
@@ -204,32 +239,24 @@ def main() -> int:
     parser.add_argument("--single-diagram", action="store_true",
                         help="combine every Java type into one diagram")
     args = parser.parse_args()
-    clone_url, ref, subpath = normalize_url(args.repo_url)
     output = Path(args.output).resolve()
     output.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="lldgen-") as temp:
         repo = Path(temp) / "repo"
-        command = ["git", "clone", "--depth", "1"]
-        if ref: command += ["--branch", ref]
-        command += [clone_url, str(repo)]
-        subprocess.run(command, check=True)
-        scan_root = repo / subpath if subpath else repo
-        if not scan_root.exists(): raise SystemExit(f"URL subpath does not exist: {subpath}")
+        try:
+            scan_root = clone(args.repo_url, repo)
+        except subprocess.CalledProcessError as exc:
+            raise SystemExit(f"git clone failed: {exc.stderr.decode(errors='replace').strip()}")
+        except ValueError as exc:
+            raise SystemExit(str(exc))
+        diagrams = generate(scan_root, args.package_depth, args.single_diagram)
         index = ["# Generated LLD diagrams", ""]
-        count = 0
-        for project in project_roots(scan_root, args.package_depth, args.single_diagram):
-            java_files = list(project.rglob("*.java"))
-            types = [item for path in java_files for item in parse_java(path)]
-            if not types: continue
-            relative = project.relative_to(scan_root)
-            name = "root" if str(relative) == "." else str(relative).replace("/", "-")
-            filename = re.sub(r"[^\w.-]", "_", name) + ".puml"
-            (output / filename).write_text(plantuml(types, name), encoding="utf-8")
-            index.append(f"- `{filename}` — {len(types)} types from `{relative}`")
-            count += 1
+        for diagram in diagrams:
+            (output / diagram.filename).write_text(diagram.source, encoding="utf-8")
+            index.append(f"- `{diagram.filename}` — {diagram.type_count} types from `{diagram.relative}`")
         if args.keep_repo: shutil.copytree(repo, output / "repository", dirs_exist_ok=True)
         (output / "README.md").write_text("\n".join(index) + "\n", encoding="utf-8")
-    print(f"Generated {count} diagram(s) in {output}")
+    print(f"Generated {len(diagrams)} diagram(s) in {output}")
     return 0
 
 

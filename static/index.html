@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repo LLD Generator</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --panel: #ffffff; --text: #1d1d1b; --muted: #6b6b66;
+    --border: #e2e1dc; --accent: #2f5bd3; --accent-text: #fff; --error: #b3261e;
+    --diagram-bg: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161615; --panel: #1f1f1d; --text: #ececea; --muted: #a09f99;
+      --border: #33322f; --accent: #7a9bff; --accent-text: #0d0d0c; --error: #ff8a80;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 40px 16px 80px; }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .lede { color: var(--muted); margin: 0 0 24px; }
+  form { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+         padding: 16px; display: grid; gap: 12px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  input[type=url] { flex: 1 1 320px; min-width: 0; padding: 10px 12px; font: inherit;
+         border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); }
+  button { font: inherit; border-radius: 8px; border: 1px solid var(--border); cursor: pointer;
+           padding: 8px 14px; background: var(--panel); color: var(--text); }
+  button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent);
+           padding: 10px 18px; font-weight: 600; }
+  button:disabled { opacity: .6; cursor: progress; }
+  .options { display: flex; gap: 20px; flex-wrap: wrap; color: var(--muted); font-size: 14px; }
+  .options label { display: flex; align-items: center; gap: 6px; }
+  .options input[type=number] { width: 56px; padding: 4px 6px; font: inherit; border-radius: 6px;
+         border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+  #status { margin: 20px 0 0; color: var(--muted); min-height: 1.5em; }
+  #status.error { color: var(--error); }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+          margin-top: 20px; overflow: hidden; }
+  .card header { display: flex; justify-content: space-between; align-items: center; gap: 8px;
+                 flex-wrap: wrap; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .card h2 { font-size: 15px; margin: 0; word-break: break-all; }
+  .card .meta { color: var(--muted); font-size: 13px; }
+  .diagram { background: var(--diagram-bg); padding: 16px; overflow: auto; max-height: 75vh; }
+  .diagram img { display: block; max-width: none; }
+  .diagram .note { color: #6b6b66; font-size: 14px; }
+  pre { margin: 0; padding: 16px; overflow: auto; max-height: 60vh; font-size: 12.5px;
+        border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Repository LLD Generator</h1>
+  <p class="lede">Paste a public GitHub or GitLab Java repository (or a folder URL inside one) to get PlantUML class diagrams.</p>
+  <form id="form">
+    <div class="row">
+      <input id="url" type="url" required placeholder="https://github.com/owner/repository" autocomplete="off">
+      <button class="primary" id="go" type="submit">Generate</button>
+    </div>
+    <div class="options">
+      <label>Package depth <input id="depth" type="number" min="1" max="6" value="2"></label>
+      <label><input id="single" type="checkbox"> Single combined diagram</label>
+    </div>
+  </form>
+  <p id="status"></p>
+  <div id="results"></div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+
+function download(name, text) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+async function render(source, target) {
+  try {
+    const res = await fetch("https://kroki.io/plantuml/svg", {
+      method: "POST", headers: { "Content-Type": "text/plain" }, body: source,
+    });
+    if (!res.ok) throw new Error(res.status);
+    const img = new Image();
+    img.alt = "Class diagram";
+    img.src = URL.createObjectURL(new Blob([await res.text()], { type: "image/svg+xml" }));
+    target.replaceChildren(img);
+  } catch {
+    target.innerHTML = '<p class="note">Preview unavailable. Download the .puml file or view the source below.</p>';
+  }
+}
+
+function card(d) {
+  const el = document.createElement("section");
+  el.className = "card";
+  el.innerHTML = `<header><div><h2></h2><div class="meta"></div></div>
+    <div class="row"><button data-act="src">Source</button><button data-act="dl">Download .puml</button></div></header>
+    <div class="diagram"><p class="note">Rendering…</p></div><pre hidden></pre>`;
+  el.querySelector("h2").textContent = d.filename;
+  el.querySelector(".meta").textContent = `${d.types} types · ${d.path}`;
+  el.querySelector("pre").textContent = d.source;
+  el.querySelector('[data-act="dl"]').onclick = () => download(d.filename, d.source);
+  el.querySelector('[data-act="src"]').onclick = () => { const p = el.querySelector("pre"); p.hidden = !p.hidden; };
+  render(d.source, el.querySelector(".diagram"));
+  return el;
+}
+
+$("form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const status = $("status");
+  $("go").disabled = true;
+  status.className = "";
+  status.textContent = "Cloning and parsing… (the first request after idle can take ~1 minute while the server wakes up)";
+  $("results").replaceChildren();
+  try {
+    const res = await fetch("/api/generate", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: $("url").value, package_depth: Number($("depth").value), single_diagram: $("single").checked }),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(typeof body.detail === "string" ? body.detail : `Request failed (${res.status})`);
+    const diagrams = body.diagrams;
+    status.textContent = diagrams.length ? `Generated ${diagrams.length} diagram(s).` : "No Java types found at that URL.";
+    if (diagrams.length > 1) {
+      const all = document.createElement("button");
+      all.textContent = "Download all";
+      all.onclick = () => diagrams.forEach((d) => download(d.filename, d.source));
+      status.append(" ", all);
+    }
+    diagrams.forEach((d) => $("results").append(card(d)));
+  } catch (err) {
+    status.className = "error";
+    status.textContent = err.message;
+  } finally {
+    $("go").disabled = false;
+  }
+});
+</script>
+</body>
+</html>

@@ -41,7 +41,20 @@ python lldgen.py REPOSITORY_OR_TREE_URL --package-depth 3
 python lldgen.py REPOSITORY_OR_TREE_URL --single-diagram
 ```
 
-## Render
+## Web app
+
+`app.py` serves a small page where you paste a public GitHub/GitLab URL and get
+the diagrams, previewed through [Kroki](https://kroki.io):
+
+```bash
+docker build -t lldgen-web . && docker run -p 10000:10000 lldgen-web
+# open http://localhost:10000
+```
+
+It is deployed on Render from `render.yaml` (Docker runtime, free plan); pushes
+to `main` redeploy automatically.
+
+## Rendering PlantUML
 
 Install PlantUML, then run:
 
