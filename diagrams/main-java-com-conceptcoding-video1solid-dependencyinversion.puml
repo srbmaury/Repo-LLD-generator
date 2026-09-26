@@ -1,0 +1,78 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-video1solid-dependencyinversion
+class "com.conceptcoding.video1solid.dependencyinversion.solution.DemoSolution" as com_conceptcoding_video1solid_dependencyinversion_solution_DemoSolution {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.video1solid.dependencyinversion.solution.MacBook" as com_conceptcoding_video1solid_dependencyinversion_solution_MacBook {
+  -keyboard: Keyboard
+  -mouse: Mouse
+  --
+  +MacBook(mouse: Mouse, keyboard: Keyboard)
+  +getMouse(): Mouse
+  +getKeyboard(): Keyboard
+}
+class "com.conceptcoding.video1solid.dependencyinversion.utility.BluetoothKeyboard" as com_conceptcoding_video1solid_dependencyinversion_utility_BluetoothKeyboard {
+  -connectionType: String
+  -company: String
+  -modelVersion: String
+  -color: String
+  --
+  +BluetoothKeyboard(connectionType: String, company: String, modelVersion: String, color: String)
+  +getSpecifications(): void
+}
+class "com.conceptcoding.video1solid.dependencyinversion.utility.BluetoothMouse" as com_conceptcoding_video1solid_dependencyinversion_utility_BluetoothMouse {
+  -connectionType: String
+  -company: String
+  -modelVersion: String
+  -color: String
+  --
+  +BluetoothMouse(connectionType: String, company: String, modelVersion: String, color: String)
+  +getSpecifications(): void
+}
+interface "com.conceptcoding.video1solid.dependencyinversion.utility.Keyboard" as com_conceptcoding_video1solid_dependencyinversion_utility_Keyboard {
+  ~getSpecifications(): void
+}
+interface "com.conceptcoding.video1solid.dependencyinversion.utility.Mouse" as com_conceptcoding_video1solid_dependencyinversion_utility_Mouse {
+  ~getSpecifications(): void
+}
+class "com.conceptcoding.video1solid.dependencyinversion.utility.WiredKeyboard" as com_conceptcoding_video1solid_dependencyinversion_utility_WiredKeyboard {
+  -connectionType: String
+  -company: String
+  -modelVersion: String
+  -color: String
+  --
+  +WiredKeyboard(connectionType: String, company: String, modelVersion: String, color: String)
+  +getSpecifications(): void
+}
+class "com.conceptcoding.video1solid.dependencyinversion.utility.WiredMouse" as com_conceptcoding_video1solid_dependencyinversion_utility_WiredMouse {
+  -connectionType: String
+  -company: String
+  -modelVersion: String
+  -color: String
+  --
+  +WiredMouse(connectionType: String, company: String, modelVersion: String, color: String)
+  +getSpecifications(): void
+}
+class "com.conceptcoding.video1solid.dependencyinversion.violation.DemoViolation" as com_conceptcoding_video1solid_dependencyinversion_violation_DemoViolation {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.video1solid.dependencyinversion.violation.MacBook" as com_conceptcoding_video1solid_dependencyinversion_violation_MacBook {
+  -keyboard: WiredKeyboard
+  -mouse: WiredMouse
+  --
+  +MacBook(wiredKeyboard: WiredKeyboard, wiredMouse: WiredMouse)
+  +getMouse(): Mouse
+  +getKeyboard(): Keyboard
+}
+com_conceptcoding_video1solid_dependencyinversion_solution_MacBook o-- com_conceptcoding_video1solid_dependencyinversion_utility_Keyboard : has-a (keyboard)
+com_conceptcoding_video1solid_dependencyinversion_solution_MacBook o-- com_conceptcoding_video1solid_dependencyinversion_utility_Mouse : has-a (mouse)
+com_conceptcoding_video1solid_dependencyinversion_utility_Keyboard <|.. com_conceptcoding_video1solid_dependencyinversion_utility_BluetoothKeyboard : implements
+com_conceptcoding_video1solid_dependencyinversion_utility_Keyboard <|.. com_conceptcoding_video1solid_dependencyinversion_utility_WiredKeyboard : implements
+com_conceptcoding_video1solid_dependencyinversion_utility_Mouse <|.. com_conceptcoding_video1solid_dependencyinversion_utility_BluetoothMouse : implements
+com_conceptcoding_video1solid_dependencyinversion_utility_Mouse <|.. com_conceptcoding_video1solid_dependencyinversion_utility_WiredMouse : implements
+com_conceptcoding_video1solid_dependencyinversion_violation_MacBook o-- com_conceptcoding_video1solid_dependencyinversion_utility_WiredKeyboard : has-a (keyboard)
+com_conceptcoding_video1solid_dependencyinversion_violation_MacBook o-- com_conceptcoding_video1solid_dependencyinversion_utility_WiredMouse : has-a (mouse)
+@enduml

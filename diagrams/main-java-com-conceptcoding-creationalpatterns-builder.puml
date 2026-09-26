@@ -1,0 +1,80 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-creationalpatterns-builder
+class "com.conceptcoding.creationalpatterns.builder.problem.Student" as com_conceptcoding_creationalpatterns_builder_problem_Student {
+  ~rollNumber: int
+  ~age: int
+  ~name: String
+  ~branch: String
+  ~fatherName: String
+  ~motherName: String
+  ~subjects: List<String>
+  ~mobileNo: String
+  ~emailId: String
+  --
+  +Student(rollNumber: int, age: int, name: String, branch: String)
+  +Student(rollNumber: int, age: int, name: String, branch: String, fatherName: String)
+  +Student(rollNumber: int, age: int, name: String, branch: String, fatherName: String, motherName: String)
+  +Student(rollNumber: int, age: int, name: String, branch: String, fatherName: String, motherName: String, emailId: String)
+  +Student(rollNumber: int, age: int, name: String, branch: String, fatherName: String, motherName: String, subjects: List<String>, mobileNo: String, emailId: String)
+  +printDetails(): void
+}
+class "com.conceptcoding.creationalpatterns.builder.solution.Client" as com_conceptcoding_creationalpatterns_builder_solution_Client {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.creationalpatterns.builder.solution.EngineeringStudentBuilder" as com_conceptcoding_creationalpatterns_builder_solution_EngineeringStudentBuilder {
+  +setSubjects(): StudentBuilder
+}
+class "com.conceptcoding.creationalpatterns.builder.solution.MBAStudentBuilder" as com_conceptcoding_creationalpatterns_builder_solution_MBAStudentBuilder {
+  +setSubjects(): StudentBuilder
+}
+class "com.conceptcoding.creationalpatterns.builder.solution.Student" as com_conceptcoding_creationalpatterns_builder_solution_Student {
+  ~rollNumber: int
+  ~age: int
+  ~name: String
+  ~branch: String
+  ~fatherName: String
+  ~motherName: String
+  ~subjects: List<String>
+  ~mobileNo: String
+  ~emailId: String
+  --
+  ~Student(builder: StudentBuilder)
+  +toString(): String
+}
+class "com.conceptcoding.creationalpatterns.builder.solution.StudentBuilder" as com_conceptcoding_creationalpatterns_builder_solution_StudentBuilder {
+  ~rollNumber: int
+  ~age: int
+  ~name: String
+  ~branch: String
+  ~fatherName: String
+  ~motherName: String
+  ~subjects: List<String>
+  ~mobileNo: String
+  ~emailId: String
+  --
+  +setRollNumber(rollNumber: int): StudentBuilder
+  +setAge(age: int): StudentBuilder
+  +setName(name: String): StudentBuilder
+  +setBranch(branch: String): StudentBuilder
+  +setFatherName(fatherName: String): StudentBuilder
+  +setMotherName(motherName: String): StudentBuilder
+  +setMobileNo(mobileNo: String): StudentBuilder
+  +setEmailId(emailId: String): StudentBuilder
+  +setSubjects(): StudentBuilder {abstract}
+  +build(): Student
+}
+class "com.conceptcoding.creationalpatterns.builder.solution.StudentRegistrationDirector" as com_conceptcoding_creationalpatterns_builder_solution_StudentRegistrationDirector {
+  ~studentBuilder: StudentBuilder
+  --
+  ~StudentRegistrationDirector(studentBuilder: StudentBuilder)
+  +createStudent(): Student
+  -createEngineeringStudent(): Student
+  -createMBAStudent(): Student
+}
+com_conceptcoding_creationalpatterns_builder_solution_StudentBuilder <|-- com_conceptcoding_creationalpatterns_builder_solution_EngineeringStudentBuilder : is-a
+com_conceptcoding_creationalpatterns_builder_solution_StudentBuilder <|-- com_conceptcoding_creationalpatterns_builder_solution_MBAStudentBuilder : is-a
+com_conceptcoding_creationalpatterns_builder_solution_StudentRegistrationDirector o-- com_conceptcoding_creationalpatterns_builder_solution_StudentBuilder : has-a (studentBuilder)
+@enduml

@@ -1,0 +1,130 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-chess
+class "com.conceptcoding.interviewquestions.chess.Board" as com_conceptcoding_interviewquestions_chess_Board {
+  ~cells: Cell[][]
+  --
+  +Board()
+  +getCell(position: Position): Cell
+  -initPieces(): void
+}
+class "com.conceptcoding.interviewquestions.chess.Cell" as com_conceptcoding_interviewquestions_chess_Cell {
+  -piece: Piece
+  -position: Position
+  --
+  +Cell(piece: Piece, position: Position)
+  +getPiece(): Piece
+  +setPiece(piece: Piece): void
+  +getPosition(): Position
+  +setPosition(position: Position): void
+  +toString(): String
+}
+class "com.conceptcoding.interviewquestions.chess.ChessDemo" as com_conceptcoding_interviewquestions_chess_ChessDemo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.interviewquestions.chess.Game" as com_conceptcoding_interviewquestions_chess_Game {
+  -player1: Player
+  -player2: Player
+  -board: Board
+  -currentTurn: Player
+  -status: GameStatus
+  -movesHistory: List<Move>
+  --
+  +Game(player1: Player, player2: Player)
+  +playMove(player: Player, start: Position, end: Position): boolean
+  -makeMove(move: Move, player: Player): boolean
+  +getStatus(): GameStatus
+  +setStatus(status: GameStatus): void
+  +getBoard(): Board
+  +setBoard(board: Board): void
+  +displayMovesHistory(): void
+  +display(): void
+}
+class "com.conceptcoding.interviewquestions.chess.Move" as com_conceptcoding_interviewquestions_chess_Move {
+  -player: Player
+  -start: Cell
+  -end: Cell
+  -pieceMoved: Piece
+  -pieceKilled: Piece
+  --
+  +Move(player: Player, start: Cell, end: Cell)
+  +getPlayer(): Player
+  +setPlayer(player: Player): void
+  +getStart(): Cell
+  +setStart(start: Cell): void
+  +getEnd(): Cell
+  +setEnd(end: Cell): void
+  +getPieceMoved(): Piece
+  +setPieceMoved(pieceMoved: Piece): void
+  +getPieceKilled(): Piece
+  +setPieceKilled(pieceKilled: Piece): void
+  +toString(): String
+}
+class "com.conceptcoding.interviewquestions.chess.Player" as com_conceptcoding_interviewquestions_chess_Player {
+  -name: String
+  -playingSide: PieceColour
+  --
+  +Player(name: String, playingSide: PieceColour)
+  +getName(): String
+  +setName(name: String): void
+  +getPlayingSide(): PieceColour
+  +setPlayingSide(playingSide: PieceColour): void
+  +toString(): String
+}
+class "com.conceptcoding.interviewquestions.chess.Position" as com_conceptcoding_interviewquestions_chess_Position {
+  -row: int
+  -col: int
+  --
+  +Position(row: int, col: int)
+  +getRow(): int
+  +getCol(): int
+  +isValid(): boolean
+  +equals(obj: Object): boolean
+  +toString(): String
+}
+enum "com.conceptcoding.interviewquestions.chess.enums.GameStatus" as com_conceptcoding_interviewquestions_chess_enums_GameStatus {
+}
+enum "com.conceptcoding.interviewquestions.chess.enums.PieceColour" as com_conceptcoding_interviewquestions_chess_enums_PieceColour {
+}
+enum "com.conceptcoding.interviewquestions.chess.enums.PieceType" as com_conceptcoding_interviewquestions_chess_enums_PieceType {
+}
+class "com.conceptcoding.interviewquestions.chess.pieces.Bishop" as com_conceptcoding_interviewquestions_chess_pieces_Bishop {
+  +Bishop(colour: PieceColour)
+  +isValidMove(board: Board, start: Cell, end: Cell): boolean
+}
+class "com.conceptcoding.interviewquestions.chess.pieces.King" as com_conceptcoding_interviewquestions_chess_pieces_King {
+  +King(colour: PieceColour)
+  +isValidMove(board: Board, start: Cell, end: Cell): boolean
+}
+class "com.conceptcoding.interviewquestions.chess.pieces.Knight" as com_conceptcoding_interviewquestions_chess_pieces_Knight {
+  +Knight(colour: PieceColour)
+  +isValidMove(board: Board, start: Cell, end: Cell): boolean
+}
+class "com.conceptcoding.interviewquestions.chess.pieces.Pawn" as com_conceptcoding_interviewquestions_chess_pieces_Pawn {
+  +Pawn(colour: PieceColour)
+  +isValidMove(board: Board, start: Cell, end: Cell): boolean
+  -hasMovedBefore(start: Cell): boolean
+}
+class "com.conceptcoding.interviewquestions.chess.pieces.Queen" as com_conceptcoding_interviewquestions_chess_pieces_Queen {
+  +Queen(colour: PieceColour)
+  +isValidMove(board: Board, start: Cell, end: Cell): boolean
+}
+class "com.conceptcoding.interviewquestions.chess.pieces.Rook" as com_conceptcoding_interviewquestions_chess_pieces_Rook {
+  +Rook(colour: PieceColour)
+  +isValidMove(board: Board, start: Cell, end: Cell): boolean
+}
+com_conceptcoding_interviewquestions_chess_Board o-- "*" com_conceptcoding_interviewquestions_chess_Cell : has-a (cells)
+com_conceptcoding_interviewquestions_chess_Cell o-- com_conceptcoding_interviewquestions_chess_Position : has-a (position)
+com_conceptcoding_interviewquestions_chess_Game o-- "*" com_conceptcoding_interviewquestions_chess_Move : has-a (movesHistory)
+com_conceptcoding_interviewquestions_chess_Game o-- com_conceptcoding_interviewquestions_chess_Board : has-a (board)
+com_conceptcoding_interviewquestions_chess_Game o-- com_conceptcoding_interviewquestions_chess_Player : has-a (currentTurn)
+com_conceptcoding_interviewquestions_chess_Game o-- com_conceptcoding_interviewquestions_chess_Player : has-a (player1)
+com_conceptcoding_interviewquestions_chess_Game o-- com_conceptcoding_interviewquestions_chess_Player : has-a (player2)
+com_conceptcoding_interviewquestions_chess_Game o-- com_conceptcoding_interviewquestions_chess_enums_GameStatus : has-a (status)
+com_conceptcoding_interviewquestions_chess_Move o-- com_conceptcoding_interviewquestions_chess_Cell : has-a (end)
+com_conceptcoding_interviewquestions_chess_Move o-- com_conceptcoding_interviewquestions_chess_Cell : has-a (start)
+com_conceptcoding_interviewquestions_chess_Move o-- com_conceptcoding_interviewquestions_chess_Player : has-a (player)
+com_conceptcoding_interviewquestions_chess_Player o-- com_conceptcoding_interviewquestions_chess_enums_PieceColour : has-a (playingSide)
+@enduml

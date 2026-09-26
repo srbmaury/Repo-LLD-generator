@@ -1,0 +1,34 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-structuralpatterns-facade
+class "com.conceptcoding.structuralpatterns.facade.ECommerceApp" as com_conceptcoding_structuralpatterns_facade_ECommerceApp {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.structuralpatterns.facade.InventoryService" as com_conceptcoding_structuralpatterns_facade_InventoryService {
+  +checkStock(productId: String): boolean
+}
+class "com.conceptcoding.structuralpatterns.facade.NotificationService" as com_conceptcoding_structuralpatterns_facade_NotificationService {
+  +sendConfirmation(productId: String): void
+}
+class "com.conceptcoding.structuralpatterns.facade.OrderFacade" as com_conceptcoding_structuralpatterns_facade_OrderFacade {
+  -inventory: InventoryService
+  -payment: PaymentService
+  -shipping: ShippingService
+  -notification: NotificationService
+  --
+  +OrderFacade()
+  +placeOrder(productId: String, paymentMethod: String): void
+}
+class "com.conceptcoding.structuralpatterns.facade.PaymentService" as com_conceptcoding_structuralpatterns_facade_PaymentService {
+  +makePayment(paymentMethod: String): boolean
+}
+class "com.conceptcoding.structuralpatterns.facade.ShippingService" as com_conceptcoding_structuralpatterns_facade_ShippingService {
+  +shipProduct(productId: String): void
+}
+com_conceptcoding_structuralpatterns_facade_OrderFacade o-- com_conceptcoding_structuralpatterns_facade_InventoryService : has-a (inventory)
+com_conceptcoding_structuralpatterns_facade_OrderFacade o-- com_conceptcoding_structuralpatterns_facade_NotificationService : has-a (notification)
+com_conceptcoding_structuralpatterns_facade_OrderFacade o-- com_conceptcoding_structuralpatterns_facade_PaymentService : has-a (payment)
+com_conceptcoding_structuralpatterns_facade_OrderFacade o-- com_conceptcoding_structuralpatterns_facade_ShippingService : has-a (shipping)
+@enduml

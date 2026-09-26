@@ -1,0 +1,53 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-creationalpatterns-singleton
+class "com.conceptcoding.creationalpatterns.singleton.DBConnectionDoubleLocking" as com_conceptcoding_creationalpatterns_singleton_DBConnectionDoubleLocking {
+  -instance: DBConnectionDoubleLocking
+  --
+  -DBConnectionDoubleLocking()
+  +getInstance(): DBConnectionDoubleLocking {static}
+  +displayMessage(): void
+}
+class "com.conceptcoding.creationalpatterns.singleton.DBConnectionEager" as com_conceptcoding_creationalpatterns_singleton_DBConnectionEager {
+  -instance: DBConnectionEager
+  --
+  -DBConnectionEager()
+  +getInstance(): DBConnectionEager {static}
+  +displayMessage(): void
+}
+class "com.conceptcoding.creationalpatterns.singleton.DBConnectionLazy" as com_conceptcoding_creationalpatterns_singleton_DBConnectionLazy {
+  -instance: DBConnectionLazy
+  --
+  -DBConnectionLazy()
+  +getInstance(): DBConnectionLazy {static}
+  +displayMessage(): void
+}
+class "com.conceptcoding.creationalpatterns.singleton.DBConnectionThreadSafe" as com_conceptcoding_creationalpatterns_singleton_DBConnectionThreadSafe {
+  -instance: DBConnectionThreadSafe
+  --
+  -DBConnectionThreadSafe()
+  +getInstance(): DBConnectionThreadSafe {static}
+  +displayMessage(): void
+}
+class "com.conceptcoding.creationalpatterns.singleton.SingletonDemo" as com_conceptcoding_creationalpatterns_singleton_SingletonDemo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.creationalpatterns.singleton.dclbugfix.DBConnectionDoubleCheckedLockFix" as com_conceptcoding_creationalpatterns_singleton_dclbugfix_DBConnectionDoubleCheckedLockFix {
+  -connectionObj: DBConnectionDoubleCheckedLockFix
+  ~portNumber: int
+  --
+  -DBConnectionDoubleCheckedLockFix(portNumberValue: int)
+  +getConnectionObj(portNumberValue: int): DBConnectionDoubleCheckedLockFix {static}
+  +displayMessage(): void
+}
+class "com.conceptcoding.creationalpatterns.singleton.dclbugfix.DBConnectionDoubleCheckedLockIssue" as com_conceptcoding_creationalpatterns_singleton_dclbugfix_DBConnectionDoubleCheckedLockIssue {
+  -connectionObj: DBConnectionDoubleCheckedLockIssue
+  ~portNumber: int
+  --
+  -DBConnectionDoubleCheckedLockIssue(portNumberValue: int)
+  +getConnectionObj(): DBConnectionDoubleCheckedLockIssue {static}
+  +displayMessage(): void
+}
+@enduml

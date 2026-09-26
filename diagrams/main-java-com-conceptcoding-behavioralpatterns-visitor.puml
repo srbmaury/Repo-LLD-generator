@@ -1,0 +1,81 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-behavioralpatterns-visitor
+class "com.conceptcoding.behavioralpatterns.visitor.problem.Demo" as com_conceptcoding_behavioralpatterns_visitor_problem_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.visitor.problem.SuiteHotelRoom" as com_conceptcoding_behavioralpatterns_visitor_problem_SuiteHotelRoom {
+  -roomNumber: String
+  -numberOfRooms: String
+  --
+  +SuiteHotelRoom(roomNumber: String, numberOfRooms: String)
+  +clean(): void
+  +deliverRoomService(orderDetails: String): void
+  +calculatePrice(): double
+}
+class "com.conceptcoding.behavioralpatterns.visitor.solution.HotelVisitorDemo" as com_conceptcoding_behavioralpatterns_visitor_solution_HotelVisitorDemo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.visitor.solution.elements.DeluxeRoom" as com_conceptcoding_behavioralpatterns_visitor_solution_elements_DeluxeRoom {
+  -roomNumber: String
+  -hasJacuzzi: boolean
+  --
+  +DeluxeRoom(roomNumber: String, hasJacuzzi: boolean)
+  +accept(visitor: IRoomVisitor): void
+  +getRoomNumber(): String
+  +hasJacuzzi(): boolean
+}
+interface "com.conceptcoding.behavioralpatterns.visitor.solution.elements.IRoom" as com_conceptcoding_behavioralpatterns_visitor_solution_elements_IRoom {
+  ~accept(visitor: IRoomVisitor): void
+}
+class "com.conceptcoding.behavioralpatterns.visitor.solution.elements.StandardRoom" as com_conceptcoding_behavioralpatterns_visitor_solution_elements_StandardRoom {
+  -roomNumber: String
+  --
+  +StandardRoom(roomNumber: String)
+  +accept(visitor: IRoomVisitor): void
+  +getRoomNumber(): String
+}
+class "com.conceptcoding.behavioralpatterns.visitor.solution.elements.SuiteRoom" as com_conceptcoding_behavioralpatterns_visitor_solution_elements_SuiteRoom {
+  -roomNumber: String
+  -numberOfRooms: int
+  --
+  +SuiteRoom(roomNumber: String, numberOfRooms: int)
+  +accept(visitor: IRoomVisitor): void
+  +getRoomNumber(): String
+  +getNumberOfRooms(): int
+}
+class "com.conceptcoding.behavioralpatterns.visitor.solution.visitors.HousekeepingVisitor" as com_conceptcoding_behavioralpatterns_visitor_solution_visitors_HousekeepingVisitor {
+  +visitStandardRoom(room: StandardRoom): void
+  +visitDeluxeRoom(room: DeluxeRoom): void
+  +visitSuiteRoom(room: SuiteRoom): void
+}
+interface "com.conceptcoding.behavioralpatterns.visitor.solution.visitors.IRoomVisitor" as com_conceptcoding_behavioralpatterns_visitor_solution_visitors_IRoomVisitor {
+  ~visitStandardRoom(room: StandardRoom): void
+  ~visitDeluxeRoom(room: DeluxeRoom): void
+  ~visitSuiteRoom(room: SuiteRoom): void
+}
+class "com.conceptcoding.behavioralpatterns.visitor.solution.visitors.PricingVisitor" as com_conceptcoding_behavioralpatterns_visitor_solution_visitors_PricingVisitor {
+  -totalRevenue: double
+  --
+  +visitStandardRoom(room: StandardRoom): void
+  +visitDeluxeRoom(room: DeluxeRoom): void
+  +visitSuiteRoom(room: SuiteRoom): void
+  +getTotalRevenue(): double
+}
+class "com.conceptcoding.behavioralpatterns.visitor.solution.visitors.RoomServiceVisitor" as com_conceptcoding_behavioralpatterns_visitor_solution_visitors_RoomServiceVisitor {
+  -orderDetails: String
+  --
+  +RoomServiceVisitor(orderDetails: String)
+  +visitStandardRoom(room: StandardRoom): void
+  +visitDeluxeRoom(room: DeluxeRoom): void
+  +visitSuiteRoom(room: SuiteRoom): void
+}
+com_conceptcoding_behavioralpatterns_visitor_solution_elements_IRoom <|.. com_conceptcoding_behavioralpatterns_visitor_solution_elements_DeluxeRoom : implements
+com_conceptcoding_behavioralpatterns_visitor_solution_elements_IRoom <|.. com_conceptcoding_behavioralpatterns_visitor_solution_elements_StandardRoom : implements
+com_conceptcoding_behavioralpatterns_visitor_solution_elements_IRoom <|.. com_conceptcoding_behavioralpatterns_visitor_solution_elements_SuiteRoom : implements
+com_conceptcoding_behavioralpatterns_visitor_solution_visitors_IRoomVisitor <|.. com_conceptcoding_behavioralpatterns_visitor_solution_visitors_HousekeepingVisitor : implements
+com_conceptcoding_behavioralpatterns_visitor_solution_visitors_IRoomVisitor <|.. com_conceptcoding_behavioralpatterns_visitor_solution_visitors_PricingVisitor : implements
+com_conceptcoding_behavioralpatterns_visitor_solution_visitors_IRoomVisitor <|.. com_conceptcoding_behavioralpatterns_visitor_solution_visitors_RoomServiceVisitor : implements
+@enduml

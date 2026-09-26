@@ -1,0 +1,42 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-additionalpatterns-mvc
+class "com.conceptcoding.additionalpatterns.mvc.MVCPatternDemo" as com_conceptcoding_additionalpatterns_mvc_MVCPatternDemo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.additionalpatterns.mvc.controller.BlogController" as com_conceptcoding_additionalpatterns_mvc_controller_BlogController {
+  -blogs: List<Blog>
+  -view: BlogView
+  --
+  +BlogController(view: BlogView)
+  +addBlog(title: String, content: String, author: String): void
+  +updateBlog(index: int, newTitle: String, newContent: String): void
+  +deleteBlog(index: int): void
+  +showBlog(index: int): void
+  +showAllBlogs(): void
+}
+class "com.conceptcoding.additionalpatterns.mvc.model.Blog" as com_conceptcoding_additionalpatterns_mvc_model_Blog {
+  -title: String
+  -content: String
+  -author: String
+  -createdAt: Date
+  --
+  +Blog(title: String, content: String, author: String, createdAt: Date)
+  +getTitle(): String
+  +setTitle(title: String): void
+  +getContent(): String
+  +setContent(content: String): void
+  +getAuthor(): String
+  +setAuthor(author: String): void
+  +getCreatedAt(): Date
+  +setCreatedAt(createdAt: Date): void
+}
+class "com.conceptcoding.additionalpatterns.mvc.view.BlogView" as com_conceptcoding_additionalpatterns_mvc_view_BlogView {
+  +displayBlogDetails(blog: Blog): void
+  +displayAllBlogs(blogs: List<Blog>): void
+}
+com_conceptcoding_additionalpatterns_mvc_controller_BlogController o-- "*" com_conceptcoding_additionalpatterns_mvc_model_Blog : has-a (blogs)
+com_conceptcoding_additionalpatterns_mvc_controller_BlogController o-- com_conceptcoding_additionalpatterns_mvc_view_BlogView : has-a (view)
+@enduml

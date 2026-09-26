@@ -1,0 +1,65 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-additionalpatterns-nullobject
+class "com.conceptcoding.additionalpatterns.nullobject.Bike" as com_conceptcoding_additionalpatterns_nullobject_Bike {
+  -model: String
+  -color: String
+  -seatingCapacity: int
+  -fuelTankCapacity: int
+  -isAvailableForTestDrive: boolean
+  --
+  +Bike(model: String, color: String, fuelTankCapacity: int)
+  +start(): void
+  +stop(): void
+  +getModel(): String
+  +getColor(): String
+  +getSeatingCapacity(): int
+  +getFuelTankCapacity(): int
+  +isAvailableForTestDrive(): boolean
+}
+class "com.conceptcoding.additionalpatterns.nullobject.Car" as com_conceptcoding_additionalpatterns_nullobject_Car {
+  -model: String
+  -color: String
+  -seatingCapacity: int
+  -fuelTankCapacity: int
+  -isAvailableForTestDrive: boolean
+  --
+  +Car(model: String, color: String, seatingCapacity: int, fuelTankCapacity: int, isAvailableForTestDrive: boolean)
+  +start(): void
+  +stop(): void
+  +getModel(): String
+  +getColor(): String
+  +getSeatingCapacity(): int
+  +getFuelTankCapacity(): int
+  +isAvailableForTestDrive(): boolean
+}
+class "com.conceptcoding.additionalpatterns.nullobject.Vehicle" as com_conceptcoding_additionalpatterns_nullobject_Vehicle {
+  +start(): void {abstract}
+  +stop(): void {abstract}
+}
+class "com.conceptcoding.additionalpatterns.nullobject.problem.VehicleFactory" as com_conceptcoding_additionalpatterns_nullobject_problem_VehicleFactory {
+  +getVehicle(type: String): Vehicle {static}
+}
+class "com.conceptcoding.additionalpatterns.nullobject.solution.NullVehicle" as com_conceptcoding_additionalpatterns_nullobject_solution_NullVehicle {
+  -model: String
+  -color: String
+  -seatingCapacity: int
+  -fuelTankCapacity: int
+  -isAvailableForTestDrive: boolean
+  --
+  +NullVehicle()
+  +start(): void
+  +stop(): void
+  +getSeatingCapacity(): int
+  +getFuelTankCapacity(): int
+  +isAvailableForTestDrive(): boolean
+}
+class "com.conceptcoding.additionalpatterns.nullobject.solution.VehicleFactory" as com_conceptcoding_additionalpatterns_nullobject_solution_VehicleFactory {
+  +getVehicle(type: String): Vehicle {static}
+}
+com_conceptcoding_additionalpatterns_nullobject_Vehicle <|-- com_conceptcoding_additionalpatterns_nullobject_Bike : is-a
+com_conceptcoding_additionalpatterns_nullobject_Vehicle <|-- com_conceptcoding_additionalpatterns_nullobject_Car : is-a
+com_conceptcoding_additionalpatterns_nullobject_Vehicle <|-- com_conceptcoding_additionalpatterns_nullobject_solution_NullVehicle : is-a
+@enduml

@@ -1,0 +1,147 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-book_my_show
+class "com.conceptcoding.interviewquestions.book_my_show.BookMyShowApp" as com_conceptcoding_interviewquestions_book_my_show_BookMyShowApp {
+  -theatreController: TheatreController
+  -bookingController: BookingController
+  --
+  +main(args: String[]): void {static}
+  -initialize(): void
+  -userFlow(): void
+  -createSeats(): List<Seat>
+}
+class "com.conceptcoding.interviewquestions.book_my_show.controllers.BookingController" as com_conceptcoding_interviewquestions_book_my_show_controllers_BookingController {
+  -bookingService: BookingService
+  --
+  +BookingController()
+  +createBooking(user: User, show: Show, seats: List<Integer>): Booking
+  +getBooking(bookingId: UUID): Booking
+  +getBookingsForUser(user: User): List<Booking>
+}
+class "com.conceptcoding.interviewquestions.book_my_show.controllers.TheatreController" as com_conceptcoding_interviewquestions_book_my_show_controllers_TheatreController {
+  -theatreService: TheatreService
+  --
+  +TheatreController()
+  +addTheatre(theatre: Theatre): void
+  +getMovies(city: City, date: LocalDate): Set<Movie>
+  +getTheatres(city: City, movie: Movie, date: LocalDate): List<Theatre>
+  +getShows(movie: Movie, date: LocalDate, theatre: Theatre): List<Show>
+}
+class "com.conceptcoding.interviewquestions.book_my_show.entities.Booking" as com_conceptcoding_interviewquestions_book_my_show_entities_Booking {
+  -bookingId: UUID
+  -user: User
+  -show: Show
+  -seats: List<Integer>
+  -payment: Payment
+  --
+  +Booking(user: User, show: Show, seats: List<Integer>, payment: Payment)
+  +getBookingId(): UUID
+  +getUser(): User
+  +getPayment(): Payment
+}
+class "com.conceptcoding.interviewquestions.book_my_show.entities.Movie" as com_conceptcoding_interviewquestions_book_my_show_entities_Movie {
+  -name: String
+  --
+  +Movie(name: String)
+  +getName(): String
+}
+class "com.conceptcoding.interviewquestions.book_my_show.entities.Payment" as com_conceptcoding_interviewquestions_book_my_show_entities_Payment {
+  -paymentId: UUID
+  -status: PaymentStatus
+  --
+  +Payment(status: PaymentStatus)
+  +getPaymentId(): UUID
+  +getStatus(): PaymentStatus
+}
+class "com.conceptcoding.interviewquestions.book_my_show.entities.Screen" as com_conceptcoding_interviewquestions_book_my_show_entities_Screen {
+  -screenId: int
+  -seats: List<Seat>
+  -showsByDate: Map<LocalDate, List<Show>>
+  --
+  +Screen(screenId: int, seats: List<Seat>)
+  +getSeats(): List<Seat>
+  +addShow(show: Show): void
+  +getShows(date: LocalDate): List<Show>
+}
+class "com.conceptcoding.interviewquestions.book_my_show.entities.Seat" as com_conceptcoding_interviewquestions_book_my_show_entities_Seat {
+  -seatId: int
+  -category: SeatCategory
+  --
+  +Seat(seatId: int, category: SeatCategory)
+  +getSeatId(): int
+}
+class "com.conceptcoding.interviewquestions.book_my_show.entities.Show" as com_conceptcoding_interviewquestions_book_my_show_entities_Show {
+  -movie: Movie
+  -showDate: LocalDate
+  -startTime: LocalTime
+  -seatStatusMap: Map<Integer, SeatStatus>
+  -seatLocks: Map<Integer, ReentrantLock>
+  --
+  +Show(movie: Movie, screen: Screen, date: LocalDate, time: LocalTime)
+  +getMovie(): Movie
+  +getShowDate(): LocalDate
+  +getStartTime(): LocalTime
+  +lockSeats(seatIds: List<Integer>): boolean
+  +confirmSeats(seatIds: List<Integer>): void
+  +releaseSeats(seatIds: List<Integer>): void
+}
+class "com.conceptcoding.interviewquestions.book_my_show.entities.Theatre" as com_conceptcoding_interviewquestions_book_my_show_entities_Theatre {
+  -name: String
+  -city: City
+  -screens: List<Screen>
+  --
+  +Theatre(name: String, city: City, screens: List<Screen>)
+  +getCity(): City
+  +getName(): String
+  +getScreens(): List<Screen>
+}
+class "com.conceptcoding.interviewquestions.book_my_show.entities.User" as com_conceptcoding_interviewquestions_book_my_show_entities_User {
+  -userId: String
+  -name: String
+  --
+  +User(userId: String, name: String)
+}
+enum "com.conceptcoding.interviewquestions.book_my_show.enums.City" as com_conceptcoding_interviewquestions_book_my_show_enums_City {
+}
+enum "com.conceptcoding.interviewquestions.book_my_show.enums.PaymentStatus" as com_conceptcoding_interviewquestions_book_my_show_enums_PaymentStatus {
+}
+enum "com.conceptcoding.interviewquestions.book_my_show.enums.SeatCategory" as com_conceptcoding_interviewquestions_book_my_show_enums_SeatCategory {
+}
+enum "com.conceptcoding.interviewquestions.book_my_show.enums.SeatStatus" as com_conceptcoding_interviewquestions_book_my_show_enums_SeatStatus {
+}
+class "com.conceptcoding.interviewquestions.book_my_show.service.BookingService" as com_conceptcoding_interviewquestions_book_my_show_service_BookingService {
+  -bookings: Map<UUID, Booking>
+  --
+  +book(user: User, show: Show, seats: List<Integer>): Booking
+  +getBooking(bookingId: UUID): Booking
+  +getBookingsForUser(user: User): List<Booking>
+}
+class "com.conceptcoding.interviewquestions.book_my_show.service.TheatreService" as com_conceptcoding_interviewquestions_book_my_show_service_TheatreService {
+  -cityTheatres: Map<City, List<Theatre>>
+  --
+  +addTheatre(theatre: Theatre): void
+  +getMovies(city: City, date: LocalDate): Set<Movie>
+  +getTheatres(city: City, movie: Movie, date: LocalDate): List<Theatre>
+  +getShows(movie: Movie, date: LocalDate, theatre: Theatre): List<Show>
+}
+com_conceptcoding_interviewquestions_book_my_show_BookMyShowApp o-- com_conceptcoding_interviewquestions_book_my_show_controllers_BookingController : has-a (bookingController)
+com_conceptcoding_interviewquestions_book_my_show_BookMyShowApp o-- com_conceptcoding_interviewquestions_book_my_show_controllers_TheatreController : has-a (theatreController)
+com_conceptcoding_interviewquestions_book_my_show_controllers_BookingController o-- com_conceptcoding_interviewquestions_book_my_show_service_BookingService : has-a (bookingService)
+com_conceptcoding_interviewquestions_book_my_show_controllers_TheatreController o-- com_conceptcoding_interviewquestions_book_my_show_service_TheatreService : has-a (theatreService)
+com_conceptcoding_interviewquestions_book_my_show_entities_Booking o-- com_conceptcoding_interviewquestions_book_my_show_entities_Payment : has-a (payment)
+com_conceptcoding_interviewquestions_book_my_show_entities_Booking o-- com_conceptcoding_interviewquestions_book_my_show_entities_Show : has-a (show)
+com_conceptcoding_interviewquestions_book_my_show_entities_Booking o-- com_conceptcoding_interviewquestions_book_my_show_entities_User : has-a (user)
+com_conceptcoding_interviewquestions_book_my_show_entities_Payment o-- com_conceptcoding_interviewquestions_book_my_show_enums_PaymentStatus : has-a (status)
+com_conceptcoding_interviewquestions_book_my_show_entities_Screen o-- "*" com_conceptcoding_interviewquestions_book_my_show_entities_Seat : has-a (seats)
+com_conceptcoding_interviewquestions_book_my_show_entities_Screen o-- "*" com_conceptcoding_interviewquestions_book_my_show_entities_Show : has-a (showsByDate)
+com_conceptcoding_interviewquestions_book_my_show_entities_Seat o-- com_conceptcoding_interviewquestions_book_my_show_enums_SeatCategory : has-a (category)
+com_conceptcoding_interviewquestions_book_my_show_entities_Show o-- "*" com_conceptcoding_interviewquestions_book_my_show_enums_SeatStatus : has-a (seatStatusMap)
+com_conceptcoding_interviewquestions_book_my_show_entities_Show o-- com_conceptcoding_interviewquestions_book_my_show_entities_Movie : has-a (movie)
+com_conceptcoding_interviewquestions_book_my_show_entities_Theatre o-- "*" com_conceptcoding_interviewquestions_book_my_show_entities_Screen : has-a (screens)
+com_conceptcoding_interviewquestions_book_my_show_entities_Theatre o-- com_conceptcoding_interviewquestions_book_my_show_enums_City : has-a (city)
+com_conceptcoding_interviewquestions_book_my_show_service_BookingService o-- "*" com_conceptcoding_interviewquestions_book_my_show_entities_Booking : has-a (bookings)
+com_conceptcoding_interviewquestions_book_my_show_service_TheatreService o-- "*" com_conceptcoding_interviewquestions_book_my_show_entities_Theatre : has-a (cityTheatres)
+com_conceptcoding_interviewquestions_book_my_show_service_TheatreService o-- "*" com_conceptcoding_interviewquestions_book_my_show_enums_City : has-a (cityTheatres)
+@enduml

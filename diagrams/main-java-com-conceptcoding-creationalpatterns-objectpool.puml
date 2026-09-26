@@ -1,0 +1,43 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-creationalpatterns-objectpool
+class "com.conceptcoding.creationalpatterns.objectpool.problem.Client" as com_conceptcoding_creationalpatterns_objectpool_problem_Client {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.creationalpatterns.objectpool.problem.DBConnectionPoolManager" as com_conceptcoding_creationalpatterns_objectpool_problem_DBConnectionPoolManager {
+  ~freeConnections: List<DBConnection>
+  ~inUseConnections: List<DBConnection>
+  ~INITIAL_POOL_SIZE: int
+  ~MAX_POOL_SIZE: int
+  --
+  +DBConnectionPoolManager()
+  +getDBConnection(): DBConnection
+  +releaseDBConnection(dbConnection: DBConnection): void
+}
+class "com.conceptcoding.creationalpatterns.objectpool.resource.DBConnection" as com_conceptcoding_creationalpatterns_objectpool_resource_DBConnection {
+  ~mySQLConnection: Connection
+  --
+  +DBConnection()
+}
+class "com.conceptcoding.creationalpatterns.objectpool.solution.Client" as com_conceptcoding_creationalpatterns_objectpool_solution_Client {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.creationalpatterns.objectpool.solution.DBConnectionPoolManager" as com_conceptcoding_creationalpatterns_objectpool_solution_DBConnectionPoolManager {
+  -dbConnectionPoolManagerInstance: DBConnectionPoolManager
+  ~freeConnections: List<DBConnection>
+  ~inUseConnections: List<DBConnection>
+  ~INITIAL_POOL_SIZE: int
+  ~MAX_POOL_SIZE: int
+  --
+  -DBConnectionPoolManager()
+  +getInstance(): DBConnectionPoolManager {static}
+  +getDBConnection(): DBConnection
+  +releaseDBConnection(dbConnection: DBConnection): void
+}
+com_conceptcoding_creationalpatterns_objectpool_problem_DBConnectionPoolManager o-- "*" com_conceptcoding_creationalpatterns_objectpool_resource_DBConnection : has-a (freeConnections)
+com_conceptcoding_creationalpatterns_objectpool_problem_DBConnectionPoolManager o-- "*" com_conceptcoding_creationalpatterns_objectpool_resource_DBConnection : has-a (inUseConnections)
+com_conceptcoding_creationalpatterns_objectpool_solution_DBConnectionPoolManager o-- "*" com_conceptcoding_creationalpatterns_objectpool_resource_DBConnection : has-a (freeConnections)
+com_conceptcoding_creationalpatterns_objectpool_solution_DBConnectionPoolManager o-- "*" com_conceptcoding_creationalpatterns_objectpool_resource_DBConnection : has-a (inUseConnections)
+@enduml

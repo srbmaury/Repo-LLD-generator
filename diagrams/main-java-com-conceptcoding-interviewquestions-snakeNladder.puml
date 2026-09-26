@@ -1,0 +1,57 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-snakeNladder
+class "com.conceptcoding.interviewquestions.snakeNladder.Board" as com_conceptcoding_interviewquestions_snakeNladder_Board {
+  ~cells: Cell[][]
+  --
+  ~Board(boardSize: int, numberOfSnakes: int, numberOfLadders: int)
+  -initializeCells(boardSize: int): void
+  -addSnakesLadders(cells: Cell[][], numberOfSnakes: int, numberOfLadders: int): void
+  ~getCell(playerPosition: int): Cell
+}
+class "com.conceptcoding.interviewquestions.snakeNladder.Cell" as com_conceptcoding_interviewquestions_snakeNladder_Cell {
+  ~jump: Jump
+}
+class "com.conceptcoding.interviewquestions.snakeNladder.Dice" as com_conceptcoding_interviewquestions_snakeNladder_Dice {
+  ~diceCount: int
+  ~min: int
+  ~max: int
+  --
+  +Dice(diceCount: int)
+  +rollDice(): int
+}
+class "com.conceptcoding.interviewquestions.snakeNladder.Game" as com_conceptcoding_interviewquestions_snakeNladder_Game {
+  ~board: Board
+  ~dice: Dice
+  ~playersList: Deque<Player>
+  ~winner: Player
+  --
+  +Game()
+  -initializeGame(): void
+  -addPlayers(): void
+  +startGame(): void
+  -findPlayerTurn(): Player
+  -jumpCheck(playerNewPosition: int): int
+}
+class "com.conceptcoding.interviewquestions.snakeNladder.Jump" as com_conceptcoding_interviewquestions_snakeNladder_Jump {
+  ~start: int
+  ~end: int
+}
+class "com.conceptcoding.interviewquestions.snakeNladder.Player" as com_conceptcoding_interviewquestions_snakeNladder_Player {
+  ~id: String
+  ~currentPosition: int
+  --
+  +Player(id: String, currentPosition: int)
+}
+class "com.conceptcoding.interviewquestions.snakeNladder.SnakeNLadderDemo" as com_conceptcoding_interviewquestions_snakeNladder_SnakeNLadderDemo {
+  +main(args: String[]): void {static}
+}
+com_conceptcoding_interviewquestions_snakeNladder_Board o-- "*" com_conceptcoding_interviewquestions_snakeNladder_Cell : has-a (cells)
+com_conceptcoding_interviewquestions_snakeNladder_Cell o-- com_conceptcoding_interviewquestions_snakeNladder_Jump : has-a (jump)
+com_conceptcoding_interviewquestions_snakeNladder_Game o-- "*" com_conceptcoding_interviewquestions_snakeNladder_Player : has-a (playersList)
+com_conceptcoding_interviewquestions_snakeNladder_Game o-- com_conceptcoding_interviewquestions_snakeNladder_Board : has-a (board)
+com_conceptcoding_interviewquestions_snakeNladder_Game o-- com_conceptcoding_interviewquestions_snakeNladder_Dice : has-a (dice)
+com_conceptcoding_interviewquestions_snakeNladder_Game o-- com_conceptcoding_interviewquestions_snakeNladder_Player : has-a (winner)
+@enduml

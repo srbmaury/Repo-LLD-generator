@@ -1,0 +1,49 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-creationalpatterns-factory
+class "com.conceptcoding.creationalpatterns.factory.Circle" as com_conceptcoding_creationalpatterns_factory_Circle {
+  +computeArea(): void
+  +draw(): void
+}
+class "com.conceptcoding.creationalpatterns.factory.Rectangle" as com_conceptcoding_creationalpatterns_factory_Rectangle {
+  +computeArea(): void
+  +draw(): void
+}
+interface "com.conceptcoding.creationalpatterns.factory.Shape" as com_conceptcoding_creationalpatterns_factory_Shape {
+  ~computeArea(): void
+  ~draw(): void
+}
+enum "com.conceptcoding.creationalpatterns.factory.ShapeType" as com_conceptcoding_creationalpatterns_factory_ShapeType {
+}
+class "com.conceptcoding.creationalpatterns.factory.Square" as com_conceptcoding_creationalpatterns_factory_Square {
+  +computeArea(): void
+  +draw(): void
+}
+class "com.conceptcoding.creationalpatterns.factory.factorymethod.CircleCreator" as com_conceptcoding_creationalpatterns_factory_factorymethod_CircleCreator {
+  +createShape(): Shape
+}
+class "com.conceptcoding.creationalpatterns.factory.factorymethod.FactoryMethodDemo" as com_conceptcoding_creationalpatterns_factory_factorymethod_FactoryMethodDemo {
+  +main(args: String[]): void {static}
+  -getShapeInstance(shapeType: ShapeType): Shape {static}
+}
+class "com.conceptcoding.creationalpatterns.factory.factorymethod.RectangleCreator" as com_conceptcoding_creationalpatterns_factory_factorymethod_RectangleCreator {
+  +createShape(): Shape
+}
+class "com.conceptcoding.creationalpatterns.factory.factorymethod.ShapeFactory" as com_conceptcoding_creationalpatterns_factory_factorymethod_ShapeFactory {
+  +createShape(): Shape {abstract}
+}
+class "com.conceptcoding.creationalpatterns.factory.factorymethod.SquareCreator" as com_conceptcoding_creationalpatterns_factory_factorymethod_SquareCreator {
+  +createShape(): Shape
+}
+class "com.conceptcoding.creationalpatterns.factory.simplefactory.SimpleFactoryDemo" as com_conceptcoding_creationalpatterns_factory_simplefactory_SimpleFactoryDemo {
+  +main(args: String[]): void {static}
+}
+com_conceptcoding_creationalpatterns_factory_Shape <|.. com_conceptcoding_creationalpatterns_factory_Circle : implements
+com_conceptcoding_creationalpatterns_factory_Shape <|.. com_conceptcoding_creationalpatterns_factory_Rectangle : implements
+com_conceptcoding_creationalpatterns_factory_Shape <|.. com_conceptcoding_creationalpatterns_factory_Square : implements
+com_conceptcoding_creationalpatterns_factory_factorymethod_ShapeFactory <|-- com_conceptcoding_creationalpatterns_factory_factorymethod_CircleCreator : is-a
+com_conceptcoding_creationalpatterns_factory_factorymethod_ShapeFactory <|-- com_conceptcoding_creationalpatterns_factory_factorymethod_RectangleCreator : is-a
+com_conceptcoding_creationalpatterns_factory_factorymethod_ShapeFactory <|-- com_conceptcoding_creationalpatterns_factory_factorymethod_SquareCreator : is-a
+@enduml

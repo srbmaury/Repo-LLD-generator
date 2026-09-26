@@ -1,0 +1,111 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-behavioralpatterns-observer
+class "com.conceptcoding.behavioralpatterns.observer.notifymefeature.ECommerceStockNotificationApp" as com_conceptcoding_behavioralpatterns_observer_notifymefeature_ECommerceStockNotificationApp {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.observer.notifymefeature.observable.IphoneProductObservable" as com_conceptcoding_behavioralpatterns_observer_notifymefeature_observable_IphoneProductObservable {
+  -productId: String
+  -productName: String
+  -price: double
+  -stockObservers: List<StockNotificationObserver>
+  -stockQuantity: int
+  --
+  +IphoneProductObservable(productId: String, productName: String, price: double, stockQuantity: int)
+  +addStockObserver(observer: StockNotificationObserver): void
+  +removeStockObserver(observer: StockNotificationObserver): void
+  +notifyStockObservers(): void
+  +restock(quantity: int): void
+  +purchase(quantity: int): boolean
+  +getProductId(): String
+  +getProductName(): String
+  +getPrice(): double
+  +getStockQuantity(): int
+}
+interface "com.conceptcoding.behavioralpatterns.observer.notifymefeature.observable.StockAvailabilityObservable" as com_conceptcoding_behavioralpatterns_observer_notifymefeature_observable_StockAvailabilityObservable {
+  ~addStockObserver(observer: StockNotificationObserver): void
+  ~removeStockObserver(observer: StockNotificationObserver): void
+  ~notifyStockObservers(): void
+  ~purchase(quantity: int): boolean
+  ~restock(quantity: int): void
+}
+class "com.conceptcoding.behavioralpatterns.observer.notifymefeature.observer.EmailNotificationObserver" as com_conceptcoding_behavioralpatterns_observer_notifymefeature_observer_EmailNotificationObserver {
+  -userId: String
+  -emailAddress: String
+  --
+  +EmailNotificationObserver(userId: String, emailAddress: String)
+  +update(): void
+  -sendEmail(): void
+  +getNotificationMethod(): String
+  +getUserId(): String
+}
+class "com.conceptcoding.behavioralpatterns.observer.notifymefeature.observer.PushNotificationObserver" as com_conceptcoding_behavioralpatterns_observer_notifymefeature_observer_PushNotificationObserver {
+  -userId: String
+  -deviceToken: String
+  --
+  +PushNotificationObserver(userId: String, deviceToken: String)
+  +update(): void
+  -sendPushNotification(): void
+  +getNotificationMethod(): String
+  +getUserId(): String
+}
+interface "com.conceptcoding.behavioralpatterns.observer.notifymefeature.observer.StockNotificationObserver" as com_conceptcoding_behavioralpatterns_observer_notifymefeature_observer_StockNotificationObserver {
+  ~update(): void
+  ~getNotificationMethod(): String
+  ~getUserId(): String
+}
+class "com.conceptcoding.behavioralpatterns.observer.weatherstation.WeatherStationApp" as com_conceptcoding_behavioralpatterns_observer_weatherstation_WeatherStationApp {
+  +main(args: String[]): void {static}
+}
+interface "com.conceptcoding.behavioralpatterns.observer.weatherstation.observable.WeatherObservable" as com_conceptcoding_behavioralpatterns_observer_weatherstation_observable_WeatherObservable {
+  ~addObserver(observer: WeatherObserver): void
+  ~removeObserver(observer: WeatherObserver): void
+  ~notifyObservers(): void
+  ~setWeatherReadings(temperature: float, humidity: float, pressure: float): void
+}
+class "com.conceptcoding.behavioralpatterns.observer.weatherstation.observable.WeatherStation" as com_conceptcoding_behavioralpatterns_observer_weatherstation_observable_WeatherStation {
+  -observers: List<WeatherObserver>
+  -temperature: float
+  -humidity: float
+  -pressure: float
+  --
+  +WeatherStation()
+  +addObserver(observer: WeatherObserver): void
+  +removeObserver(observer: WeatherObserver): void
+  +notifyObservers(): void
+  +setWeatherReadings(temperature: float, humidity: float, pressure: float): void
+  +getTemperature(): float
+  +getHumidity(): float
+  +getPressure(): float
+  +toString(): String
+}
+class "com.conceptcoding.behavioralpatterns.observer.weatherstation.observer.CurrentConditionsDisplay" as com_conceptcoding_behavioralpatterns_observer_weatherstation_observer_CurrentConditionsDisplay {
+  -weatherStation: WeatherObservable
+  --
+  +CurrentConditionsDisplay(weatherStation: WeatherObservable)
+  +update(): void
+  +display(): void
+}
+class "com.conceptcoding.behavioralpatterns.observer.weatherstation.observer.ForecastDisplay" as com_conceptcoding_behavioralpatterns_observer_weatherstation_observer_ForecastDisplay {
+  -weatherStation: WeatherObservable
+  --
+  +ForecastDisplay(weatherStation: WeatherObservable)
+  +update(): void
+  +display(): void
+}
+interface "com.conceptcoding.behavioralpatterns.observer.weatherstation.observer.WeatherObserver" as com_conceptcoding_behavioralpatterns_observer_weatherstation_observer_WeatherObserver {
+  ~update(): void
+}
+com_conceptcoding_behavioralpatterns_observer_notifymefeature_observable_IphoneProductObservable o-- "*" com_conceptcoding_behavioralpatterns_observer_notifymefeature_observer_StockNotificationObserver : has-a (stockObservers)
+com_conceptcoding_behavioralpatterns_observer_notifymefeature_observable_StockAvailabilityObservable <|.. com_conceptcoding_behavioralpatterns_observer_notifymefeature_observable_IphoneProductObservable : implements
+com_conceptcoding_behavioralpatterns_observer_notifymefeature_observer_StockNotificationObserver <|.. com_conceptcoding_behavioralpatterns_observer_notifymefeature_observer_EmailNotificationObserver : implements
+com_conceptcoding_behavioralpatterns_observer_notifymefeature_observer_StockNotificationObserver <|.. com_conceptcoding_behavioralpatterns_observer_notifymefeature_observer_PushNotificationObserver : implements
+com_conceptcoding_behavioralpatterns_observer_weatherstation_observable_WeatherObservable <|.. com_conceptcoding_behavioralpatterns_observer_weatherstation_observable_WeatherStation : implements
+com_conceptcoding_behavioralpatterns_observer_weatherstation_observable_WeatherStation o-- "*" com_conceptcoding_behavioralpatterns_observer_weatherstation_observer_WeatherObserver : has-a (observers)
+com_conceptcoding_behavioralpatterns_observer_weatherstation_observer_CurrentConditionsDisplay o-- com_conceptcoding_behavioralpatterns_observer_weatherstation_observable_WeatherObservable : has-a (weatherStation)
+com_conceptcoding_behavioralpatterns_observer_weatherstation_observer_ForecastDisplay o-- com_conceptcoding_behavioralpatterns_observer_weatherstation_observable_WeatherObservable : has-a (weatherStation)
+com_conceptcoding_behavioralpatterns_observer_weatherstation_observer_WeatherObserver <|.. com_conceptcoding_behavioralpatterns_observer_weatherstation_observer_CurrentConditionsDisplay : implements
+com_conceptcoding_behavioralpatterns_observer_weatherstation_observer_WeatherObserver <|.. com_conceptcoding_behavioralpatterns_observer_weatherstation_observer_ForecastDisplay : implements
+@enduml

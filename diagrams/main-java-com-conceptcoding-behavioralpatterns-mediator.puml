@@ -1,0 +1,44 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-behavioralpatterns-mediator
+class "com.conceptcoding.behavioralpatterns.mediator.AuctionDemo" as com_conceptcoding_behavioralpatterns_mediator_AuctionDemo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.mediator.AuctionHouse" as com_conceptcoding_behavioralpatterns_mediator_AuctionHouse {
+  -bidders: List<IColleague>
+  -itemName: String
+  -currentHighestBid: double
+  -currentHighestBidder: IColleague
+  --
+  +AuctionHouse(itemName: String, startingPrice: double)
+  +registerBidder(bidder: IColleague): void
+  +placeBid(bidder: IColleague, bidAmount: double): void
+  +closeAuction(): void
+}
+interface "com.conceptcoding.behavioralpatterns.mediator.AuctionMediator" as com_conceptcoding_behavioralpatterns_mediator_AuctionMediator {
+  ~registerBidder(bidder: IColleague): void
+  ~placeBid(bidder: IColleague, bidAmount: double): void
+  ~closeAuction(): void
+}
+class "com.conceptcoding.behavioralpatterns.mediator.Bidder" as com_conceptcoding_behavioralpatterns_mediator_Bidder {
+  #name: String
+  #mediator: AuctionMediator
+  --
+  +Bidder(name: String, mediator: AuctionMediator)
+  +placeBid(amount: double): void
+  +receiveBidNotification(bidAmount: double): void
+  +getName(): String
+}
+interface "com.conceptcoding.behavioralpatterns.mediator.IColleague" as com_conceptcoding_behavioralpatterns_mediator_IColleague {
+  ~placeBid(amount: double): void
+  ~receiveBidNotification(bidAmount: double): void
+  ~getName(): String
+}
+com_conceptcoding_behavioralpatterns_mediator_AuctionHouse o-- "*" com_conceptcoding_behavioralpatterns_mediator_IColleague : has-a (bidders)
+com_conceptcoding_behavioralpatterns_mediator_AuctionHouse o-- com_conceptcoding_behavioralpatterns_mediator_IColleague : has-a (currentHighestBidder)
+com_conceptcoding_behavioralpatterns_mediator_AuctionMediator <|.. com_conceptcoding_behavioralpatterns_mediator_AuctionHouse : implements
+com_conceptcoding_behavioralpatterns_mediator_Bidder o-- com_conceptcoding_behavioralpatterns_mediator_AuctionMediator : has-a (mediator)
+com_conceptcoding_behavioralpatterns_mediator_IColleague <|.. com_conceptcoding_behavioralpatterns_mediator_Bidder : implements
+@enduml

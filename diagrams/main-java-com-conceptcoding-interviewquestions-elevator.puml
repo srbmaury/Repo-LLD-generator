@@ -1,0 +1,115 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-elevator
+class "com.conceptcoding.interviewquestions.elevator.Building" as com_conceptcoding_interviewquestions_elevator_Building {
+  ~floors: List<Floor>
+  --
+  +Building(totalFloors: int, dispatcher: ExternalDispatcher)
+  +getFloor(floor: int): Floor
+}
+class "com.conceptcoding.interviewquestions.elevator.Demo" as com_conceptcoding_interviewquestions_elevator_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.interviewquestions.elevator.Door" as com_conceptcoding_interviewquestions_elevator_Door {
+  -doorState: DoorState
+  --
+  ~Door()
+  +openDoor(id: int): void
+  +closeDoor(id: int): void
+}
+class "com.conceptcoding.interviewquestions.elevator.ElevatorCar" as com_conceptcoding_interviewquestions_elevator_ElevatorCar {
+  ~id: int
+  ~currentFloor: int
+  ~nextFloorStoppage: int
+  ~movingDirection: ElevatorDirection
+  ~door: Door
+  --
+  +ElevatorCar(id: int)
+  +showDisplay(): void
+  +moveElevator(destinationFloor: int): void
+  +setCurrentFloor(currentFloor: int): void
+}
+class "com.conceptcoding.interviewquestions.elevator.ElevatorController" as com_conceptcoding_interviewquestions_elevator_ElevatorController {
+  ~upMinPQ: PriorityBlockingQueue<Integer>
+  ~downMaxPQ: PriorityBlockingQueue<Integer>
+  ~elevatorCar: ElevatorCar
+  -monitor: Object
+  --
+  ~ElevatorController(elevatorCar: ElevatorCar)
+  +submitRequest(destinationFloor: int): void
+  -enqueueRequest(destinationFloor: int): void
+  +run(): void
+  +controlElevator(): void
+}
+class "com.conceptcoding.interviewquestions.elevator.ElevatorScheduler" as com_conceptcoding_interviewquestions_elevator_ElevatorScheduler {
+  -controllers: List<ElevatorController>
+  -strategy: ElevatorSelectionStrategy
+  --
+  +ElevatorScheduler(controllers: List<ElevatorController>, strategy: ElevatorSelectionStrategy)
+  +setStrategy(strategy: ElevatorSelectionStrategy): void
+  +assignElevator(floor: int, direction: ElevatorDirection): ElevatorController
+}
+interface "com.conceptcoding.interviewquestions.elevator.ElevatorSelectionStrategy" as com_conceptcoding_interviewquestions_elevator_ElevatorSelectionStrategy {
+  ~selectElevator(controllers: List<ElevatorController>, requestFloor: int, direction: ElevatorDirection): ElevatorController
+}
+class "com.conceptcoding.interviewquestions.elevator.ExternalButton" as com_conceptcoding_interviewquestions_elevator_ExternalButton {
+  -dispatcher: ExternalDispatcher
+  --
+  +ExternalButton(dispatcher: ExternalDispatcher)
+  +pressButton(floor: int, direction: ElevatorDirection): void
+}
+class "com.conceptcoding.interviewquestions.elevator.ExternalDispatcher" as com_conceptcoding_interviewquestions_elevator_ExternalDispatcher {
+  ~scheduler: ElevatorScheduler
+  --
+  +ExternalDispatcher(scheduler: ElevatorScheduler)
+  +submitExternalRequest(floor: int, direction: ElevatorDirection): void
+}
+class "com.conceptcoding.interviewquestions.elevator.Floor" as com_conceptcoding_interviewquestions_elevator_Floor {
+  ~floorNumber: int
+  ~upButton: ExternalButton
+  ~downButton: ExternalButton
+  --
+  +Floor(floorNumber: int, dispatcher: ExternalDispatcher)
+  +pressUpButton(): void
+  +pressDownButton(): void
+}
+class "com.conceptcoding.interviewquestions.elevator.InternalButton" as com_conceptcoding_interviewquestions_elevator_InternalButton {
+  -controller: ElevatorController
+  --
+  +InternalButton(controller: ElevatorController)
+  +pressButton(destinationFloor: int): void
+}
+class "com.conceptcoding.interviewquestions.elevator.InternalDispatcher" as com_conceptcoding_interviewquestions_elevator_InternalDispatcher {
+  -INSTANCE: InternalDispatcher
+  --
+  -InternalDispatcher()
+  +getInstance(): InternalDispatcher {static}
+  +submitInternalRequest(destinationFloor: int, controller: ElevatorController): void
+}
+class "com.conceptcoding.interviewquestions.elevator.LeastBusyStrategy" as com_conceptcoding_interviewquestions_elevator_LeastBusyStrategy {
+  +selectElevator(controllers: List<ElevatorController>, requestFloor: int, direction: ElevatorDirection): ElevatorController
+}
+class "com.conceptcoding.interviewquestions.elevator.NearestElevatorStrategy" as com_conceptcoding_interviewquestions_elevator_NearestElevatorStrategy {
+  +selectElevator(controllers: List<ElevatorController>, requestFloor: int, direction: ElevatorDirection): ElevatorController
+}
+enum "com.conceptcoding.interviewquestions.elevator.enums.DoorState" as com_conceptcoding_interviewquestions_elevator_enums_DoorState {
+}
+enum "com.conceptcoding.interviewquestions.elevator.enums.ElevatorDirection" as com_conceptcoding_interviewquestions_elevator_enums_ElevatorDirection {
+}
+com_conceptcoding_interviewquestions_elevator_Building o-- "*" com_conceptcoding_interviewquestions_elevator_Floor : has-a (floors)
+com_conceptcoding_interviewquestions_elevator_Door o-- com_conceptcoding_interviewquestions_elevator_enums_DoorState : has-a (doorState)
+com_conceptcoding_interviewquestions_elevator_ElevatorCar o-- com_conceptcoding_interviewquestions_elevator_Door : has-a (door)
+com_conceptcoding_interviewquestions_elevator_ElevatorCar o-- com_conceptcoding_interviewquestions_elevator_enums_ElevatorDirection : has-a (movingDirection)
+com_conceptcoding_interviewquestions_elevator_ElevatorController o-- com_conceptcoding_interviewquestions_elevator_ElevatorCar : has-a (elevatorCar)
+com_conceptcoding_interviewquestions_elevator_ElevatorScheduler o-- "*" com_conceptcoding_interviewquestions_elevator_ElevatorController : has-a (controllers)
+com_conceptcoding_interviewquestions_elevator_ElevatorScheduler o-- com_conceptcoding_interviewquestions_elevator_ElevatorSelectionStrategy : has-a (strategy)
+com_conceptcoding_interviewquestions_elevator_ElevatorSelectionStrategy <|.. com_conceptcoding_interviewquestions_elevator_LeastBusyStrategy : implements
+com_conceptcoding_interviewquestions_elevator_ElevatorSelectionStrategy <|.. com_conceptcoding_interviewquestions_elevator_NearestElevatorStrategy : implements
+com_conceptcoding_interviewquestions_elevator_ExternalButton o-- com_conceptcoding_interviewquestions_elevator_ExternalDispatcher : has-a (dispatcher)
+com_conceptcoding_interviewquestions_elevator_ExternalDispatcher o-- com_conceptcoding_interviewquestions_elevator_ElevatorScheduler : has-a (scheduler)
+com_conceptcoding_interviewquestions_elevator_Floor o-- com_conceptcoding_interviewquestions_elevator_ExternalButton : has-a (downButton)
+com_conceptcoding_interviewquestions_elevator_Floor o-- com_conceptcoding_interviewquestions_elevator_ExternalButton : has-a (upButton)
+com_conceptcoding_interviewquestions_elevator_InternalButton o-- com_conceptcoding_interviewquestions_elevator_ElevatorController : has-a (controller)
+@enduml

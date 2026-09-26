@@ -1,0 +1,33 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-behavioralpatterns-templatemethod
+class "com.conceptcoding.behavioralpatterns.templatemethod.BankTransfer" as com_conceptcoding_behavioralpatterns_templatemethod_BankTransfer {
+  +validateRequest(): void
+  +debitAmount(): void
+  +calculateFees(): void
+  +creditAmount(): void
+}
+class "com.conceptcoding.behavioralpatterns.templatemethod.MerchantPayment" as com_conceptcoding_behavioralpatterns_templatemethod_MerchantPayment {
+  +validateRequest(): void
+  +debitAmount(): void
+  +calculateFees(): void
+  +creditAmount(): void
+  #requiresOTPAuthentication(): boolean
+}
+class "com.conceptcoding.behavioralpatterns.templatemethod.PaymentFlow" as com_conceptcoding_behavioralpatterns_templatemethod_PaymentFlow {
+  +validateRequest(): void {abstract}
+  +debitAmount(): void {abstract}
+  +calculateFees(): void {abstract}
+  +creditAmount(): void {abstract}
+  +sendMoney(): void
+  #requiresOTPAuthentication(): boolean
+  +logTransaction(): void
+}
+class "com.conceptcoding.behavioralpatterns.templatemethod.TemplateDemo" as com_conceptcoding_behavioralpatterns_templatemethod_TemplateDemo {
+  +main(args: String[]): void {static}
+}
+com_conceptcoding_behavioralpatterns_templatemethod_PaymentFlow <|-- com_conceptcoding_behavioralpatterns_templatemethod_BankTransfer : is-a
+com_conceptcoding_behavioralpatterns_templatemethod_PaymentFlow <|-- com_conceptcoding_behavioralpatterns_templatemethod_MerchantPayment : is-a
+@enduml

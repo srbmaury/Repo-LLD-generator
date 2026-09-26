@@ -1,0 +1,91 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-structuralpatterns-flyweight
+class "com.conceptcoding.structuralpatterns.flyweight.roboticgame.issue.Demo" as com_conceptcoding_structuralpatterns_flyweight_roboticgame_issue_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.structuralpatterns.flyweight.roboticgame.issue.Robot" as com_conceptcoding_structuralpatterns_flyweight_roboticgame_issue_Robot {
+  ~coordinateX: int
+  ~coordinateY: int
+  ~type: String
+  ~body: Sprites
+  --
+  ~Robot(coordinateX: int, coordinateY: int, type: String, body: Sprites)
+}
+class "com.conceptcoding.structuralpatterns.flyweight.roboticgame.issue.Sprites" as com_conceptcoding_structuralpatterns_flyweight_roboticgame_issue_Sprites {
+}
+class "com.conceptcoding.structuralpatterns.flyweight.roboticgame.solution.HumanoidRobot" as com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_HumanoidRobot {
+  -type: String
+  -body: Sprites
+  --
+  ~HumanoidRobot(type: String, body: Sprites)
+  +getType(): String
+  +getBody(): Sprites
+  +display(x: int, y: int): void
+}
+interface "com.conceptcoding.structuralpatterns.flyweight.roboticgame.solution.IRobot" as com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_IRobot {
+  ~display(x: int, y: int): void
+}
+class "com.conceptcoding.structuralpatterns.flyweight.roboticgame.solution.RoboticDog" as com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_RoboticDog {
+  -type: String
+  -body: Sprites
+  --
+  ~RoboticDog(type: String, body: Sprites)
+  +getType(): String
+  +getBody(): Sprites
+  +display(x: int, y: int): void
+}
+class "com.conceptcoding.structuralpatterns.flyweight.roboticgame.solution.RoboticFactory" as com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_RoboticFactory {
+  -roboticObjectCache: Map<String, IRobot>
+  --
+  +createRobot(robotType: String): IRobot {static}
+  +getTotalRobots(): int {static}
+}
+class "com.conceptcoding.structuralpatterns.flyweight.roboticgame.solution.RoboticGameSimulation" as com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_RoboticGameSimulation {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.structuralpatterns.flyweight.roboticgame.solution.Sprites" as com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_Sprites {
+}
+class "com.conceptcoding.structuralpatterns.flyweight.wordprocessor.issue.Character" as com_conceptcoding_structuralpatterns_flyweight_wordprocessor_issue_Character {
+  ~character: char
+  ~fontType: String
+  ~size: int
+  ~row: int
+  ~column: int
+  --
+  +Character(character: char, fontType: String, size: int, row: int, column: int)
+}
+class "com.conceptcoding.structuralpatterns.flyweight.wordprocessor.issue.Demo" as com_conceptcoding_structuralpatterns_flyweight_wordprocessor_issue_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.structuralpatterns.flyweight.wordprocessor.solution.DocumentCharacter" as com_conceptcoding_structuralpatterns_flyweight_wordprocessor_solution_DocumentCharacter {
+  -character: char
+  -fontType: String
+  -size: int
+  --
+  ~DocumentCharacter(character: char, fontType: String, size: int)
+  +display(row: int, column: int): void
+}
+interface "com.conceptcoding.structuralpatterns.flyweight.wordprocessor.solution.ILetter" as com_conceptcoding_structuralpatterns_flyweight_wordprocessor_solution_ILetter {
+  ~display(row: int, column: int): void
+}
+class "com.conceptcoding.structuralpatterns.flyweight.wordprocessor.solution.LetterFactory" as com_conceptcoding_structuralpatterns_flyweight_wordprocessor_solution_LetterFactory {
+  -characterCache: Map<Character, ILetter>
+  --
+  +crateLetter(characterValue: char): ILetter {static}
+  +getTotalCharacters(): int {static}
+}
+class "com.conceptcoding.structuralpatterns.flyweight.wordprocessor.solution.WordProcessorSimulation" as com_conceptcoding_structuralpatterns_flyweight_wordprocessor_solution_WordProcessorSimulation {
+  +main(args: String[]): void {static}
+}
+com_conceptcoding_structuralpatterns_flyweight_roboticgame_issue_Robot o-- com_conceptcoding_structuralpatterns_flyweight_roboticgame_issue_Sprites : has-a (body)
+com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_HumanoidRobot o-- com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_Sprites : has-a (body)
+com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_IRobot <|.. com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_HumanoidRobot : implements
+com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_IRobot <|.. com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_RoboticDog : implements
+com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_RoboticDog o-- com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_Sprites : has-a (body)
+com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_RoboticFactory o-- "*" com_conceptcoding_structuralpatterns_flyweight_roboticgame_solution_IRobot : has-a (roboticObjectCache)
+com_conceptcoding_structuralpatterns_flyweight_wordprocessor_solution_ILetter <|.. com_conceptcoding_structuralpatterns_flyweight_wordprocessor_solution_DocumentCharacter : implements
+com_conceptcoding_structuralpatterns_flyweight_wordprocessor_solution_LetterFactory o-- "*" com_conceptcoding_structuralpatterns_flyweight_wordprocessor_solution_ILetter : has-a (characterCache)
+@enduml

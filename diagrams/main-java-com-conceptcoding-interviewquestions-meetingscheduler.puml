@@ -1,0 +1,134 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-meetingscheduler
+class "com.conceptcoding.interviewquestions.meetingscheduler.Calendar" as com_conceptcoding_interviewquestions_meetingscheduler_Calendar {
+  -meetings: Map<TimeInterval, Meeting>
+  --
+  +Calendar()
+  +addMeeting(meeting: Meeting): void
+  +removeMeeting(meeting: Meeting): void
+  +getMeeting(timeInterval: TimeInterval): Meeting
+  +getMeetings(): List<Meeting>
+  +setMeetings(meetings: Map<TimeInterval, Meeting>): void
+  +toString(): String
+}
+class "com.conceptcoding.interviewquestions.meetingscheduler.Demo" as com_conceptcoding_interviewquestions_meetingscheduler_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.interviewquestions.meetingscheduler.Meeting" as com_conceptcoding_interviewquestions_meetingscheduler_Meeting {
+  -meetingId: String
+  -subject: String
+  -timeInterval: TimeInterval
+  -organizer: User
+  -meetingRoom: MeetingRoom
+  -attendees: Map<User, ParticipantResponse>
+  --
+  +Meeting(meetingId: String, subject: String, timeInterval: TimeInterval, organizer: User, attendees: Map<User, ParticipantResponse>, meetingRoom: MeetingRoom)
+  +getMeetingId(): String
+  +setMeetingId(meetingId: String): void
+  +getSubject(): String
+  +setSubject(subject: String): void
+  +getTimeInterval(): TimeInterval
+  +setTimeInterval(timeInterval: TimeInterval): void
+  +getOrganizer(): User
+  +setOrganizer(organizer: User): void
+  +getMeetingRoom(): MeetingRoom
+  +setMeetingRoom(meetingRoom: MeetingRoom): void
+  +getAttendees(): Map<User, ParticipantResponse>
+  +setAttendees(attendees: Map<User, ParticipantResponse>): void
+  +getAcceptedParticipants(): List<User>
+  +getDeclinedParticipants(): List<User>
+  +getTentativeParticipants(): List<User>
+  +toString(): String
+}
+class "com.conceptcoding.interviewquestions.meetingscheduler.MeetingRoom" as com_conceptcoding_interviewquestions_meetingscheduler_MeetingRoom {
+  -id: int
+  -name: String
+  -capacity: int
+  -bookedSlots: List<TimeInterval>
+  -calendar: Calendar
+  --
+  +MeetingRoom(id: int, name: String, capacity: int)
+  +viewCalendar(): void
+  +getId(): int
+  +getCapacity(): int
+  +getCalendar(): Calendar
+  +setCalendar(calendar: Calendar): void
+  +getName(): String
+  +setName(name: String): void
+  +getBookedSlots(): List<TimeInterval>
+  +addBookedSlot(bookedSlot: TimeInterval): void
+  +removeBookedSlot(bookedSlot: TimeInterval): void
+  +isAvailableFor(interval: TimeInterval, requiredCapacity: int): boolean
+}
+class "com.conceptcoding.interviewquestions.meetingscheduler.MeetingScheduler" as com_conceptcoding_interviewquestions_meetingscheduler_MeetingScheduler {
+  -allMeetingRooms: List<MeetingRoom>
+  --
+  +MeetingScheduler(rooms: List<MeetingRoom>)
+  +scheduleMeeting(organiser: User, participants: Map<User, ParticipantResponse>, subject: String, timeInterval: TimeInterval): Meeting
+  +cancelMeeting(meeting: Meeting): void
+  -simulateUserResponsesForInvites(meeting: Meeting): void
+  -getMeetingId(): String
+  +addMeetingRoom(meetingRoom: MeetingRoom): void
+  +removeMeetingRoom(meetingRoom: MeetingRoom): void
+  -notifyParticipantsWithInvites(meeting: Meeting): void
+  -notifyParticipantsAboutMeetingCancellation(meeting: Meeting): void
+  +bookSlot(room: MeetingRoom, meeting: Meeting): void
+  +releaseSlot(room: MeetingRoom, meeting: Meeting): void
+  +checkForAvailableRooms(capacity: int, interval: TimeInterval): MeetingRoom
+}
+class "com.conceptcoding.interviewquestions.meetingscheduler.Notification" as com_conceptcoding_interviewquestions_meetingscheduler_Notification {
+  -notificationId: int
+  -message: String
+  --
+  +Notification(notificationId: int, message: String)
+  +sendMeetingInviteNotification(user: User, meeting: Meeting): void
+  +sendCancelMeetingNotification(user: User, meeting: Meeting): void
+}
+enum "com.conceptcoding.interviewquestions.meetingscheduler.ParticipantResponse" as com_conceptcoding_interviewquestions_meetingscheduler_ParticipantResponse {
+}
+enum "com.conceptcoding.interviewquestions.meetingscheduler.ParticipantType" as com_conceptcoding_interviewquestions_meetingscheduler_ParticipantType {
+}
+class "com.conceptcoding.interviewquestions.meetingscheduler.TimeInterval" as com_conceptcoding_interviewquestions_meetingscheduler_TimeInterval {
+  -startTime: LocalDateTime
+  -endTime: LocalDateTime
+  --
+  +TimeInterval(startTime: LocalDateTime, endTime: LocalDateTime)
+  +getStartTime(): LocalDateTime
+  +getEndTime(): LocalDateTime
+  +overlapsWith(newInterval: TimeInterval): boolean
+}
+class "com.conceptcoding.interviewquestions.meetingscheduler.User" as com_conceptcoding_interviewquestions_meetingscheduler_User {
+  -name: String
+  -email: String
+  -calendar: Calendar
+  -participantType: ParticipantType
+  --
+  +User(name: String, email: String, participantType: ParticipantType)
+  +viewCalendar(): void
+  +respondToInvitation(participant: User, meeting: Meeting, response: ParticipantResponse): void
+  +getName(): String
+  +setName(name: String): void
+  +getEmail(): String
+  +setEmail(email: String): void
+  +getCalendar(): Calendar
+  +setCalendar(calendar: Calendar): void
+  +getParticipantType(): ParticipantType
+  +setParticipantType(participantType: ParticipantType): void
+  +toString(): String
+}
+com_conceptcoding_interviewquestions_meetingscheduler_Calendar o-- "*" com_conceptcoding_interviewquestions_meetingscheduler_Meeting : has-a (meetings)
+com_conceptcoding_interviewquestions_meetingscheduler_Calendar o-- "*" com_conceptcoding_interviewquestions_meetingscheduler_TimeInterval : has-a (meetings)
+com_conceptcoding_interviewquestions_meetingscheduler_Meeting o-- "*" com_conceptcoding_interviewquestions_meetingscheduler_ParticipantResponse : has-a (attendees)
+com_conceptcoding_interviewquestions_meetingscheduler_Meeting o-- "*" com_conceptcoding_interviewquestions_meetingscheduler_User : has-a (attendees)
+com_conceptcoding_interviewquestions_meetingscheduler_Meeting o-- com_conceptcoding_interviewquestions_meetingscheduler_MeetingRoom : has-a (meetingRoom)
+com_conceptcoding_interviewquestions_meetingscheduler_Meeting o-- com_conceptcoding_interviewquestions_meetingscheduler_TimeInterval : has-a (timeInterval)
+com_conceptcoding_interviewquestions_meetingscheduler_Meeting o-- com_conceptcoding_interviewquestions_meetingscheduler_User : has-a (organizer)
+com_conceptcoding_interviewquestions_meetingscheduler_MeetingRoom o-- "*" com_conceptcoding_interviewquestions_meetingscheduler_TimeInterval : has-a (bookedSlots)
+com_conceptcoding_interviewquestions_meetingscheduler_MeetingRoom o-- com_conceptcoding_interviewquestions_meetingscheduler_Calendar : has-a (calendar)
+com_conceptcoding_interviewquestions_meetingscheduler_MeetingScheduler o-- "*" com_conceptcoding_interviewquestions_meetingscheduler_MeetingRoom : has-a (allMeetingRooms)
+com_conceptcoding_interviewquestions_meetingscheduler_User o-- com_conceptcoding_interviewquestions_meetingscheduler_Calendar : has-a (calendar)
+com_conceptcoding_interviewquestions_meetingscheduler_User o-- com_conceptcoding_interviewquestions_meetingscheduler_ParticipantType : has-a (participantType)
+@enduml

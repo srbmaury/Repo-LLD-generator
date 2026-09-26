@@ -1,0 +1,76 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-behavioralpatterns-iterator
+class "com.conceptcoding.behavioralpatterns.iterator.collections.LinkedHashSetExample" as com_conceptcoding_behavioralpatterns_iterator_collections_LinkedHashSetExample {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.iterator.library.Book" as com_conceptcoding_behavioralpatterns_iterator_library_Book {
+  -title: String
+  -author: String
+  -isbn: String
+  -price: int
+  --
+  +Book(title: String, author: String, isbn: String)
+  +getTitle(): String
+  +getAuthor(): String
+  +getIsbn(): String
+  +getPrice(): int
+  +toString(): String
+}
+interface "com.conceptcoding.behavioralpatterns.iterator.library.BookCollection" as com_conceptcoding_behavioralpatterns_iterator_library_BookCollection {
+  ~createIterator(): Iterator<Book>
+  ~createReverseIterator(): Iterator<Book>
+}
+interface "com.conceptcoding.behavioralpatterns.iterator.library.Iterator" as com_conceptcoding_behavioralpatterns_iterator_library_Iterator {
+  ~hasNext(): boolean
+  ~next(): T
+}
+class "com.conceptcoding.behavioralpatterns.iterator.library.Library" as com_conceptcoding_behavioralpatterns_iterator_library_Library {
+  -books: List<Book>
+  --
+  +Library(books: List<Book>)
+  +createIterator(): Iterator<Book>
+  +createReverseIterator(): Iterator<Book>
+}
+class "com.conceptcoding.behavioralpatterns.iterator.library.LibraryIterator" as com_conceptcoding_behavioralpatterns_iterator_library_LibraryIterator {
+  -books: List<Book>
+  -position: int
+  --
+  +LibraryIterator(books: List<Book>)
+  +hasNext(): boolean
+  +next(): Book
+}
+class "com.conceptcoding.behavioralpatterns.iterator.library.LibraryIteratorDemo" as com_conceptcoding_behavioralpatterns_iterator_library_LibraryIteratorDemo {
+  +main(args: String[]): void {static}
+  -getLibrary(): Library {static}
+  -displayLibrary(iterator: Iterator<Book>): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.iterator.library.ReverseLibraryIterator" as com_conceptcoding_behavioralpatterns_iterator_library_ReverseLibraryIterator {
+  -books: List<Book>
+  -position: int
+  --
+  +ReverseLibraryIterator(books: List<Book>)
+  +hasNext(): boolean
+  +next(): Book
+}
+class "com.conceptcoding.behavioralpatterns.iterator.problem.Book" as com_conceptcoding_behavioralpatterns_iterator_problem_Book {
+  -title: String
+  -author: String
+  -isbn: String
+  --
+  +Book(tittle: String, author: String, isbn: String)
+  +getBooks(): List<Book> {static}
+  +toString(): String
+}
+class "com.conceptcoding.behavioralpatterns.iterator.problem.Client" as com_conceptcoding_behavioralpatterns_iterator_problem_Client {
+  +main(args: String[]): void {static}
+}
+com_conceptcoding_behavioralpatterns_iterator_library_BookCollection <|.. com_conceptcoding_behavioralpatterns_iterator_library_Library : implements
+com_conceptcoding_behavioralpatterns_iterator_library_Iterator <|.. com_conceptcoding_behavioralpatterns_iterator_library_LibraryIterator : implements
+com_conceptcoding_behavioralpatterns_iterator_library_Iterator <|.. com_conceptcoding_behavioralpatterns_iterator_library_ReverseLibraryIterator : implements
+com_conceptcoding_behavioralpatterns_iterator_library_Library o-- "*" com_conceptcoding_behavioralpatterns_iterator_library_Book : has-a (books)
+com_conceptcoding_behavioralpatterns_iterator_library_LibraryIterator o-- "*" com_conceptcoding_behavioralpatterns_iterator_library_Book : has-a (books)
+com_conceptcoding_behavioralpatterns_iterator_library_ReverseLibraryIterator o-- "*" com_conceptcoding_behavioralpatterns_iterator_library_Book : has-a (books)
+@enduml

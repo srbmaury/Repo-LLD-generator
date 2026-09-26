@@ -1,0 +1,39 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-creationalpatterns-prototype
+class "com.conceptcoding.creationalpatterns.prototype.problem.DemoProblem" as com_conceptcoding_creationalpatterns_prototype_problem_DemoProblem {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.creationalpatterns.prototype.problem.Student" as com_conceptcoding_creationalpatterns_prototype_problem_Student {
+  ~id: int
+  ~name: String
+  ~branch: String
+  -rollNo: int
+  --
+  ~Student()
+  ~Student(id: int, name: String, branch: String, rollNo: int)
+  +printDetails(): void
+}
+class "com.conceptcoding.creationalpatterns.prototype.solution.DemoSolution" as com_conceptcoding_creationalpatterns_prototype_solution_DemoSolution {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.creationalpatterns.prototype.solution.Student" as com_conceptcoding_creationalpatterns_prototype_solution_Student {
+  ~id: int
+  ~name: String
+  ~branch: String
+  ~inHighSchool: boolean
+  -rollNo: int
+  --
+  ~Student()
+  ~Student(id: int, name: String, branch: String, rollNo: int)
+  +setInHighSchool(inHighSchool: boolean): void
+  +clone(): StudentPrototype
+  +printDetails(): void
+}
+interface "com.conceptcoding.creationalpatterns.prototype.solution.StudentPrototype" as com_conceptcoding_creationalpatterns_prototype_solution_StudentPrototype {
+  ~clone(): StudentPrototype
+}
+com_conceptcoding_creationalpatterns_prototype_solution_StudentPrototype <|.. com_conceptcoding_creationalpatterns_prototype_solution_Student : implements
+@enduml

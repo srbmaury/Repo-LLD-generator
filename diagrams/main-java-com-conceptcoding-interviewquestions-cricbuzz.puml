@@ -1,0 +1,209 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-cricbuzz
+class "com.conceptcoding.interviewquestions.cricbuzz.Demo" as com_conceptcoding_interviewquestions_cricbuzz_Demo {
+  +main(args: String[]): void {static}
+  -addTeam(name: String): Team
+  -addPlayer(name: String, playerType: PlayerType): PlayerDetails
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.Inning.BallDetails" as com_conceptcoding_interviewquestions_cricbuzz_Inning_BallDetails {
+  +ballNumber: int
+  +ballType: BallType
+  +runType: RunType
+  +playedBy: PlayerDetails
+  +bowledBy: PlayerDetails
+  +wicket: Wicket
+  ~scoreUpdaterObserverList: List<ScoreUpdaterObserver>
+  --
+  +BallDetails(ballNumber: int)
+  +startBallDelivery(battingTeam: Team, bowlingTeam: Team, over: OverDetails): void
+  -notifyUpdaters(ballDetails: BallDetails): void
+  -getRunType(): RunType
+  -isWicketTaken(): boolean
+}
+enum "com.conceptcoding.interviewquestions.cricbuzz.Inning.BallType" as com_conceptcoding_interviewquestions_cricbuzz_Inning_BallType {
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.Inning.InningDetails" as com_conceptcoding_interviewquestions_cricbuzz_Inning_InningDetails {
+  ~battingTeam: Team
+  ~bowlingTeam: Team
+  ~matchType: MatchType
+  ~overs: List<OverDetails>
+  --
+  +InningDetails(battingTeam: Team, bowlingTeam: Team, matchType: MatchType)
+  +start(runsToWin: int): void
+  +getTotalRuns(): int
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.Inning.OverDetails" as com_conceptcoding_interviewquestions_cricbuzz_Inning_OverDetails {
+  ~overNumber: int
+  ~balls: List<BallDetails>
+  ~extraBallsCount: int
+  ~bowledBy: PlayerDetails
+  --
+  ~OverDetails(overNumber: int, bowledBy: PlayerDetails)
+  +startOver(battingTeam: Team, bowlingTeam: Team, runsToWin: int): boolean
+}
+enum "com.conceptcoding.interviewquestions.cricbuzz.Inning.RunType" as com_conceptcoding_interviewquestions_cricbuzz_Inning_RunType {
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.Match" as com_conceptcoding_interviewquestions_cricbuzz_Match {
+  ~teamA: Team
+  ~teamB: Team
+  ~matchDate: Date
+  ~venue: String
+  ~tossWinner: Team
+  ~innings: InningDetails[]
+  ~matchType: MatchType
+  --
+  +Match(teamA: Team, teamB: Team, matchDate: Date, venue: String, matchType: MatchType)
+  +startMatch(): void
+  -toss(teamA: Team, teamB: Team): Team
+}
+interface "com.conceptcoding.interviewquestions.cricbuzz.MatchType" as com_conceptcoding_interviewquestions_cricbuzz_MatchType {
+  +noOfOvers(): int
+  +maxOverCountBowlers(): int
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.OneDayMatch" as com_conceptcoding_interviewquestions_cricbuzz_OneDayMatch {
+  +noOfOvers(): int
+  +maxOverCountBowlers(): int
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.ScoreUpdater.BattingScoreUpdater" as com_conceptcoding_interviewquestions_cricbuzz_ScoreUpdater_BattingScoreUpdater {
+  +update(ballDetails: BallDetails): void
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.ScoreUpdater.BowlingScoreUpdater" as com_conceptcoding_interviewquestions_cricbuzz_ScoreUpdater_BowlingScoreUpdater {
+  +update(ballDetails: BallDetails): void
+}
+interface "com.conceptcoding.interviewquestions.cricbuzz.ScoreUpdater.ScoreUpdaterObserver" as com_conceptcoding_interviewquestions_cricbuzz_ScoreUpdater_ScoreUpdaterObserver {
+  +update(ballDetails: BallDetails): void
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.T20Match" as com_conceptcoding_interviewquestions_cricbuzz_T20Match {
+  +noOfOvers(): int
+  +maxOverCountBowlers(): int
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.Team.Player.Person" as com_conceptcoding_interviewquestions_cricbuzz_Team_Player_Person {
+  +name: String
+  +age: int
+  +address: String
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.Team.Player.PlayerBattingController" as com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerBattingController {
+  ~yetToPlay: Queue<PlayerDetails>
+  ~striker: PlayerDetails
+  ~nonStriker: PlayerDetails
+  --
+  +PlayerBattingController(playing11: Queue<PlayerDetails>)
+  +getNextPlayer(): void
+  +getStriker(): PlayerDetails
+  +setStriker(playerDetails: PlayerDetails): void
+  +getNonStriker(): PlayerDetails
+  +setNonStriker(playerDetails: PlayerDetails): void
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.Team.Player.PlayerBowlingController" as com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerBowlingController {
+  ~bowlersList: Deque<PlayerDetails>
+  ~bowlerVsOverCount: Map<PlayerDetails, Integer>
+  ~currentBowler: PlayerDetails
+  --
+  +PlayerBowlingController(bowlers: List<PlayerDetails>)
+  -setBowlersList(bowlersList: List<PlayerDetails>): void
+  +getNextBowler(maxOverCountPerBowler: int): void
+  +getCurrentBowler(): PlayerDetails
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.Team.Player.PlayerDetails" as com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails {
+  +person: Person
+  +playerType: PlayerType
+  +battingScoreCard: BattingScoreCard
+  +bowlingScoreCard: BowlingScoreCard
+  --
+  +PlayerDetails(person: Person, playerType: PlayerType)
+  +printBattingScoreCard(): void
+  +printBowlingScoreCard(): void
+}
+enum "com.conceptcoding.interviewquestions.cricbuzz.Team.Player.PlayerType" as com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerType {
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.Team.Player.Score.BattingScoreCard" as com_conceptcoding_interviewquestions_cricbuzz_Team_Player_Score_BattingScoreCard {
+  +totalRuns: int
+  +totalBallsPlayed: int
+  +totalFours: int
+  +totalSix: int
+  +strikeRate: double
+  +wicketDetails: Wicket
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.Team.Player.Score.BowlingScoreCard" as com_conceptcoding_interviewquestions_cricbuzz_Team_Player_Score_BowlingScoreCard {
+  +totalOversCount: int
+  +runsGiven: int
+  +wicketsTaken: int
+  +noBallCount: int
+  +wideBallCount: int
+  +economyRate: double
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.Team.Team" as com_conceptcoding_interviewquestions_cricbuzz_Team_Team {
+  +teamName: String
+  +playing11: Queue<PlayerDetails>
+  +bench: List<PlayerDetails>
+  +battingController: PlayerBattingController
+  +bowlingController: PlayerBowlingController
+  +isWinner: boolean
+  --
+  +Team(teamName: String, playing11: Queue<PlayerDetails>, bench: List<PlayerDetails>, bowlers: List<PlayerDetails>)
+  +getTeamName(): String
+  +chooseNextBatsMan(): void
+  +chooseNextBowler(maxOverCountPerBowler: int): void
+  +getStriker(): PlayerDetails
+  +setStriker(player: PlayerDetails): void
+  +getNonStriker(): PlayerDetails
+  +setNonStriker(player: PlayerDetails): void
+  +getCurrentBowler(): PlayerDetails
+  +printBattingScoreCard(): void
+  +printBowlingScoreCard(): void
+  +getTotalRuns(): int
+}
+class "com.conceptcoding.interviewquestions.cricbuzz.Team.Wicket" as com_conceptcoding_interviewquestions_cricbuzz_Team_Wicket {
+  +wicketType: WicketType
+  +takenBy: PlayerDetails
+  +overDetail: OverDetails
+  +ballDetail: BallDetails
+  --
+  +Wicket(wicketType: WicketType, takenBy: PlayerDetails, overDetail: OverDetails, ballDetail: BallDetails)
+}
+enum "com.conceptcoding.interviewquestions.cricbuzz.Team.WicketType" as com_conceptcoding_interviewquestions_cricbuzz_Team_WicketType {
+}
+com_conceptcoding_interviewquestions_cricbuzz_Inning_BallDetails o-- "*" com_conceptcoding_interviewquestions_cricbuzz_ScoreUpdater_ScoreUpdaterObserver : has-a (scoreUpdaterObserverList)
+com_conceptcoding_interviewquestions_cricbuzz_Inning_BallDetails o-- com_conceptcoding_interviewquestions_cricbuzz_Inning_BallType : has-a (ballType)
+com_conceptcoding_interviewquestions_cricbuzz_Inning_BallDetails o-- com_conceptcoding_interviewquestions_cricbuzz_Inning_RunType : has-a (runType)
+com_conceptcoding_interviewquestions_cricbuzz_Inning_BallDetails o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails : has-a (bowledBy)
+com_conceptcoding_interviewquestions_cricbuzz_Inning_BallDetails o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails : has-a (playedBy)
+com_conceptcoding_interviewquestions_cricbuzz_Inning_BallDetails o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Wicket : has-a (wicket)
+com_conceptcoding_interviewquestions_cricbuzz_Inning_InningDetails o-- "*" com_conceptcoding_interviewquestions_cricbuzz_Inning_OverDetails : has-a (overs)
+com_conceptcoding_interviewquestions_cricbuzz_Inning_InningDetails o-- com_conceptcoding_interviewquestions_cricbuzz_MatchType : has-a (matchType)
+com_conceptcoding_interviewquestions_cricbuzz_Inning_InningDetails o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Team : has-a (battingTeam)
+com_conceptcoding_interviewquestions_cricbuzz_Inning_InningDetails o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Team : has-a (bowlingTeam)
+com_conceptcoding_interviewquestions_cricbuzz_Inning_OverDetails o-- "*" com_conceptcoding_interviewquestions_cricbuzz_Inning_BallDetails : has-a (balls)
+com_conceptcoding_interviewquestions_cricbuzz_Inning_OverDetails o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails : has-a (bowledBy)
+com_conceptcoding_interviewquestions_cricbuzz_Match o-- "*" com_conceptcoding_interviewquestions_cricbuzz_Inning_InningDetails : has-a (innings)
+com_conceptcoding_interviewquestions_cricbuzz_Match o-- com_conceptcoding_interviewquestions_cricbuzz_MatchType : has-a (matchType)
+com_conceptcoding_interviewquestions_cricbuzz_Match o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Team : has-a (teamA)
+com_conceptcoding_interviewquestions_cricbuzz_Match o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Team : has-a (teamB)
+com_conceptcoding_interviewquestions_cricbuzz_Match o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Team : has-a (tossWinner)
+com_conceptcoding_interviewquestions_cricbuzz_MatchType <|.. com_conceptcoding_interviewquestions_cricbuzz_OneDayMatch : implements
+com_conceptcoding_interviewquestions_cricbuzz_MatchType <|.. com_conceptcoding_interviewquestions_cricbuzz_T20Match : implements
+com_conceptcoding_interviewquestions_cricbuzz_ScoreUpdater_ScoreUpdaterObserver <|.. com_conceptcoding_interviewquestions_cricbuzz_ScoreUpdater_BattingScoreUpdater : implements
+com_conceptcoding_interviewquestions_cricbuzz_ScoreUpdater_ScoreUpdaterObserver <|.. com_conceptcoding_interviewquestions_cricbuzz_ScoreUpdater_BowlingScoreUpdater : implements
+com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerBattingController o-- "*" com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails : has-a (yetToPlay)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerBattingController o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails : has-a (nonStriker)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerBattingController o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails : has-a (striker)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerBowlingController o-- "*" com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails : has-a (bowlerVsOverCount)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerBowlingController o-- "*" com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails : has-a (bowlersList)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerBowlingController o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails : has-a (currentBowler)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_Person : has-a (person)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerType : has-a (playerType)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_Score_BattingScoreCard : has-a (battingScoreCard)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_Score_BowlingScoreCard : has-a (bowlingScoreCard)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Player_Score_BattingScoreCard o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Wicket : has-a (wicketDetails)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Team o-- "*" com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails : has-a (bench)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Team o-- "*" com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails : has-a (playing11)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Team o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerBattingController : has-a (battingController)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Team o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerBowlingController : has-a (bowlingController)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Wicket o-- com_conceptcoding_interviewquestions_cricbuzz_Inning_BallDetails : has-a (ballDetail)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Wicket o-- com_conceptcoding_interviewquestions_cricbuzz_Inning_OverDetails : has-a (overDetail)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Wicket o-- com_conceptcoding_interviewquestions_cricbuzz_Team_Player_PlayerDetails : has-a (takenBy)
+com_conceptcoding_interviewquestions_cricbuzz_Team_Wicket o-- com_conceptcoding_interviewquestions_cricbuzz_Team_WicketType : has-a (wicketType)
+@enduml

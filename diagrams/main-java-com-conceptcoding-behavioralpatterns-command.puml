@@ -1,0 +1,83 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-behavioralpatterns-command
+class "com.conceptcoding.behavioralpatterns.command.problem.AirConditioner" as com_conceptcoding_behavioralpatterns_command_problem_AirConditioner {
+  ~isOn: boolean
+  ~temperature: int
+  --
+  +turnOn(): void
+  +turnOff(): void
+  +setTemperature(temperature: int): void
+}
+class "com.conceptcoding.behavioralpatterns.command.problem.Bulb" as com_conceptcoding_behavioralpatterns_command_problem_Bulb {
+  ~isOn: boolean
+  --
+  +turnOn(): void
+  +turnOff(): void
+}
+class "com.conceptcoding.behavioralpatterns.command.problem.Client" as com_conceptcoding_behavioralpatterns_command_problem_Client {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.command.solution.AirConditioner" as com_conceptcoding_behavioralpatterns_command_solution_AirConditioner {
+  ~isOn: boolean
+  ~temperature: int
+  --
+  +turnOn(): void
+  +turnOff(): void
+  +isOn(): boolean
+  +setOn(on: boolean): void
+  +getTemperature(): int
+  +setTemperature(temperature: int): void
+}
+class "com.conceptcoding.behavioralpatterns.command.solution.Client" as com_conceptcoding_behavioralpatterns_command_solution_Client {
+  +main(args: String[]): void {static}
+}
+interface "com.conceptcoding.behavioralpatterns.command.solution.ICommand" as com_conceptcoding_behavioralpatterns_command_solution_ICommand {
+  ~execute(): void
+  ~undo(): void
+}
+class "com.conceptcoding.behavioralpatterns.command.solution.RemoteController" as com_conceptcoding_behavioralpatterns_command_solution_RemoteController {
+  ~command: ICommand
+  ~commandHistory: Stack<ICommand>
+  --
+  ~RemoteController()
+  +setCommand(command: ICommand): void
+  +pressButton(): void
+  +undo(): void
+}
+class "com.conceptcoding.behavioralpatterns.command.solution.SetTemperatureCommand" as com_conceptcoding_behavioralpatterns_command_solution_SetTemperatureCommand {
+  -ac: AirConditioner
+  -newTemperature: int
+  -previousTemperature: int
+  --
+  +SetTemperatureCommand(ac: AirConditioner, temperature: int)
+  +execute(): void
+  +undo(): void
+}
+class "com.conceptcoding.behavioralpatterns.command.solution.TurnOffCommand" as com_conceptcoding_behavioralpatterns_command_solution_TurnOffCommand {
+  -ac: AirConditioner
+  -previousState: boolean
+  --
+  +TurnOffCommand(ac: AirConditioner)
+  +execute(): void
+  +undo(): void
+}
+class "com.conceptcoding.behavioralpatterns.command.solution.TurnOnCommand" as com_conceptcoding_behavioralpatterns_command_solution_TurnOnCommand {
+  -ac: AirConditioner
+  -previousState: boolean
+  --
+  +TurnOnCommand(ac: AirConditioner)
+  +execute(): void
+  +undo(): void
+}
+com_conceptcoding_behavioralpatterns_command_solution_ICommand <|.. com_conceptcoding_behavioralpatterns_command_solution_SetTemperatureCommand : implements
+com_conceptcoding_behavioralpatterns_command_solution_ICommand <|.. com_conceptcoding_behavioralpatterns_command_solution_TurnOffCommand : implements
+com_conceptcoding_behavioralpatterns_command_solution_ICommand <|.. com_conceptcoding_behavioralpatterns_command_solution_TurnOnCommand : implements
+com_conceptcoding_behavioralpatterns_command_solution_RemoteController o-- com_conceptcoding_behavioralpatterns_command_solution_ICommand : has-a (command)
+com_conceptcoding_behavioralpatterns_command_solution_RemoteController o-- com_conceptcoding_behavioralpatterns_command_solution_ICommand : has-a (commandHistory)
+com_conceptcoding_behavioralpatterns_command_solution_SetTemperatureCommand o-- com_conceptcoding_behavioralpatterns_command_solution_AirConditioner : has-a (ac)
+com_conceptcoding_behavioralpatterns_command_solution_TurnOffCommand o-- com_conceptcoding_behavioralpatterns_command_solution_AirConditioner : has-a (ac)
+com_conceptcoding_behavioralpatterns_command_solution_TurnOnCommand o-- com_conceptcoding_behavioralpatterns_command_solution_AirConditioner : has-a (ac)
+@enduml

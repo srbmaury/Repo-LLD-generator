@@ -1,0 +1,102 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-behavioralpatterns-state
+class "com.conceptcoding.behavioralpatterns.state.VendingMachineAppDemo" as com_conceptcoding_behavioralpatterns_state_VendingMachineAppDemo {
+  +main(args: String[]): void {static}
+  -fillUpInventory(vendingMachine: VendingMachine): void {static}
+  -displayInventory(vendingMachine: VendingMachine): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.state.context.Inventory" as com_conceptcoding_behavioralpatterns_state_context_Inventory {
+  ~inventory: ItemShelf[]
+  --
+  ~Inventory(itemCount: int)
+  +getInventory(): ItemShelf[]
+  +setInventory(inventory: ItemShelf[]): void
+  +initialEmptyInventory(): void
+  +addItem(item: Item, codeNumber: int): void
+  +getItem(codeNumber: int): Item
+  +updateSoldOutItem(codeNumber: int): void
+}
+class "com.conceptcoding.behavioralpatterns.state.context.Item" as com_conceptcoding_behavioralpatterns_state_context_Item {
+  ~type: ItemType
+  ~price: int
+  --
+  +getType(): ItemType
+  +setType(type: ItemType): void
+  +getPrice(): int
+  +setPrice(price: int): void
+}
+class "com.conceptcoding.behavioralpatterns.state.context.ItemShelf" as com_conceptcoding_behavioralpatterns_state_context_ItemShelf {
+  ~code: int
+  ~item: Item
+  ~soldOut: boolean
+  --
+  +getCode(): int
+  +setCode(code: int): void
+  +getItem(): Item
+  +setItem(item: Item): void
+  +isSoldOut(): boolean
+  +setSoldOut(soldOut: boolean): void
+}
+enum "com.conceptcoding.behavioralpatterns.state.context.ItemType" as com_conceptcoding_behavioralpatterns_state_context_ItemType {
+}
+class "com.conceptcoding.behavioralpatterns.state.context.VendingMachine" as com_conceptcoding_behavioralpatterns_state_context_VendingMachine {
+  -vendingMachineState: State
+  -inventory: Inventory
+  -coinList: List<Coin>
+  --
+  +VendingMachine()
+  +getVendingMachineState(): State
+  +setVendingMachineState(vendingMachineState: State): void
+  +getInventory(): Inventory
+  +setInventory(inventory: Inventory): void
+  +getCoinList(): List<Coin>
+  +setCoinList(coinList: List<Coin>): void
+}
+enum "com.conceptcoding.behavioralpatterns.state.vendingmachinestates.Coin" as com_conceptcoding_behavioralpatterns_state_vendingmachinestates_Coin {
+}
+class "com.conceptcoding.behavioralpatterns.state.vendingmachinestates.State" as com_conceptcoding_behavioralpatterns_state_vendingmachinestates_State {
+  +clickOnInsertCoinButton(machine: VendingMachine): void
+  +clickOnStartProductSelectionButton(machine: VendingMachine): void
+  +insertCoin(machine: VendingMachine, coin: Coin): void
+  +chooseProduct(machine: VendingMachine, codeNumber: int): void
+  +getChange(returnChangeMoney: int): int
+  +dispenseProduct(machine: VendingMachine, codeNumber: int): Item
+  +refundFullMoney(machine: VendingMachine): List<Coin>
+  +updateInventory(machine: VendingMachine, item: Item, codeNumber: int): void
+}
+class "com.conceptcoding.behavioralpatterns.state.vendingmachinestates.impl.DispenseState" as com_conceptcoding_behavioralpatterns_state_vendingmachinestates_impl_DispenseState {
+  ~DispenseState(machine: VendingMachine, codeNumber: int)
+  +dispenseProduct(machine: VendingMachine, codeNumber: int): Item
+}
+class "com.conceptcoding.behavioralpatterns.state.vendingmachinestates.impl.HasMoneyState" as com_conceptcoding_behavioralpatterns_state_vendingmachinestates_impl_HasMoneyState {
+  +HasMoneyState()
+  +clickOnStartProductSelectionButton(machine: VendingMachine): void
+  +insertCoin(machine: VendingMachine, coin: Coin): void
+  +refundFullMoney(machine: VendingMachine): List<Coin>
+}
+class "com.conceptcoding.behavioralpatterns.state.vendingmachinestates.impl.IdleState" as com_conceptcoding_behavioralpatterns_state_vendingmachinestates_impl_IdleState {
+  +IdleState()
+  +IdleState(machine: VendingMachine)
+  +clickOnInsertCoinButton(machine: VendingMachine): void
+  +updateInventory(machine: VendingMachine, item: Item, codeNumber: int): void
+}
+class "com.conceptcoding.behavioralpatterns.state.vendingmachinestates.impl.SelectionState" as com_conceptcoding_behavioralpatterns_state_vendingmachinestates_impl_SelectionState {
+  +SelectionState()
+  +chooseProduct(machine: VendingMachine, codeNumber: int): void
+  +getChange(returnExtraMoney: int): int
+  +refundFullMoney(machine: VendingMachine): List<Coin>
+}
+com_conceptcoding_behavioralpatterns_state_context_Inventory o-- "*" com_conceptcoding_behavioralpatterns_state_context_ItemShelf : has-a (inventory)
+com_conceptcoding_behavioralpatterns_state_context_Item o-- com_conceptcoding_behavioralpatterns_state_context_ItemType : has-a (type)
+com_conceptcoding_behavioralpatterns_state_context_ItemShelf o-- com_conceptcoding_behavioralpatterns_state_context_Item : has-a (item)
+com_conceptcoding_behavioralpatterns_state_context_VendingMachine o-- "*" com_conceptcoding_behavioralpatterns_state_vendingmachinestates_Coin : has-a (coinList)
+com_conceptcoding_behavioralpatterns_state_context_VendingMachine o-- com_conceptcoding_behavioralpatterns_state_context_Inventory : has-a (inventory)
+com_conceptcoding_behavioralpatterns_state_context_VendingMachine o-- com_conceptcoding_behavioralpatterns_state_vendingmachinestates_State : has-a (vendingMachineState)
+com_conceptcoding_behavioralpatterns_state_vendingmachinestates_State <|-- com_conceptcoding_behavioralpatterns_state_vendingmachinestates_impl_DispenseState : is-a
+com_conceptcoding_behavioralpatterns_state_vendingmachinestates_State <|-- com_conceptcoding_behavioralpatterns_state_vendingmachinestates_impl_HasMoneyState : is-a
+com_conceptcoding_behavioralpatterns_state_vendingmachinestates_State <|-- com_conceptcoding_behavioralpatterns_state_vendingmachinestates_impl_IdleState : is-a
+com_conceptcoding_behavioralpatterns_state_vendingmachinestates_State <|-- com_conceptcoding_behavioralpatterns_state_vendingmachinestates_impl_SelectionState : is-a
+@enduml

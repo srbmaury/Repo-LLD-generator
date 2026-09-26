@@ -1,0 +1,60 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-tictactoe
+class "com.conceptcoding.interviewquestions.tictactoe.PlayGame" as com_conceptcoding_interviewquestions_tictactoe_PlayGame {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.interviewquestions.tictactoe.TicTacToeGame" as com_conceptcoding_interviewquestions_tictactoe_TicTacToeGame {
+  ~players: Deque<Player>
+  ~gameBoard: Board
+  ~winner: Player
+  --
+  +initializeGame(): void
+  +startGame(): GameStatus
+  +checkForWinner(row: int, column: int, pieceType: PieceType): boolean
+}
+class "com.conceptcoding.interviewquestions.tictactoe.model.Board" as com_conceptcoding_interviewquestions_tictactoe_model_Board {
+  +size: int
+  +board: PlayingPiece[][]
+  --
+  +Board(size: int)
+  +addPiece(row: int, column: int, playingPiece: PlayingPiece): boolean
+  +getFreeCells(): List<Pair<Integer, Integer>>
+  +printBoard(): void
+}
+enum "com.conceptcoding.interviewquestions.tictactoe.model.GameStatus" as com_conceptcoding_interviewquestions_tictactoe_model_GameStatus {
+}
+enum "com.conceptcoding.interviewquestions.tictactoe.model.PieceType" as com_conceptcoding_interviewquestions_tictactoe_model_PieceType {
+}
+class "com.conceptcoding.interviewquestions.tictactoe.model.Player" as com_conceptcoding_interviewquestions_tictactoe_model_Player {
+  +name: String
+  +playingPiece: PlayingPiece
+  --
+  +Player(name: String, playingPiece: PlayingPiece)
+  +getName(): String
+  +setName(name: String): void
+  +getPlayingPiece(): PlayingPiece
+  +setPlayingPiece(playingPiece: PlayingPiece): void
+}
+class "com.conceptcoding.interviewquestions.tictactoe.model.PlayingPiece" as com_conceptcoding_interviewquestions_tictactoe_model_PlayingPiece {
+  +pieceType: PieceType
+  --
+  ~PlayingPiece(pieceType: PieceType)
+}
+class "com.conceptcoding.interviewquestions.tictactoe.model.PlayingPieceO" as com_conceptcoding_interviewquestions_tictactoe_model_PlayingPieceO {
+  +PlayingPieceO()
+}
+class "com.conceptcoding.interviewquestions.tictactoe.model.PlayingPieceX" as com_conceptcoding_interviewquestions_tictactoe_model_PlayingPieceX {
+  +PlayingPieceX()
+}
+com_conceptcoding_interviewquestions_tictactoe_TicTacToeGame o-- "*" com_conceptcoding_interviewquestions_tictactoe_model_Player : has-a (players)
+com_conceptcoding_interviewquestions_tictactoe_TicTacToeGame o-- com_conceptcoding_interviewquestions_tictactoe_model_Board : has-a (gameBoard)
+com_conceptcoding_interviewquestions_tictactoe_TicTacToeGame o-- com_conceptcoding_interviewquestions_tictactoe_model_Player : has-a (winner)
+com_conceptcoding_interviewquestions_tictactoe_model_Board o-- "*" com_conceptcoding_interviewquestions_tictactoe_model_PlayingPiece : has-a (board)
+com_conceptcoding_interviewquestions_tictactoe_model_Player o-- com_conceptcoding_interviewquestions_tictactoe_model_PlayingPiece : has-a (playingPiece)
+com_conceptcoding_interviewquestions_tictactoe_model_PlayingPiece <|-- com_conceptcoding_interviewquestions_tictactoe_model_PlayingPieceO : is-a
+com_conceptcoding_interviewquestions_tictactoe_model_PlayingPiece <|-- com_conceptcoding_interviewquestions_tictactoe_model_PlayingPieceX : is-a
+com_conceptcoding_interviewquestions_tictactoe_model_PlayingPiece o-- com_conceptcoding_interviewquestions_tictactoe_model_PieceType : has-a (pieceType)
+@enduml

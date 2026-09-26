@@ -1,0 +1,137 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-atm
+class "com.conceptcoding.interviewquestions.atm.ATMRoomComponents.ATM" as com_conceptcoding_interviewquestions_atm_ATMRoomComponents_ATM {
+  -atmObject: ATM
+  ~currentATMState: ATMState
+  ~noOfTwoThousandNotes: int
+  ~noOfFiveHundredNotes: int
+  ~noOfOneHundredNotes: int
+  -atmBalance: int
+  --
+  -ATM()
+  +getATMObject(): ATM {static}
+  +getCurrentATMState(): ATMState
+  +setCurrentATMState(currentATMState: ATMState): void
+  +getAtmBalance(): int
+  +setAtmBalance(atmBalance: int, noOfTwoThousandNotes: int, noOfFiveHundredNotes: int, noOfOneHundredNotes: int): void
+  +getNoOfTwoThousandNotes(): int
+  +getNoOfFiveHundredNotes(): int
+  +getNoOfOneHundredNotes(): int
+  +deductATMBalance(amount: int): void
+  +deductTwoThousandNotes(number: int): void
+  +deductFiveHundredNotes(number: int): void
+  +deductOneHundredNotes(number: int): void
+  +printCurrentATMStatus(): void
+}
+class "com.conceptcoding.interviewquestions.atm.ATMRoomComponents.ATMRoom" as com_conceptcoding_interviewquestions_atm_ATMRoomComponents_ATMRoom {
+  ~atm: ATM
+  ~user: User
+  --
+  +main(args: String[]): void {static}
+  -initialize(): void
+  -createUser(): User
+  -createCard(): Card
+  -createBankAccount(): UserBankAccount
+}
+class "com.conceptcoding.interviewquestions.atm.ATMRoomComponents.Card" as com_conceptcoding_interviewquestions_atm_ATMRoomComponents_Card {
+  ~PIN_NUMBER: int
+  -cardNumber: int
+  -cvv: int
+  -expiryDate: int
+  -holderName: int
+  -bankAccount: UserBankAccount
+  --
+  +isCorrectPINEntered(pin: int): boolean
+  +getBankBalance(): int
+  +deductBankBalance(amount: int): void
+  +setBankAccount(bankAccount: UserBankAccount): void
+}
+class "com.conceptcoding.interviewquestions.atm.ATMRoomComponents.User" as com_conceptcoding_interviewquestions_atm_ATMRoomComponents_User {
+  ~card: Card
+  ~bankAccount: UserBankAccount
+  --
+  +getCard(): Card
+  +setCard(card: Card): void
+}
+class "com.conceptcoding.interviewquestions.atm.ATMRoomComponents.UserBankAccount" as com_conceptcoding_interviewquestions_atm_ATMRoomComponents_UserBankAccount {
+  ~balance: int
+  --
+  +withdrawalBalance(amount: int): void
+  +getBalance(): int
+  +setBalance(balance: int): void
+}
+class "com.conceptcoding.interviewquestions.atm.ATMStates.ATMState" as com_conceptcoding_interviewquestions_atm_ATMStates_ATMState {
+  +insertCard(atm: ATM, card: Card): void
+  +authenticatePin(atm: ATM, card: Card, pin: int): void
+  +selectOperation(atm: ATM, card: Card, txnType: TransactionType): void
+  +cashWithdrawal(atm: ATM, card: Card, withdrawAmount: int): void
+  +displayBalance(atm: ATM, card: Card): void
+  +returnCard(): void
+  +exit(atm: ATM): void
+}
+class "com.conceptcoding.interviewquestions.atm.ATMStates.CashWithdrawalState" as com_conceptcoding_interviewquestions_atm_ATMStates_CashWithdrawalState {
+  +CashWithdrawalState()
+  +cashWithdrawal(atmObject: ATM, card: Card, withdrawalAmountRequest: int): void
+  +exit(atmObject: ATM): void
+  +returnCard(): void
+}
+class "com.conceptcoding.interviewquestions.atm.ATMStates.CheckBalanceState" as com_conceptcoding_interviewquestions_atm_ATMStates_CheckBalanceState {
+  +CheckBalanceState()
+  +displayBalance(atm: ATM, card: Card): void
+  +exit(atmObject: ATM): void
+  +returnCard(): void
+}
+class "com.conceptcoding.interviewquestions.atm.ATMStates.HasCardState" as com_conceptcoding_interviewquestions_atm_ATMStates_HasCardState {
+  +HasCardState()
+  +authenticatePin(atm: ATM, card: Card, pin: int): void
+  +exit(atm: ATM): void
+  +returnCard(): void
+}
+class "com.conceptcoding.interviewquestions.atm.ATMStates.IdleState" as com_conceptcoding_interviewquestions_atm_ATMStates_IdleState {
+  +insertCard(atm: ATM, card: Card): void
+}
+class "com.conceptcoding.interviewquestions.atm.ATMStates.SelectOperationState" as com_conceptcoding_interviewquestions_atm_ATMStates_SelectOperationState {
+  +SelectOperationState()
+  +selectOperation(atmObject: ATM, card: Card, txnType: TransactionType): void
+  +exit(atmObject: ATM): void
+  +returnCard(): void
+  -showOperations(): void
+}
+class "com.conceptcoding.interviewquestions.atm.AmountWithdrawal.CashWithdrawProcessor" as com_conceptcoding_interviewquestions_atm_AmountWithdrawal_CashWithdrawProcessor {
+  ~nextCashWithdrawalProcessor: CashWithdrawProcessor
+  --
+  ~CashWithdrawProcessor(cashWithdrawalProcessor: CashWithdrawProcessor)
+  +withdraw(atm: ATM, remainingAmount: int): void
+}
+class "com.conceptcoding.interviewquestions.atm.AmountWithdrawal.FiveHundredWithdrawProcessor" as com_conceptcoding_interviewquestions_atm_AmountWithdrawal_FiveHundredWithdrawProcessor {
+  +FiveHundredWithdrawProcessor(nextCashWithdrawProcessor: CashWithdrawProcessor)
+  +withdraw(atm: ATM, remainingAmount: int): void
+}
+class "com.conceptcoding.interviewquestions.atm.AmountWithdrawal.OneHundredWithdrawProcessor" as com_conceptcoding_interviewquestions_atm_AmountWithdrawal_OneHundredWithdrawProcessor {
+  +OneHundredWithdrawProcessor(nextCashWithdrawProcessor: CashWithdrawProcessor)
+  +withdraw(atm: ATM, remainingAmount: int): void
+}
+class "com.conceptcoding.interviewquestions.atm.AmountWithdrawal.TwoThousandWithdrawProcessor" as com_conceptcoding_interviewquestions_atm_AmountWithdrawal_TwoThousandWithdrawProcessor {
+  +TwoThousandWithdrawProcessor(nextCashWithdrawProcessor: CashWithdrawProcessor)
+  +withdraw(atm: ATM, remainingAmount: int): void
+}
+enum "com.conceptcoding.interviewquestions.atm.enums.TransactionType" as com_conceptcoding_interviewquestions_atm_enums_TransactionType {
+}
+com_conceptcoding_interviewquestions_atm_ATMRoomComponents_ATM o-- com_conceptcoding_interviewquestions_atm_ATMStates_ATMState : has-a (currentATMState)
+com_conceptcoding_interviewquestions_atm_ATMRoomComponents_ATMRoom o-- com_conceptcoding_interviewquestions_atm_ATMRoomComponents_ATM : has-a (atm)
+com_conceptcoding_interviewquestions_atm_ATMRoomComponents_ATMRoom o-- com_conceptcoding_interviewquestions_atm_ATMRoomComponents_User : has-a (user)
+com_conceptcoding_interviewquestions_atm_ATMRoomComponents_Card o-- com_conceptcoding_interviewquestions_atm_ATMRoomComponents_UserBankAccount : has-a (bankAccount)
+com_conceptcoding_interviewquestions_atm_ATMRoomComponents_User o-- com_conceptcoding_interviewquestions_atm_ATMRoomComponents_Card : has-a (card)
+com_conceptcoding_interviewquestions_atm_ATMRoomComponents_User o-- com_conceptcoding_interviewquestions_atm_ATMRoomComponents_UserBankAccount : has-a (bankAccount)
+com_conceptcoding_interviewquestions_atm_ATMStates_ATMState <|-- com_conceptcoding_interviewquestions_atm_ATMStates_CashWithdrawalState : is-a
+com_conceptcoding_interviewquestions_atm_ATMStates_ATMState <|-- com_conceptcoding_interviewquestions_atm_ATMStates_CheckBalanceState : is-a
+com_conceptcoding_interviewquestions_atm_ATMStates_ATMState <|-- com_conceptcoding_interviewquestions_atm_ATMStates_HasCardState : is-a
+com_conceptcoding_interviewquestions_atm_ATMStates_ATMState <|-- com_conceptcoding_interviewquestions_atm_ATMStates_IdleState : is-a
+com_conceptcoding_interviewquestions_atm_ATMStates_ATMState <|-- com_conceptcoding_interviewquestions_atm_ATMStates_SelectOperationState : is-a
+com_conceptcoding_interviewquestions_atm_AmountWithdrawal_CashWithdrawProcessor <|-- com_conceptcoding_interviewquestions_atm_AmountWithdrawal_FiveHundredWithdrawProcessor : is-a
+com_conceptcoding_interviewquestions_atm_AmountWithdrawal_CashWithdrawProcessor <|-- com_conceptcoding_interviewquestions_atm_AmountWithdrawal_OneHundredWithdrawProcessor : is-a
+com_conceptcoding_interviewquestions_atm_AmountWithdrawal_CashWithdrawProcessor <|-- com_conceptcoding_interviewquestions_atm_AmountWithdrawal_TwoThousandWithdrawProcessor : is-a
+@enduml

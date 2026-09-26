@@ -1,0 +1,49 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-video1solid-interfacesegregation
+class "com.conceptcoding.video1solid.interfacesegregation.solution.Chef" as com_conceptcoding_video1solid_interfacesegregation_solution_Chef {
+  +prepareFood(): void
+  +decideMenu(): void
+}
+interface "com.conceptcoding.video1solid.interfacesegregation.solution.ChefTasks" as com_conceptcoding_video1solid_interfacesegregation_solution_ChefTasks {
+  ~prepareFood(): void
+  ~decideMenu(): void
+}
+interface "com.conceptcoding.video1solid.interfacesegregation.solution.MaintenanceTasks" as com_conceptcoding_video1solid_interfacesegregation_solution_MaintenanceTasks {
+  ~cleanTheKitchen(): void
+  ~reStockGroceries(): void
+}
+class "com.conceptcoding.video1solid.interfacesegregation.solution.SolutionDemo" as com_conceptcoding_video1solid_interfacesegregation_solution_SolutionDemo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.video1solid.interfacesegregation.solution.Waiter" as com_conceptcoding_video1solid_interfacesegregation_solution_Waiter {
+  +serveFoodAndDrinks(): void
+  +takeOrder(): void
+}
+interface "com.conceptcoding.video1solid.interfacesegregation.solution.WaiterTasks" as com_conceptcoding_video1solid_interfacesegregation_solution_WaiterTasks {
+  ~serveFoodAndDrinks(): void
+  ~takeOrder(): void
+}
+interface "com.conceptcoding.video1solid.interfacesegregation.violation.RestaurantEmployee" as com_conceptcoding_video1solid_interfacesegregation_violation_RestaurantEmployee {
+  ~prepareFood(): void
+  ~decideMenu(): void
+  ~serveFoodAndDrinks(): void
+  ~takeOrder(): void
+  ~cleanTheKitchen(): void
+}
+class "com.conceptcoding.video1solid.interfacesegregation.violation.ViolationDemo" as com_conceptcoding_video1solid_interfacesegregation_violation_ViolationDemo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.video1solid.interfacesegregation.violation.Waiter" as com_conceptcoding_video1solid_interfacesegregation_violation_Waiter {
+  +takeOrder(): void
+  +serveFoodAndDrinks(): void
+  +cleanTheKitchen(): void
+  +prepareFood(): void
+  +decideMenu(): void
+}
+com_conceptcoding_video1solid_interfacesegregation_solution_ChefTasks <|.. com_conceptcoding_video1solid_interfacesegregation_solution_Chef : implements
+com_conceptcoding_video1solid_interfacesegregation_solution_WaiterTasks <|.. com_conceptcoding_video1solid_interfacesegregation_solution_Waiter : implements
+com_conceptcoding_video1solid_interfacesegregation_violation_RestaurantEmployee <|.. com_conceptcoding_video1solid_interfacesegregation_violation_Waiter : implements
+@enduml

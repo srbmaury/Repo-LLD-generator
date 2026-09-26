@@ -1,0 +1,30 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-structuralpatterns-proxy
+interface "com.conceptcoding.structuralpatterns.proxy.EmployeeDao" as com_conceptcoding_structuralpatterns_proxy_EmployeeDao {
+  ~getEmployeeInfo(empID: int): void
+  ~createEmployee(obj: EmployeeDo): void
+}
+class "com.conceptcoding.structuralpatterns.proxy.EmployeeDaoImpl" as com_conceptcoding_structuralpatterns_proxy_EmployeeDaoImpl {
+  +getEmployeeInfo(empID: int): void
+  +createEmployee(obj: EmployeeDo): void
+}
+class "com.conceptcoding.structuralpatterns.proxy.EmployeeDaoProxy" as com_conceptcoding_structuralpatterns_proxy_EmployeeDaoProxy {
+  -empDaoObj: EmployeeDao
+  -clientRole: String
+  --
+  +EmployeeDaoProxy(clientRole: String)
+  +getEmployeeInfo(empID: int): void
+  +createEmployee(obj: EmployeeDo): void
+}
+class "com.conceptcoding.structuralpatterns.proxy.EmployeeDo" as com_conceptcoding_structuralpatterns_proxy_EmployeeDo {
+}
+class "com.conceptcoding.structuralpatterns.proxy.EmployeeManagement" as com_conceptcoding_structuralpatterns_proxy_EmployeeManagement {
+  +main(args: String[]): void {static}
+}
+com_conceptcoding_structuralpatterns_proxy_EmployeeDao <|.. com_conceptcoding_structuralpatterns_proxy_EmployeeDaoImpl : implements
+com_conceptcoding_structuralpatterns_proxy_EmployeeDao <|.. com_conceptcoding_structuralpatterns_proxy_EmployeeDaoProxy : implements
+com_conceptcoding_structuralpatterns_proxy_EmployeeDaoProxy o-- com_conceptcoding_structuralpatterns_proxy_EmployeeDao : has-a (empDaoObj)
+@enduml

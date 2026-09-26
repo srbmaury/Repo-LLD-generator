@@ -1,0 +1,42 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-video1solid-openclosed
+class "com.conceptcoding.video1solid.openclosed.solution.DatabaseInvoiceDao" as com_conceptcoding_video1solid_openclosed_solution_DatabaseInvoiceDao {
+  ~invoice: Invoice
+  --
+  +DatabaseInvoiceDao(invoice: Invoice)
+  +save(): void
+}
+class "com.conceptcoding.video1solid.openclosed.solution.FileInvoiceDao" as com_conceptcoding_video1solid_openclosed_solution_FileInvoiceDao {
+  ~invoice: Invoice
+  --
+  +FileInvoiceDao(invoice: Invoice)
+  +save(): void
+}
+interface "com.conceptcoding.video1solid.openclosed.solution.InvoiceDao" as com_conceptcoding_video1solid_openclosed_solution_InvoiceDao {
+  ~save(): void
+}
+class "com.conceptcoding.video1solid.openclosed.solution.SolutionDemo" as com_conceptcoding_video1solid_openclosed_solution_SolutionDemo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.video1solid.openclosed.violation.InvoiceDao" as com_conceptcoding_video1solid_openclosed_violation_InvoiceDao {
+  ~invoice: Invoice
+  --
+  +InvoiceDao(invoice: Invoice)
+  +saveToDB(): void
+  +saveToFile(): void
+}
+class "com.conceptcoding.video1solid.openclosed.violation.InvoiceDaoOld" as com_conceptcoding_video1solid_openclosed_violation_InvoiceDaoOld {
+  ~invoice: Invoice
+  --
+  +InvoiceDaoOld(invoice: Invoice)
+  +saveToDB(): void
+}
+class "com.conceptcoding.video1solid.openclosed.violation.ViolationDemo" as com_conceptcoding_video1solid_openclosed_violation_ViolationDemo {
+  +main(args: String[]): void {static}
+}
+com_conceptcoding_video1solid_openclosed_solution_InvoiceDao <|.. com_conceptcoding_video1solid_openclosed_solution_DatabaseInvoiceDao : implements
+com_conceptcoding_video1solid_openclosed_solution_InvoiceDao <|.. com_conceptcoding_video1solid_openclosed_solution_FileInvoiceDao : implements
+@enduml

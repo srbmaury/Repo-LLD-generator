@@ -1,0 +1,44 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-behavioralpatterns-memento
+class "com.conceptcoding.behavioralpatterns.memento.ApplicationConfiguration" as com_conceptcoding_behavioralpatterns_memento_ApplicationConfiguration {
+  -theme: String
+  -fontSize: int
+  -notificationsEnabled: boolean
+  -language: String
+  --
+  +ApplicationConfiguration(theme: String, fontSize: int, notificationsEnabled: boolean, language: String)
+  +save(): ConfigurationMemento
+  +restore(memento: ConfigurationMemento): void
+  +setTheme(theme: String): void
+  +setFontSize(fontSize: int): void
+  +setNotificationsEnabled(enabled: boolean): void
+  +setLanguage(language: String): void
+  +toString(): String
+}
+class "com.conceptcoding.behavioralpatterns.memento.ConfigurationManager" as com_conceptcoding_behavioralpatterns_memento_ConfigurationManager {
+  -history: Stack<ConfigurationMemento>
+  --
+  +saveState(appConfig: ApplicationConfiguration): void
+  +undo(appConfig: ApplicationConfiguration): void
+}
+class "com.conceptcoding.behavioralpatterns.memento.ConfigurationMemento" as com_conceptcoding_behavioralpatterns_memento_ConfigurationMemento {
+  -theme: String
+  -fontSize: int
+  -notificationsEnabled: boolean
+  -language: String
+  --
+  +ConfigurationMemento(theme: String, fontSize: int, notificationsEnabled: boolean, language: String)
+  ~getTheme(): String
+  ~getFontSize(): int
+  ~isNotificationsEnabled(): boolean
+  ~getLanguage(): String
+  +toString(): String
+}
+class "com.conceptcoding.behavioralpatterns.memento.MementoDemo" as com_conceptcoding_behavioralpatterns_memento_MementoDemo {
+  +main(args: String[]): void {static}
+}
+com_conceptcoding_behavioralpatterns_memento_ConfigurationManager o-- com_conceptcoding_behavioralpatterns_memento_ConfigurationMemento : has-a (history)
+@enduml

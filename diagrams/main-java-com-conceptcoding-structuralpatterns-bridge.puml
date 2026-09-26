@@ -1,0 +1,68 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-structuralpatterns-bridge
+class "com.conceptcoding.structuralpatterns.bridge.problem.Demo" as com_conceptcoding_structuralpatterns_bridge_problem_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.structuralpatterns.bridge.problem.Dog" as com_conceptcoding_structuralpatterns_bridge_problem_Dog {
+  +breathe(): void
+}
+class "com.conceptcoding.structuralpatterns.bridge.problem.Fish" as com_conceptcoding_structuralpatterns_bridge_problem_Fish {
+  +breathe(): void
+}
+class "com.conceptcoding.structuralpatterns.bridge.problem.LivingThings" as com_conceptcoding_structuralpatterns_bridge_problem_LivingThings {
+  +breathe(): void {abstract}
+}
+class "com.conceptcoding.structuralpatterns.bridge.problem.Tree" as com_conceptcoding_structuralpatterns_bridge_problem_Tree {
+  +breathe(): void
+}
+class "com.conceptcoding.structuralpatterns.bridge.problem.Whale" as com_conceptcoding_structuralpatterns_bridge_problem_Whale {
+  +breathe(): void
+}
+interface "com.conceptcoding.structuralpatterns.bridge.solution.BreathingProcess" as com_conceptcoding_structuralpatterns_bridge_solution_BreathingProcess {
+  ~breathe(): void
+}
+class "com.conceptcoding.structuralpatterns.bridge.solution.Client" as com_conceptcoding_structuralpatterns_bridge_solution_Client {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.structuralpatterns.bridge.solution.Dog" as com_conceptcoding_structuralpatterns_bridge_solution_Dog {
+  +Dog(breathingProcess: BreathingProcess)
+  +breathe(): void
+}
+class "com.conceptcoding.structuralpatterns.bridge.solution.Fish" as com_conceptcoding_structuralpatterns_bridge_solution_Fish {
+  +Fish(breathingProcess: BreathingProcess)
+  +breathe(): void
+}
+class "com.conceptcoding.structuralpatterns.bridge.solution.GillBreathing" as com_conceptcoding_structuralpatterns_bridge_solution_GillBreathing {
+  +breathe(): void
+}
+class "com.conceptcoding.structuralpatterns.bridge.solution.LivingThings" as com_conceptcoding_structuralpatterns_bridge_solution_LivingThings {
+  #breathingProcess: BreathingProcess
+  --
+  +LivingThings(breathingProcess: BreathingProcess)
+  +breathe(): void {abstract}
+}
+class "com.conceptcoding.structuralpatterns.bridge.solution.LungBreathing" as com_conceptcoding_structuralpatterns_bridge_solution_LungBreathing {
+  +breathe(): void
+}
+class "com.conceptcoding.structuralpatterns.bridge.solution.Photosynthesis" as com_conceptcoding_structuralpatterns_bridge_solution_Photosynthesis {
+  +breathe(): void
+}
+class "com.conceptcoding.structuralpatterns.bridge.solution.Tree" as com_conceptcoding_structuralpatterns_bridge_solution_Tree {
+  +Tree(breathingProcess: BreathingProcess)
+  +breathe(): void
+}
+com_conceptcoding_structuralpatterns_bridge_problem_LivingThings <|-- com_conceptcoding_structuralpatterns_bridge_problem_Dog : is-a
+com_conceptcoding_structuralpatterns_bridge_problem_LivingThings <|-- com_conceptcoding_structuralpatterns_bridge_problem_Fish : is-a
+com_conceptcoding_structuralpatterns_bridge_problem_LivingThings <|-- com_conceptcoding_structuralpatterns_bridge_problem_Tree : is-a
+com_conceptcoding_structuralpatterns_bridge_problem_LivingThings <|-- com_conceptcoding_structuralpatterns_bridge_problem_Whale : is-a
+com_conceptcoding_structuralpatterns_bridge_solution_BreathingProcess <|.. com_conceptcoding_structuralpatterns_bridge_solution_GillBreathing : implements
+com_conceptcoding_structuralpatterns_bridge_solution_BreathingProcess <|.. com_conceptcoding_structuralpatterns_bridge_solution_LungBreathing : implements
+com_conceptcoding_structuralpatterns_bridge_solution_BreathingProcess <|.. com_conceptcoding_structuralpatterns_bridge_solution_Photosynthesis : implements
+com_conceptcoding_structuralpatterns_bridge_solution_LivingThings <|-- com_conceptcoding_structuralpatterns_bridge_solution_Dog : is-a
+com_conceptcoding_structuralpatterns_bridge_solution_LivingThings <|-- com_conceptcoding_structuralpatterns_bridge_solution_Fish : is-a
+com_conceptcoding_structuralpatterns_bridge_solution_LivingThings <|-- com_conceptcoding_structuralpatterns_bridge_solution_Tree : is-a
+com_conceptcoding_structuralpatterns_bridge_solution_LivingThings o-- com_conceptcoding_structuralpatterns_bridge_solution_BreathingProcess : has-a (breathingProcess)
+@enduml

@@ -1,0 +1,46 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-behavioralpatterns-interpreter
+interface "com.conceptcoding.behavioralpatterns.interpreter.AbstractExpression" as com_conceptcoding_behavioralpatterns_interpreter_AbstractExpression {
+  ~interpret(context: Context): int
+}
+class "com.conceptcoding.behavioralpatterns.interpreter.AddNonTerminalExpression" as com_conceptcoding_behavioralpatterns_interpreter_AddNonTerminalExpression {
+  -rightExpression: AbstractExpression
+  -leftExpression: AbstractExpression
+  --
+  +AddNonTerminalExpression(left: AbstractExpression, right: AbstractExpression)
+  +interpret(context: Context): int
+}
+class "com.conceptcoding.behavioralpatterns.interpreter.Client" as com_conceptcoding_behavioralpatterns_interpreter_Client {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.interpreter.Context" as com_conceptcoding_behavioralpatterns_interpreter_Context {
+  -variables: Map<String, Integer>
+  --
+  +setVariable(name: String, value: int): void
+  +getVariable(name: String): int
+  +toString(): String
+}
+class "com.conceptcoding.behavioralpatterns.interpreter.MultiplyNonTerminalExpression" as com_conceptcoding_behavioralpatterns_interpreter_MultiplyNonTerminalExpression {
+  -leftExpression: AbstractExpression
+  -rightExpression: AbstractExpression
+  --
+  +MultiplyNonTerminalExpression(left: AbstractExpression, right: AbstractExpression)
+  +interpret(context: Context): int
+}
+class "com.conceptcoding.behavioralpatterns.interpreter.NumberTerminalExpression" as com_conceptcoding_behavioralpatterns_interpreter_NumberTerminalExpression {
+  ~stringValue: String
+  --
+  ~NumberTerminalExpression(stringVal: String)
+  +interpret(context: Context): int
+}
+com_conceptcoding_behavioralpatterns_interpreter_AbstractExpression <|.. com_conceptcoding_behavioralpatterns_interpreter_AddNonTerminalExpression : implements
+com_conceptcoding_behavioralpatterns_interpreter_AbstractExpression <|.. com_conceptcoding_behavioralpatterns_interpreter_MultiplyNonTerminalExpression : implements
+com_conceptcoding_behavioralpatterns_interpreter_AbstractExpression <|.. com_conceptcoding_behavioralpatterns_interpreter_NumberTerminalExpression : implements
+com_conceptcoding_behavioralpatterns_interpreter_AddNonTerminalExpression o-- com_conceptcoding_behavioralpatterns_interpreter_AbstractExpression : has-a (leftExpression)
+com_conceptcoding_behavioralpatterns_interpreter_AddNonTerminalExpression o-- com_conceptcoding_behavioralpatterns_interpreter_AbstractExpression : has-a (rightExpression)
+com_conceptcoding_behavioralpatterns_interpreter_MultiplyNonTerminalExpression o-- com_conceptcoding_behavioralpatterns_interpreter_AbstractExpression : has-a (leftExpression)
+com_conceptcoding_behavioralpatterns_interpreter_MultiplyNonTerminalExpression o-- com_conceptcoding_behavioralpatterns_interpreter_AbstractExpression : has-a (rightExpression)
+@enduml

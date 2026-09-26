@@ -1,0 +1,113 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-video1solid-liskovsubstitution
+class "com.conceptcoding.video1solid.liskovsubstitution.example1.solution.Bicycle" as com_conceptcoding_video1solid_liskovsubstitution_example1_solution_Bicycle {
+  ~brand: String
+  ~hasGears: Boolean
+  ~speed: int
+  --
+  +Bicycle(brand: String, hasGears: Boolean, speed: int)
+  +accelerate(): void
+  +applyBrakes(): void
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example1.solution.Bike" as com_conceptcoding_video1solid_liskovsubstitution_example1_solution_Bike {
+  +accelerate(): void {abstract}
+  +applyBrakes(): void {abstract}
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example1.solution.Demo" as com_conceptcoding_video1solid_liskovsubstitution_example1_solution_Demo {
+  +main(args: String[]): void {static}
+}
+interface "com.conceptcoding.video1solid.liskovsubstitution.example1.solution.Engine" as com_conceptcoding_video1solid_liskovsubstitution_example1_solution_Engine {
+  ~turnOnEngine(): void
+  ~turnOffEngine(): void
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example1.solution.MotorCycle" as com_conceptcoding_video1solid_liskovsubstitution_example1_solution_MotorCycle {
+  ~company: String
+  ~isEngineOn: boolean
+  ~speed: int
+  --
+  +MotorCycle(company: String, speed: int)
+  +turnOnEngine(): void
+  +turnOffEngine(): void
+  +accelerate(): void
+  +applyBrakes(): void
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example1.violation.Bicycle" as com_conceptcoding_video1solid_liskovsubstitution_example1_violation_Bicycle {
+  ~brand: String
+  ~hasGears: Boolean
+  ~speed: int
+  --
+  +Bicycle(brand: String, hasGears: Boolean, speed: int)
+  +turnOnEngine(): void
+  +turnOffEngine(): void
+  +accelerate(): void
+  +applyBrakes(): void
+}
+interface "com.conceptcoding.video1solid.liskovsubstitution.example1.violation.Bike" as com_conceptcoding_video1solid_liskovsubstitution_example1_violation_Bike {
+  ~turnOnEngine(): void
+  ~turnOffEngine(): void
+  ~accelerate(): void
+  ~applyBrakes(): void
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example1.violation.Demo" as com_conceptcoding_video1solid_liskovsubstitution_example1_violation_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example1.violation.MotorCycle" as com_conceptcoding_video1solid_liskovsubstitution_example1_violation_MotorCycle {
+  ~company: String
+  ~isEngineOn: boolean
+  ~speed: int
+  --
+  +MotorCycle(company: String, speed: int)
+  +turnOnEngine(): void
+  +turnOffEngine(): void
+  +accelerate(): void
+  +applyBrakes(): void
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example2.solution.Bicycle" as com_conceptcoding_video1solid_liskovsubstitution_example2_solution_Bicycle {
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example2.solution.Car" as com_conceptcoding_video1solid_liskovsubstitution_example2_solution_Car {
+  +getNumberOfWheels(): Integer
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example2.solution.EngineVehicle" as com_conceptcoding_video1solid_liskovsubstitution_example2_solution_EngineVehicle {
+  +hasEngine(): Boolean
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example2.solution.MotorCycle" as com_conceptcoding_video1solid_liskovsubstitution_example2_solution_MotorCycle {
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example2.solution.SolutionDemo" as com_conceptcoding_video1solid_liskovsubstitution_example2_solution_SolutionDemo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example2.solution.Vehicle" as com_conceptcoding_video1solid_liskovsubstitution_example2_solution_Vehicle {
+  +getNumberOfWheels(): Integer
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example2.violation.Bicycle" as com_conceptcoding_video1solid_liskovsubstitution_example2_violation_Bicycle {
+  +hasEngine(): Boolean
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example2.violation.Car" as com_conceptcoding_video1solid_liskovsubstitution_example2_violation_Car {
+  +getNumberOfWheels(): Integer
+  +getSpecifications(): String
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example2.violation.MotorCycle" as com_conceptcoding_video1solid_liskovsubstitution_example2_violation_MotorCycle {
+  +getSpecifications(): String
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example2.violation.Vehicle" as com_conceptcoding_video1solid_liskovsubstitution_example2_violation_Vehicle {
+  +getNumberOfWheels(): Integer
+  +hasEngine(): Boolean
+}
+class "com.conceptcoding.video1solid.liskovsubstitution.example2.violation.ViolationDemo" as com_conceptcoding_video1solid_liskovsubstitution_example2_violation_ViolationDemo {
+  +main(args: String[]): void {static}
+}
+com_conceptcoding_video1solid_liskovsubstitution_example1_solution_Bike <|-- com_conceptcoding_video1solid_liskovsubstitution_example1_solution_Bicycle : is-a
+com_conceptcoding_video1solid_liskovsubstitution_example1_solution_Bike <|-- com_conceptcoding_video1solid_liskovsubstitution_example1_solution_MotorCycle : is-a
+com_conceptcoding_video1solid_liskovsubstitution_example1_solution_Engine <|.. com_conceptcoding_video1solid_liskovsubstitution_example1_solution_MotorCycle : implements
+com_conceptcoding_video1solid_liskovsubstitution_example1_violation_Bike <|.. com_conceptcoding_video1solid_liskovsubstitution_example1_violation_Bicycle : implements
+com_conceptcoding_video1solid_liskovsubstitution_example1_violation_Bike <|.. com_conceptcoding_video1solid_liskovsubstitution_example1_violation_MotorCycle : implements
+com_conceptcoding_video1solid_liskovsubstitution_example2_solution_EngineVehicle <|-- com_conceptcoding_video1solid_liskovsubstitution_example2_solution_Car : is-a
+com_conceptcoding_video1solid_liskovsubstitution_example2_solution_EngineVehicle <|-- com_conceptcoding_video1solid_liskovsubstitution_example2_solution_MotorCycle : is-a
+com_conceptcoding_video1solid_liskovsubstitution_example2_solution_Vehicle <|-- com_conceptcoding_video1solid_liskovsubstitution_example2_solution_Bicycle : is-a
+com_conceptcoding_video1solid_liskovsubstitution_example2_solution_Vehicle <|-- com_conceptcoding_video1solid_liskovsubstitution_example2_solution_EngineVehicle : is-a
+com_conceptcoding_video1solid_liskovsubstitution_example2_violation_Vehicle <|-- com_conceptcoding_video1solid_liskovsubstitution_example2_violation_Bicycle : is-a
+com_conceptcoding_video1solid_liskovsubstitution_example2_violation_Vehicle <|-- com_conceptcoding_video1solid_liskovsubstitution_example2_violation_Car : is-a
+com_conceptcoding_video1solid_liskovsubstitution_example2_violation_Vehicle <|-- com_conceptcoding_video1solid_liskovsubstitution_example2_violation_MotorCycle : is-a
+@enduml

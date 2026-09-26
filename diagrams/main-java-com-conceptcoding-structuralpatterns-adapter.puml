@@ -1,0 +1,30 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-structuralpatterns-adapter
+interface "com.conceptcoding.structuralpatterns.adapter.ImperialWeighingMachine" as com_conceptcoding_structuralpatterns_adapter_ImperialWeighingMachine {
+  ~getWeightInPounds(): double
+}
+class "com.conceptcoding.structuralpatterns.adapter.ImperialWeighingMachineImpl" as com_conceptcoding_structuralpatterns_adapter_ImperialWeighingMachineImpl {
+  ~weightInPounds: double
+  --
+  +ImperialWeighingMachineImpl(weighingScaleReading: double)
+  +getWeightInPounds(): double
+}
+class "com.conceptcoding.structuralpatterns.adapter.MetricWeighingMachine" as com_conceptcoding_structuralpatterns_adapter_MetricWeighingMachine {
+  +main(args: String[]): void {static}
+}
+interface "com.conceptcoding.structuralpatterns.adapter.WeighingMachineAdapter" as com_conceptcoding_structuralpatterns_adapter_WeighingMachineAdapter {
+  ~getWeightInKg(): double
+}
+class "com.conceptcoding.structuralpatterns.adapter.WeightMachineAdapterImpl" as com_conceptcoding_structuralpatterns_adapter_WeightMachineAdapterImpl {
+  ~imperialWeighingMachine: ImperialWeighingMachine
+  --
+  +WeightMachineAdapterImpl(weightMachineInPounds: ImperialWeighingMachine)
+  +getWeightInKg(): double
+}
+com_conceptcoding_structuralpatterns_adapter_ImperialWeighingMachine <|.. com_conceptcoding_structuralpatterns_adapter_ImperialWeighingMachineImpl : implements
+com_conceptcoding_structuralpatterns_adapter_WeighingMachineAdapter <|.. com_conceptcoding_structuralpatterns_adapter_WeightMachineAdapterImpl : implements
+com_conceptcoding_structuralpatterns_adapter_WeightMachineAdapterImpl o-- com_conceptcoding_structuralpatterns_adapter_ImperialWeighingMachine : has-a (imperialWeighingMachine)
+@enduml

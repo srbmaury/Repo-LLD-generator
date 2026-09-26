@@ -1,0 +1,232 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-paymentgateway
+class "com.conceptcoding.interviewquestions.paymentgateway.PaymentGateway" as com_conceptcoding_interviewquestions_paymentgateway_PaymentGateway {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.instrument.BankInstrument" as com_conceptcoding_interviewquestions_paymentgateway_instrument_BankInstrument {
+  ~bankAccountNumber: String
+  ~ifscCode: String
+  --
+  +BankInstrument()
+  +BankInstrument(instrumentId: int, userID: int, type: InstrumentType, bankAccountNumber: String, ifscCode: String)
+  +getBankAccountNumber(): String
+  +setBankAccountNumber(bankAccountNumber: String): void
+  +getIfscCode(): String
+  +setIfscCode(ifscCode: String): void
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.instrument.BankService" as com_conceptcoding_interviewquestions_paymentgateway_instrument_BankService {
+  +BankService()
+  +addInstrument(instrumentDO: InstrumentDO): InstrumentDO
+  +getInstrumentsByUserID(userID: int): List<InstrumentDO>
+  +mapBankInstrumentToInstrumentDO(bankInstrument: BankInstrument): InstrumentDO
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.instrument.CardInstrument" as com_conceptcoding_interviewquestions_paymentgateway_instrument_CardInstrument {
+  ~cardNumber: String
+  ~cvv: String
+  --
+  +CardInstrument()
+  +CardInstrument(instrumentId: int, userID: int, type: InstrumentType, cardNumber: String, cvv: String)
+  +getCardNumber(): String
+  +setCardNumber(cardNumber: String): void
+  +getCvv(): String
+  +setCvv(cvv: String): void
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.instrument.CardService" as com_conceptcoding_interviewquestions_paymentgateway_instrument_CardService {
+  +CardService()
+  +addInstrument(instrumentDO: InstrumentDO): InstrumentDO
+  -mapBankInstrumentToInstrumentDO(cardInstrument: CardInstrument): InstrumentDO
+  +getInstrumentsByUserID(userID: int): List<InstrumentDO>
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.instrument.Instrument" as com_conceptcoding_interviewquestions_paymentgateway_instrument_Instrument {
+  ~instrumentID: int
+  ~userID: int
+  ~instrumentType: InstrumentType
+  --
+  +Instrument()
+  +Instrument(instrumentID: int, userID: int, instrumentType: InstrumentType)
+  +getInstrumentID(): int
+  +setInstrumentID(instrumentID: int): void
+  +getUserId(): int
+  +setUserId(userID: int): void
+  +getInstrumentType(): InstrumentType
+  +setInstrumentType(instrumentType: InstrumentType): void
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.instrument.InstrumentController" as com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentController {
+  ~instrumentControllerFactory: InstrumentServiceFactory
+  --
+  +InstrumentController()
+  +addInstrument(instrument: InstrumentDO): InstrumentDO
+  +getAllInstruments(userID: int): List<InstrumentDO>
+  +getInstrumentByID(userID: int, instrumentID: int): InstrumentDO
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.instrument.InstrumentDO" as com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentDO {
+  ~instrumentID: int
+  ~userID: int
+  ~instrumentType: InstrumentType
+  ~bankAccountNumber: String
+  ~ifsc: String
+  ~cardNumber: String
+  ~cvvNumber: String
+  --
+  +getInstrumentID(): int
+  +setInstrumentID(instrumentID: int): void
+  +getUserID(): int
+  +setUserID(userID: int): void
+  +getInstrumentType(): InstrumentType
+  +setInstrumentType(instrumentType: InstrumentType): void
+  +getBankAccountNumber(): String
+  +setBankAccountNumber(bankAccountNumber: String): void
+  +getIfsc(): String
+  +setIfsc(ifsc: String): void
+  +getCardNumber(): String
+  +setCardNumber(cardNumber: String): void
+  +getCvvNumber(): String
+  +setCvvNumber(cvvNumber: String): void
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.instrument.InstrumentService" as com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentService {
+  ~userVsInstruments: Map<Integer, List<Instrument>>
+  --
+  +addInstrument(instrumentDO: InstrumentDO): InstrumentDO {abstract}
+  +getInstrumentsByUserID(userID: int): List<InstrumentDO> {abstract}
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.instrument.InstrumentServiceFactory" as com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentServiceFactory {
+  +getInstrumentService(instrumentType: InstrumentType): InstrumentService
+}
+enum "com.conceptcoding.interviewquestions.paymentgateway.instrument.InstrumentType" as com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentType {
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.transaction.Processor" as com_conceptcoding_interviewquestions_paymentgateway_transaction_Processor {
+  +processPayment(senderInstrumentDO: InstrumentDO, receiverInstrumentDO: InstrumentDO): void
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.transaction.Transaction" as com_conceptcoding_interviewquestions_paymentgateway_transaction_Transaction {
+  ~txnID: int
+  ~amount: int
+  ~senderId: int
+  ~receiverId: int
+  ~debitInstrumentId: int
+  ~creditInstrumentId: int
+  ~status: TransactionStatus
+  --
+  +Transaction()
+  +getTxnID(): int
+  +setTxnID(txnID: int): void
+  +getAmount(): int
+  +setAmount(amount: int): void
+  +getSenderId(): int
+  +setSenderId(senderId: int): void
+  +getReceiverId(): int
+  +setReceiverId(receiverId: int): void
+  +getDebitInstrumentId(): int
+  +setDebitInstrumentId(debitInstrumentId: int): void
+  +getCreditInstrumentId(): int
+  +setCreditInstrumentId(creditInstrumentId: int): void
+  +getStatus(): TransactionStatus
+  +setStatus(status: TransactionStatus): void
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.transaction.TransactionController" as com_conceptcoding_interviewquestions_paymentgateway_transaction_TransactionController {
+  ~txnService: TransactionService
+  --
+  +TransactionController()
+  +makePayment(txnDO: TransactionDO): TransactionDO
+  +getTransactionHistory(userID: int): List<Transaction>
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.transaction.TransactionDO" as com_conceptcoding_interviewquestions_paymentgateway_transaction_TransactionDO {
+  ~txnID: int
+  ~senderId: int
+  ~receiverId: int
+  ~debitInstrumentId: int
+  ~creditInstrumentId: int
+  ~amount: int
+  ~status: TransactionStatus
+  --
+  +TransactionDO()
+  +TransactionDO(txnID: int, senderId: int, receiverId: int, debitInstrumentId: int, creditInstrumentId: int, amount: int, status: TransactionStatus)
+  +getTxnID(): int
+  +setTxnID(txnID: int): void
+  +getSenderId(): int
+  +setSenderId(senderId: int): void
+  +getReceiverId(): int
+  +setReceiverId(receiverId: int): void
+  +getDebitInstrumentId(): int
+  +setDebitInstrumentId(debitInstrumentId: int): void
+  +getCreditInstrumentId(): int
+  +setCreditInstrumentId(creditInstrumentId: int): void
+  +getAmount(): int
+  +setAmount(amount: int): void
+  +getStatus(): TransactionStatus
+  +setStatus(status: TransactionStatus): void
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.transaction.TransactionService" as com_conceptcoding_interviewquestions_paymentgateway_transaction_TransactionService {
+  +userVsTransactionsList: Map<Integer, List<Transaction>>
+  ~instrumentController: InstrumentController
+  ~processor: Processor
+  --
+  +TransactionService()
+  +getTransactionHistory(userID: int): List<Transaction>
+  +makePayment(txnDO: TransactionDO): TransactionDO
+}
+enum "com.conceptcoding.interviewquestions.paymentgateway.transaction.TransactionStatus" as com_conceptcoding_interviewquestions_paymentgateway_transaction_TransactionStatus {
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.user.User" as com_conceptcoding_interviewquestions_paymentgateway_user_User {
+  ~userID: int
+  ~userName: String
+  ~email: String
+  --
+  +User()
+  +User(userID: int, userName: String, email: String)
+  +getUserID(): int
+  +setUserID(userID: int): void
+  +getUserName(): String
+  +setUserName(userName: String): void
+  +getEmail(): String
+  +setEmail(email: String): void
+  +toString(): String
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.user.UserController" as com_conceptcoding_interviewquestions_paymentgateway_user_UserController {
+  ~userService: UserService
+  --
+  +UserController()
+  +addUser(userDOObj: UserDO): UserDO
+  +getUser(userID: int): UserDO
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.user.UserDO" as com_conceptcoding_interviewquestions_paymentgateway_user_UserDO {
+  ~id: int
+  ~name: String
+  ~mail: String
+  --
+  +UserDO()
+  +UserDO(id: int, name: String, mail: String)
+  +getId(): int
+  +setId(id: int): void
+  +getName(): String
+  +setName(name: String): void
+  +getMail(): String
+  +setMail(mail: String): void
+  +toString(): String
+}
+class "com.conceptcoding.interviewquestions.paymentgateway.user.UserService" as com_conceptcoding_interviewquestions_paymentgateway_user_UserService {
+  ~usersList: List<User>
+  --
+  +addUser(userDO: UserDO): UserDO
+  -convertUserDOToUser(userObj: User): UserDO
+  +getUser(userID: int): UserDO
+}
+com_conceptcoding_interviewquestions_paymentgateway_instrument_Instrument <|-- com_conceptcoding_interviewquestions_paymentgateway_instrument_BankInstrument : is-a
+com_conceptcoding_interviewquestions_paymentgateway_instrument_Instrument <|-- com_conceptcoding_interviewquestions_paymentgateway_instrument_CardInstrument : is-a
+com_conceptcoding_interviewquestions_paymentgateway_instrument_Instrument o-- com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentType : has-a (instrumentType)
+com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentController o-- com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentServiceFactory : has-a (instrumentControllerFactory)
+com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentDO o-- com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentType : has-a (instrumentType)
+com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentService <|-- com_conceptcoding_interviewquestions_paymentgateway_instrument_BankService : is-a
+com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentService <|-- com_conceptcoding_interviewquestions_paymentgateway_instrument_CardService : is-a
+com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentService o-- "*" com_conceptcoding_interviewquestions_paymentgateway_instrument_Instrument : has-a (userVsInstruments)
+com_conceptcoding_interviewquestions_paymentgateway_transaction_Transaction o-- com_conceptcoding_interviewquestions_paymentgateway_transaction_TransactionStatus : has-a (status)
+com_conceptcoding_interviewquestions_paymentgateway_transaction_TransactionController o-- com_conceptcoding_interviewquestions_paymentgateway_transaction_TransactionService : has-a (txnService)
+com_conceptcoding_interviewquestions_paymentgateway_transaction_TransactionDO o-- com_conceptcoding_interviewquestions_paymentgateway_transaction_TransactionStatus : has-a (status)
+com_conceptcoding_interviewquestions_paymentgateway_transaction_TransactionService o-- "*" com_conceptcoding_interviewquestions_paymentgateway_transaction_Transaction : has-a (userVsTransactionsList)
+com_conceptcoding_interviewquestions_paymentgateway_transaction_TransactionService o-- com_conceptcoding_interviewquestions_paymentgateway_instrument_InstrumentController : has-a (instrumentController)
+com_conceptcoding_interviewquestions_paymentgateway_transaction_TransactionService o-- com_conceptcoding_interviewquestions_paymentgateway_transaction_Processor : has-a (processor)
+com_conceptcoding_interviewquestions_paymentgateway_user_UserController o-- com_conceptcoding_interviewquestions_paymentgateway_user_UserService : has-a (userService)
+com_conceptcoding_interviewquestions_paymentgateway_user_UserService o-- "*" com_conceptcoding_interviewquestions_paymentgateway_user_User : has-a (usersList)
+@enduml

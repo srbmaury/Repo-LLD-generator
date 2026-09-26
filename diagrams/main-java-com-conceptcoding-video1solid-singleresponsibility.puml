@@ -1,0 +1,62 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-video1solid-singleresponsibility
+class "com.conceptcoding.video1solid.singleresponsibility.solution.Invoice" as com_conceptcoding_video1solid_singleresponsibility_solution_Invoice {
+  -marker: Marker
+  -quantity: int
+  -total: int
+  --
+  +Invoice(marker: Marker, quantity: int)
+  +calculateTotal(): void
+}
+class "com.conceptcoding.video1solid.singleresponsibility.solution.InvoiceDao" as com_conceptcoding_video1solid_singleresponsibility_solution_InvoiceDao {
+  ~invoice: Invoice
+  --
+  +InvoiceDao(invoice: Invoice)
+  +saveToDB(): void
+}
+class "com.conceptcoding.video1solid.singleresponsibility.solution.InvoicePrinter" as com_conceptcoding_video1solid_singleresponsibility_solution_InvoicePrinter {
+  -invoice: Invoice
+  --
+  +InvoicePrinter(invoice: Invoice)
+  +print(): void
+}
+class "com.conceptcoding.video1solid.singleresponsibility.solution.Marker" as com_conceptcoding_video1solid_singleresponsibility_solution_Marker {
+  ~name: String
+  ~color: String
+  ~price: int
+  ~year: int
+  --
+  +Marker(name: String, color: String, price: int, year: int)
+}
+class "com.conceptcoding.video1solid.singleresponsibility.solution.SolutionDemo" as com_conceptcoding_video1solid_singleresponsibility_solution_SolutionDemo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.video1solid.singleresponsibility.violation.Invoice" as com_conceptcoding_video1solid_singleresponsibility_violation_Invoice {
+  -marker: Marker
+  -quantity: int
+  -total: int
+  --
+  +Invoice(marker: Marker, quantity: int)
+  +calculateTotal(): void
+  +printInvoice(): void
+  +saveToDB(): void
+}
+class "com.conceptcoding.video1solid.singleresponsibility.violation.Marker" as com_conceptcoding_video1solid_singleresponsibility_violation_Marker {
+  ~name: String
+  ~color: String
+  ~price: int
+  ~year: int
+  --
+  +Marker(name: String, color: String, price: int, year: int)
+}
+class "com.conceptcoding.video1solid.singleresponsibility.violation.ViolationDemo" as com_conceptcoding_video1solid_singleresponsibility_violation_ViolationDemo {
+  +main(args: String[]): void {static}
+}
+com_conceptcoding_video1solid_singleresponsibility_solution_Invoice o-- com_conceptcoding_video1solid_singleresponsibility_solution_Marker : has-a (marker)
+com_conceptcoding_video1solid_singleresponsibility_solution_InvoiceDao o-- com_conceptcoding_video1solid_singleresponsibility_solution_Invoice : has-a (invoice)
+com_conceptcoding_video1solid_singleresponsibility_solution_InvoicePrinter o-- com_conceptcoding_video1solid_singleresponsibility_solution_Invoice : has-a (invoice)
+com_conceptcoding_video1solid_singleresponsibility_violation_Invoice o-- com_conceptcoding_video1solid_singleresponsibility_violation_Marker : has-a (marker)
+@enduml

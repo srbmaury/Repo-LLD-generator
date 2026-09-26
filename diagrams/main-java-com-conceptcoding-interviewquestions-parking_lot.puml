@@ -1,0 +1,140 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-parking_lot
+class "com.conceptcoding.interviewquestions.parking_lot.Entity.ParkingSpot" as com_conceptcoding_interviewquestions_parking_lot_Entity_ParkingSpot {
+  -spotId: String
+  -isFree: boolean
+  --
+  +ParkingSpot(spotId: String)
+  +isSpotFree(): boolean
+  +occupySpot(): void
+  +releaseSpot(): void
+  +getSpotId(): String
+}
+class "com.conceptcoding.interviewquestions.parking_lot.Entity.Vehicle" as com_conceptcoding_interviewquestions_parking_lot_Entity_Vehicle {
+  ~vehicleNumber: String
+  ~vehicleType: VehicleType
+  --
+  +Vehicle(vehicleNumber: String, vehicleType: VehicleType)
+  +getVehicleNumber(): String
+  +getVehicleType(): VehicleType
+}
+interface "com.conceptcoding.interviewquestions.parking_lot.LookupStrategy.ParkingSpotLookupStrategy" as com_conceptcoding_interviewquestions_parking_lot_LookupStrategy_ParkingSpotLookupStrategy {
+  ~selectSpot(spots: List<ParkingSpot>): ParkingSpot
+}
+class "com.conceptcoding.interviewquestions.parking_lot.LookupStrategy.RandomLookupStrategy" as com_conceptcoding_interviewquestions_parking_lot_LookupStrategy_RandomLookupStrategy {
+  +selectSpot(spots: List<ParkingSpot>): ParkingSpot
+}
+class "com.conceptcoding.interviewquestions.parking_lot.ParkingLotClient" as com_conceptcoding_interviewquestions_parking_lot_ParkingLotClient {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.interviewquestions.parking_lot.Ticket" as com_conceptcoding_interviewquestions_parking_lot_Ticket {
+  -vehicle: Vehicle
+  -level: ParkingLevel
+  -spot: ParkingSpot
+  -entryTime: LocalDateTime
+  --
+  +Ticket(vehicle: Vehicle, level: ParkingLevel, spot: ParkingSpot)
+  +getVehicle(): Vehicle
+  +getLevel(): ParkingLevel
+  +getSpot(): ParkingSpot
+  +getEntryTime(): LocalDateTime
+}
+enum "com.conceptcoding.interviewquestions.parking_lot.enums.VehicleType" as com_conceptcoding_interviewquestions_parking_lot_enums_VehicleType {
+}
+class "com.conceptcoding.interviewquestions.parking_lot.parkinglot.EntranceGate" as com_conceptcoding_interviewquestions_parking_lot_parkinglot_EntranceGate {
+  +enter(building: ParkingBuilding, vehicle: Vehicle): Ticket
+}
+class "com.conceptcoding.interviewquestions.parking_lot.parkinglot.ExitGate" as com_conceptcoding_interviewquestions_parking_lot_parkinglot_ExitGate {
+  -costComputation: CostComputation
+  --
+  +ExitGate(costComputation: CostComputation)
+  +completeExit(building: ParkingBuilding, ticket: Ticket, payment: Payment): void
+  -calculatePrice(ticket: Ticket): double
+}
+class "com.conceptcoding.interviewquestions.parking_lot.parkinglot.ParkingBuilding" as com_conceptcoding_interviewquestions_parking_lot_parkinglot_ParkingBuilding {
+  -levels: List<ParkingLevel>
+  --
+  +ParkingBuilding(levels: List<ParkingLevel>, costComputation: CostComputation)
+  ~allocate(vehicle: Vehicle): Ticket
+  ~release(ticket: Ticket): void
+}
+class "com.conceptcoding.interviewquestions.parking_lot.parkinglot.ParkingLevel" as com_conceptcoding_interviewquestions_parking_lot_parkinglot_ParkingLevel {
+  -levelNumber: int
+  -managers: Map<VehicleType, ParkingSpotManager>
+  --
+  +ParkingLevel(levelNumber: int, managers: Map<VehicleType, ParkingSpotManager>)
+  +hasAvailability(type: VehicleType): boolean
+  +park(type: VehicleType): ParkingSpot
+  +unPark(type: VehicleType, spot: ParkingSpot): void
+  +getLevelNumber(): int
+}
+class "com.conceptcoding.interviewquestions.parking_lot.parkinglot.ParkingLot" as com_conceptcoding_interviewquestions_parking_lot_parkinglot_ParkingLot {
+  -building: ParkingBuilding
+  -entranceGate: EntranceGate
+  -exitGate: ExitGate
+  --
+  +ParkingLot(building: ParkingBuilding, entranceGate: EntranceGate, exitGate: ExitGate)
+  +vehicleArrives(vehicle: Vehicle): Ticket
+  +vehicleExits(ticket: Ticket, payment: Payment): void
+}
+class "com.conceptcoding.interviewquestions.parking_lot.payment.CashPayment" as com_conceptcoding_interviewquestions_parking_lot_payment_CashPayment {
+  +pay(amount: double): boolean
+}
+interface "com.conceptcoding.interviewquestions.parking_lot.payment.Payment" as com_conceptcoding_interviewquestions_parking_lot_payment_Payment {
+  ~pay(amount: double): boolean
+}
+class "com.conceptcoding.interviewquestions.parking_lot.payment.UPIPayment" as com_conceptcoding_interviewquestions_parking_lot_payment_UPIPayment {
+  +pay(amount: double): boolean
+}
+class "com.conceptcoding.interviewquestions.parking_lot.pricing.CostComputation" as com_conceptcoding_interviewquestions_parking_lot_pricing_CostComputation {
+  -pricingStrategy: PricingStrategy
+  --
+  +CostComputation(pricingStrategy: PricingStrategy)
+  +compute(ticket: Ticket): double
+}
+class "com.conceptcoding.interviewquestions.parking_lot.pricing.FixedPricingStrategy" as com_conceptcoding_interviewquestions_parking_lot_pricing_FixedPricingStrategy {
+  +calculate(ticket: Ticket): double
+}
+interface "com.conceptcoding.interviewquestions.parking_lot.pricing.PricingStrategy" as com_conceptcoding_interviewquestions_parking_lot_pricing_PricingStrategy {
+  ~calculate(ticket: Ticket): double
+}
+class "com.conceptcoding.interviewquestions.parking_lot.spotManagers.FourWheelerSpotManager" as com_conceptcoding_interviewquestions_parking_lot_spotManagers_FourWheelerSpotManager {
+  +FourWheelerSpotManager(spots: List<ParkingSpot>, strategy: ParkingSpotLookupStrategy)
+}
+class "com.conceptcoding.interviewquestions.parking_lot.spotManagers.ParkingSpotManager" as com_conceptcoding_interviewquestions_parking_lot_spotManagers_ParkingSpotManager {
+  #spots: List<ParkingSpot>
+  #strategy: ParkingSpotLookupStrategy
+  -lock: ReentrantLock
+  --
+  #ParkingSpotManager(spots: List<ParkingSpot>, strategy: ParkingSpotLookupStrategy)
+  +park(): ParkingSpot
+  +unPark(spot: ParkingSpot): void
+  +hasFreeSpot(): boolean
+}
+class "com.conceptcoding.interviewquestions.parking_lot.spotManagers.TwoWheelerSpotManager" as com_conceptcoding_interviewquestions_parking_lot_spotManagers_TwoWheelerSpotManager {
+  +TwoWheelerSpotManager(spots: List<ParkingSpot>, strategy: ParkingSpotLookupStrategy)
+}
+com_conceptcoding_interviewquestions_parking_lot_Entity_Vehicle o-- com_conceptcoding_interviewquestions_parking_lot_enums_VehicleType : has-a (vehicleType)
+com_conceptcoding_interviewquestions_parking_lot_LookupStrategy_ParkingSpotLookupStrategy <|.. com_conceptcoding_interviewquestions_parking_lot_LookupStrategy_RandomLookupStrategy : implements
+com_conceptcoding_interviewquestions_parking_lot_Ticket o-- com_conceptcoding_interviewquestions_parking_lot_Entity_ParkingSpot : has-a (spot)
+com_conceptcoding_interviewquestions_parking_lot_Ticket o-- com_conceptcoding_interviewquestions_parking_lot_Entity_Vehicle : has-a (vehicle)
+com_conceptcoding_interviewquestions_parking_lot_Ticket o-- com_conceptcoding_interviewquestions_parking_lot_parkinglot_ParkingLevel : has-a (level)
+com_conceptcoding_interviewquestions_parking_lot_parkinglot_ExitGate o-- com_conceptcoding_interviewquestions_parking_lot_pricing_CostComputation : has-a (costComputation)
+com_conceptcoding_interviewquestions_parking_lot_parkinglot_ParkingBuilding o-- "*" com_conceptcoding_interviewquestions_parking_lot_parkinglot_ParkingLevel : has-a (levels)
+com_conceptcoding_interviewquestions_parking_lot_parkinglot_ParkingLevel o-- "*" com_conceptcoding_interviewquestions_parking_lot_enums_VehicleType : has-a (managers)
+com_conceptcoding_interviewquestions_parking_lot_parkinglot_ParkingLevel o-- "*" com_conceptcoding_interviewquestions_parking_lot_spotManagers_ParkingSpotManager : has-a (managers)
+com_conceptcoding_interviewquestions_parking_lot_parkinglot_ParkingLot o-- com_conceptcoding_interviewquestions_parking_lot_parkinglot_EntranceGate : has-a (entranceGate)
+com_conceptcoding_interviewquestions_parking_lot_parkinglot_ParkingLot o-- com_conceptcoding_interviewquestions_parking_lot_parkinglot_ExitGate : has-a (exitGate)
+com_conceptcoding_interviewquestions_parking_lot_parkinglot_ParkingLot o-- com_conceptcoding_interviewquestions_parking_lot_parkinglot_ParkingBuilding : has-a (building)
+com_conceptcoding_interviewquestions_parking_lot_payment_Payment <|.. com_conceptcoding_interviewquestions_parking_lot_payment_CashPayment : implements
+com_conceptcoding_interviewquestions_parking_lot_payment_Payment <|.. com_conceptcoding_interviewquestions_parking_lot_payment_UPIPayment : implements
+com_conceptcoding_interviewquestions_parking_lot_pricing_CostComputation o-- com_conceptcoding_interviewquestions_parking_lot_pricing_PricingStrategy : has-a (pricingStrategy)
+com_conceptcoding_interviewquestions_parking_lot_pricing_PricingStrategy <|.. com_conceptcoding_interviewquestions_parking_lot_pricing_FixedPricingStrategy : implements
+com_conceptcoding_interviewquestions_parking_lot_spotManagers_ParkingSpotManager <|-- com_conceptcoding_interviewquestions_parking_lot_spotManagers_FourWheelerSpotManager : is-a
+com_conceptcoding_interviewquestions_parking_lot_spotManagers_ParkingSpotManager <|-- com_conceptcoding_interviewquestions_parking_lot_spotManagers_TwoWheelerSpotManager : is-a
+com_conceptcoding_interviewquestions_parking_lot_spotManagers_ParkingSpotManager o-- "*" com_conceptcoding_interviewquestions_parking_lot_Entity_ParkingSpot : has-a (spots)
+com_conceptcoding_interviewquestions_parking_lot_spotManagers_ParkingSpotManager o-- com_conceptcoding_interviewquestions_parking_lot_LookupStrategy_ParkingSpotLookupStrategy : has-a (strategy)
+@enduml

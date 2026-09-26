@@ -1,0 +1,42 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-behavioralpatterns-chainofresponsibility
+class "com.conceptcoding.behavioralpatterns.chainofresponsibility.DebugLogProcessor" as com_conceptcoding_behavioralpatterns_chainofresponsibility_DebugLogProcessor {
+  +DebugLogProcessor(level: int)
+  #write(message: String): void
+}
+class "com.conceptcoding.behavioralpatterns.chainofresponsibility.ErrorLogProcessor" as com_conceptcoding_behavioralpatterns_chainofresponsibility_ErrorLogProcessor {
+  +ErrorLogProcessor(level: int)
+  #write(message: String): void
+}
+class "com.conceptcoding.behavioralpatterns.chainofresponsibility.FatalLogProcessor" as com_conceptcoding_behavioralpatterns_chainofresponsibility_FatalLogProcessor {
+  +FatalLogProcessor(level: int)
+  #write(message: String): void
+}
+class "com.conceptcoding.behavioralpatterns.chainofresponsibility.InfoLogProcessor" as com_conceptcoding_behavioralpatterns_chainofresponsibility_InfoLogProcessor {
+  +InfoLogProcessor(level: int)
+  #write(message: String): void
+}
+class "com.conceptcoding.behavioralpatterns.chainofresponsibility.LogProcessor" as com_conceptcoding_behavioralpatterns_chainofresponsibility_LogProcessor {
+  +DEBUG: int
+  +INFO: int
+  +ERROR: int
+  +FATAL: int
+  ~level: int
+  ~nextLoggerProcessor: LogProcessor
+  --
+  +setNextLogger(nextLogger: LogProcessor): void
+  +logMessage(level: int, message: String): void
+  #write(message: String): void {abstract}
+}
+class "com.conceptcoding.behavioralpatterns.chainofresponsibility.LoggerDemo" as com_conceptcoding_behavioralpatterns_chainofresponsibility_LoggerDemo {
+  +main(args: String[]): void {static}
+  -getChainOfLoggers(): LogProcessor {static}
+}
+com_conceptcoding_behavioralpatterns_chainofresponsibility_LogProcessor <|-- com_conceptcoding_behavioralpatterns_chainofresponsibility_DebugLogProcessor : is-a
+com_conceptcoding_behavioralpatterns_chainofresponsibility_LogProcessor <|-- com_conceptcoding_behavioralpatterns_chainofresponsibility_ErrorLogProcessor : is-a
+com_conceptcoding_behavioralpatterns_chainofresponsibility_LogProcessor <|-- com_conceptcoding_behavioralpatterns_chainofresponsibility_FatalLogProcessor : is-a
+com_conceptcoding_behavioralpatterns_chainofresponsibility_LogProcessor <|-- com_conceptcoding_behavioralpatterns_chainofresponsibility_InfoLogProcessor : is-a
+@enduml

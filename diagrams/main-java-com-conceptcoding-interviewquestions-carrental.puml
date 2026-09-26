@@ -1,0 +1,242 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-carrental
+class "com.conceptcoding.interviewquestions.carrental.Bill.Bill" as com_conceptcoding_interviewquestions_carrental_Bill_Bill {
+  -billId: int
+  -reservationId: int
+  -totalBillAmount: double
+  -billPaid: boolean
+  --
+  +Bill(billId: int, reservationId: int, totalBillAmount: double)
+  +getBillId(): int
+  +getReservationId(): int
+  +getTotalBillAmount(): double
+  +isBillPaid(): boolean
+  +setBillPaid(billPaid: boolean): void
+}
+class "com.conceptcoding.interviewquestions.carrental.Bill.BillManager" as com_conceptcoding_interviewquestions_carrental_Bill_BillManager {
+  -billingStrategy: BillingStrategy
+  -bills: Map<Integer, Bill>
+  --
+  +BillManager(billingStrategy: BillingStrategy)
+  +generateBill(reservation: Reservation): Bill
+  +getBill(billId: int): Optional<Bill>
+  +setBillingStrategy(billingStrategy: BillingStrategy): void
+}
+interface "com.conceptcoding.interviewquestions.carrental.Bill.BillingStrategy" as com_conceptcoding_interviewquestions_carrental_Bill_BillingStrategy {
+  ~generateBill(reservation: Reservation): Bill
+}
+class "com.conceptcoding.interviewquestions.carrental.Bill.DailyBillingStrategy" as com_conceptcoding_interviewquestions_carrental_Bill_DailyBillingStrategy {
+  ~vehicleInventoryManager: VehicleInventoryManager
+  -billIdGenerator: AtomicInteger
+  --
+  +DailyBillingStrategy(vehicleInventoryManager: VehicleInventoryManager)
+  +generateBill(reservation: Reservation): Bill
+}
+class "com.conceptcoding.interviewquestions.carrental.Demo" as com_conceptcoding_interviewquestions_carrental_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.interviewquestions.carrental.Location" as com_conceptcoding_interviewquestions_carrental_Location {
+  ~buildingNo: int
+  ~area: String
+  ~city: String
+  ~state: String
+  ~country: String
+  ~pincode: int
+  --
+  ~Location(buildingNo: int, area: String, city: String, state: String, country: String, pincode: int)
+}
+class "com.conceptcoding.interviewquestions.carrental.Store" as com_conceptcoding_interviewquestions_carrental_Store {
+  -storeId: int
+  -storeLocation: Location
+  -inventory: VehicleInventoryManager
+  -reservationManager: ReservationManager
+  -billManager: BillManager
+  -paymentManager: PaymentManager
+  --
+  +Store(storeId: int, location: Location)
+  +getVehicles(type: VehicleType, from: LocalDate, to: LocalDate): List<Vehicle>
+  +createReservation(vehicleId: int, user: User, from: LocalDate, to: LocalDate, type: ReservationType): Reservation
+  +cancelReservation(reservationId: int): void
+  +startTrip(reservationId: int): void
+  +submitVehicle(reservationId: int): void
+  +generateBill(reservationId: int, billingStrategy: BillingStrategy): Bill
+  +makePayment(bill: Bill, paymentStrategy: PaymentStrategy, paymentAmount: double): Payment
+  +getInventory(): VehicleInventoryManager
+  +getStoreId(): int
+}
+class "com.conceptcoding.interviewquestions.carrental.User" as com_conceptcoding_interviewquestions_carrental_User {
+  ~userId: int
+  ~userName: String
+  ~drivingLicenseNo: String
+  --
+  +User(userId: int, userName: String, drivingLicenseNo: String)
+  +getUserId(): int
+  +setUserId(userId: int): void
+  +getUserName(): String
+  +setUserName(userName: String): void
+  +getDrivingLicenseNo(): String
+  +setDrivingLicenseNo(drivingLicenseNo: String): void
+}
+class "com.conceptcoding.interviewquestions.carrental.VehicleRentalSystem" as com_conceptcoding_interviewquestions_carrental_VehicleRentalSystem {
+  ~storeList: List<Store>
+  ~userList: List<User>
+  --
+  +VehicleRentalSystem()
+  +getStore(storeId: int): Store
+  +getUser(userId: int): User
+  +addStore(store: Store): void
+  +addUser(user: User): void
+  +removeStore(storeId: int): void
+  +removeUser(userId: int): void
+}
+class "com.conceptcoding.interviewquestions.carrental.payment.Payment" as com_conceptcoding_interviewquestions_carrental_payment_Payment {
+  -paymentId: int
+  -billId: int
+  -amountPaid: double
+  -paymentMode: PaymentMode
+  -paymentDate: Date
+  --
+  +Payment(paymentId: int, billId: int, amountPaid: double, paymentMode: PaymentMode, paymentDate: Date)
+  +getPaymentId(): int
+  +getBillId(): int
+  +getAmountPaid(): double
+  +getPaymentMode(): PaymentMode
+  +getPaymentDate(): Date
+}
+class "com.conceptcoding.interviewquestions.carrental.payment.PaymentManager" as com_conceptcoding_interviewquestions_carrental_payment_PaymentManager {
+  -paymentStrategy: PaymentStrategy
+  -payments: Map<Integer, Payment>
+  --
+  +PaymentManager(paymentStrategy: PaymentStrategy)
+  +makePayment(bill: Bill, paymentAmount: double): Payment
+  +getPaymentsForBill(billId: int): List<Payment>
+  +getPayment(paymentId: int): Optional<Payment>
+  +setPaymentStrategy(paymentStrategy: PaymentStrategy): void
+}
+enum "com.conceptcoding.interviewquestions.carrental.payment.PaymentMode" as com_conceptcoding_interviewquestions_carrental_payment_PaymentMode {
+}
+interface "com.conceptcoding.interviewquestions.carrental.payment.PaymentStrategy" as com_conceptcoding_interviewquestions_carrental_payment_PaymentStrategy {
+  ~processPayment(bill: Bill, paymentAmount: double): Payment
+}
+class "com.conceptcoding.interviewquestions.carrental.payment.UPIPaymentStrategy" as com_conceptcoding_interviewquestions_carrental_payment_UPIPaymentStrategy {
+  -paymentIdGenerator: AtomicInteger
+  --
+  +processPayment(bill: Bill, paymentAmount: double): Payment
+}
+class "com.conceptcoding.interviewquestions.carrental.product.DateInterval" as com_conceptcoding_interviewquestions_carrental_product_DateInterval {
+  -from: LocalDate
+  -to: LocalDate
+  --
+  +DateInterval(from: LocalDate, to: LocalDate)
+  +getFrom(): LocalDate
+  +getTo(): LocalDate
+  +overlaps(other: DateInterval): boolean
+}
+class "com.conceptcoding.interviewquestions.carrental.product.Vehicle" as com_conceptcoding_interviewquestions_carrental_product_Vehicle {
+  -vehicleID: int
+  -vehicleNumber: String
+  -vehicleType: VehicleType
+  -dailyRentalCost: double
+  -vehicleStatus: VehicleStatus
+  --
+  +Vehicle(vehicleID: int, vehicleNumber: String, vehicleType: VehicleType)
+  +getVehicleID(): int
+  +getVehicleType(): VehicleType
+  +getVehicleStatus(): VehicleStatus
+  +getDailyRentalCost(): double
+  +getVehicleNumber(): String
+  +setDailyRentalCost(dailyRentalCost: double): void
+  +setStatus(vehicleStatus: VehicleStatus): void
+}
+class "com.conceptcoding.interviewquestions.carrental.product.VehicleInventoryManager" as com_conceptcoding_interviewquestions_carrental_product_VehicleInventoryManager {
+  -vehicles: ConcurrentMap<Integer, Vehicle>
+  -vehicleBookingIds: ConcurrentMap<Integer, List<Integer>>
+  -vehicleLocks: ConcurrentMap<Integer, ReentrantLock>
+  -reservationRepository: ReservationRepository
+  --
+  +addVehicle(vehicle: Vehicle): void
+  +getVehicle(vehicleId: int): Optional<Vehicle>
+  +setReservationRepository(reservationRepository: ReservationRepository): void
+  -lockForVehicle(vehicleId: int): ReentrantLock
+  +isAvailable(vehicleId: int, from: LocalDate, to: LocalDate): boolean
+  +reserve(vehicleId: int, reservationId: int, from: LocalDate, to: LocalDate): boolean
+  +release(vehicleId: int, reservationId: int): void
+  +getAvailableVehicles(type: VehicleType, from: LocalDate, to: LocalDate): List<Vehicle>
+}
+enum "com.conceptcoding.interviewquestions.carrental.product.VehicleStatus" as com_conceptcoding_interviewquestions_carrental_product_VehicleStatus {
+}
+enum "com.conceptcoding.interviewquestions.carrental.product.VehicleType" as com_conceptcoding_interviewquestions_carrental_product_VehicleType {
+}
+class "com.conceptcoding.interviewquestions.carrental.reservation.Reservation" as com_conceptcoding_interviewquestions_carrental_reservation_Reservation {
+  -reservationId: int
+  -vehicleId: int
+  -userId: int
+  -dateBookedFrom: LocalDate
+  -dateBookedTo: LocalDate
+  -reservationType: ReservationType
+  -reservationStatus: ReservationStatus
+  --
+  +Reservation(reservationId: int, vehicleId: int, userId: int, dateBookedFrom: LocalDate, dateBookedTo: LocalDate, reservationType: ReservationType)
+  +getReservationId(): int
+  +getVehicleId(): int
+  +getUserId(): int
+  +getDateBookedFrom(): LocalDate
+  +getDateBookedTo(): LocalDate
+  +getReservationType(): ReservationType
+  +getReservationStatus(): ReservationStatus
+  +setReservationStatus(reservationStatus: ReservationStatus): void
+}
+class "com.conceptcoding.interviewquestions.carrental.reservation.ReservationManager" as com_conceptcoding_interviewquestions_carrental_reservation_ReservationManager {
+  -inventory: VehicleInventoryManager
+  -reservationRepository: ReservationRepository
+  -reservationIdGenerator: AtomicInteger
+  --
+  +ReservationManager(inventory: VehicleInventoryManager)
+  +findByID(reservationId: int): Optional<Reservation>
+  +createReservation(vehicleId: int, user: User, from: LocalDate, to: LocalDate, type: ReservationType): Reservation
+  +cancelReservation(reservationId: int): void
+  +startTrip(reservationId: int): void
+  +submitVehicle(reservationId: int): void
+  +remove(reservationId: int): void
+}
+class "com.conceptcoding.interviewquestions.carrental.reservation.ReservationRepository" as com_conceptcoding_interviewquestions_carrental_reservation_ReservationRepository {
+  -reservations: Map<Integer, Reservation>
+  --
+  +ReservationRepository()
+  +save(reservation: Reservation): void
+  +findById(reservationId: int): Optional<Reservation>
+  +remove(reservationId: int): void
+  +getAll(): Map<Integer, Reservation>
+}
+enum "com.conceptcoding.interviewquestions.carrental.reservation.ReservationStatus" as com_conceptcoding_interviewquestions_carrental_reservation_ReservationStatus {
+}
+enum "com.conceptcoding.interviewquestions.carrental.reservation.ReservationType" as com_conceptcoding_interviewquestions_carrental_reservation_ReservationType {
+}
+com_conceptcoding_interviewquestions_carrental_Bill_BillManager o-- "*" com_conceptcoding_interviewquestions_carrental_Bill_Bill : has-a (bills)
+com_conceptcoding_interviewquestions_carrental_Bill_BillManager o-- com_conceptcoding_interviewquestions_carrental_Bill_BillingStrategy : has-a (billingStrategy)
+com_conceptcoding_interviewquestions_carrental_Bill_BillingStrategy <|.. com_conceptcoding_interviewquestions_carrental_Bill_DailyBillingStrategy : implements
+com_conceptcoding_interviewquestions_carrental_Bill_DailyBillingStrategy o-- com_conceptcoding_interviewquestions_carrental_product_VehicleInventoryManager : has-a (vehicleInventoryManager)
+com_conceptcoding_interviewquestions_carrental_Store o-- com_conceptcoding_interviewquestions_carrental_Bill_BillManager : has-a (billManager)
+com_conceptcoding_interviewquestions_carrental_Store o-- com_conceptcoding_interviewquestions_carrental_Location : has-a (storeLocation)
+com_conceptcoding_interviewquestions_carrental_Store o-- com_conceptcoding_interviewquestions_carrental_payment_PaymentManager : has-a (paymentManager)
+com_conceptcoding_interviewquestions_carrental_Store o-- com_conceptcoding_interviewquestions_carrental_product_VehicleInventoryManager : has-a (inventory)
+com_conceptcoding_interviewquestions_carrental_Store o-- com_conceptcoding_interviewquestions_carrental_reservation_ReservationManager : has-a (reservationManager)
+com_conceptcoding_interviewquestions_carrental_VehicleRentalSystem o-- "*" com_conceptcoding_interviewquestions_carrental_Store : has-a (storeList)
+com_conceptcoding_interviewquestions_carrental_VehicleRentalSystem o-- "*" com_conceptcoding_interviewquestions_carrental_User : has-a (userList)
+com_conceptcoding_interviewquestions_carrental_payment_Payment o-- com_conceptcoding_interviewquestions_carrental_payment_PaymentMode : has-a (paymentMode)
+com_conceptcoding_interviewquestions_carrental_payment_PaymentManager o-- "*" com_conceptcoding_interviewquestions_carrental_payment_Payment : has-a (payments)
+com_conceptcoding_interviewquestions_carrental_payment_PaymentManager o-- com_conceptcoding_interviewquestions_carrental_payment_PaymentStrategy : has-a (paymentStrategy)
+com_conceptcoding_interviewquestions_carrental_payment_PaymentStrategy <|.. com_conceptcoding_interviewquestions_carrental_payment_UPIPaymentStrategy : implements
+com_conceptcoding_interviewquestions_carrental_product_Vehicle o-- com_conceptcoding_interviewquestions_carrental_product_VehicleStatus : has-a (vehicleStatus)
+com_conceptcoding_interviewquestions_carrental_product_Vehicle o-- com_conceptcoding_interviewquestions_carrental_product_VehicleType : has-a (vehicleType)
+com_conceptcoding_interviewquestions_carrental_product_VehicleInventoryManager o-- "*" com_conceptcoding_interviewquestions_carrental_product_Vehicle : has-a (vehicles)
+com_conceptcoding_interviewquestions_carrental_product_VehicleInventoryManager o-- com_conceptcoding_interviewquestions_carrental_reservation_ReservationRepository : has-a (reservationRepository)
+com_conceptcoding_interviewquestions_carrental_reservation_Reservation o-- com_conceptcoding_interviewquestions_carrental_reservation_ReservationStatus : has-a (reservationStatus)
+com_conceptcoding_interviewquestions_carrental_reservation_Reservation o-- com_conceptcoding_interviewquestions_carrental_reservation_ReservationType : has-a (reservationType)
+com_conceptcoding_interviewquestions_carrental_reservation_ReservationManager o-- com_conceptcoding_interviewquestions_carrental_product_VehicleInventoryManager : has-a (inventory)
+com_conceptcoding_interviewquestions_carrental_reservation_ReservationManager o-- com_conceptcoding_interviewquestions_carrental_reservation_ReservationRepository : has-a (reservationRepository)
+com_conceptcoding_interviewquestions_carrental_reservation_ReservationRepository o-- "*" com_conceptcoding_interviewquestions_carrental_reservation_Reservation : has-a (reservations)
+@enduml

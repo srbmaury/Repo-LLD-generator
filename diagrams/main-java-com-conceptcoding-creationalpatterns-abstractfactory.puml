@@ -1,0 +1,57 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-creationalpatterns-abstractfactory
+class "com.conceptcoding.creationalpatterns.abstractfactory.AbstractFactoryDemo" as com_conceptcoding_creationalpatterns_abstractfactory_AbstractFactoryDemo {
+  +main(args: String[]): void {static}
+}
+interface "com.conceptcoding.creationalpatterns.abstractfactory.CarExterior" as com_conceptcoding_creationalpatterns_abstractfactory_CarExterior {
+  ~addExteriorComponents(): void
+}
+interface "com.conceptcoding.creationalpatterns.abstractfactory.CarFactory" as com_conceptcoding_creationalpatterns_abstractfactory_CarFactory {
+  ~createInterior(): CarInterior
+  ~createExterior(): CarExterior
+  ~produceCompleteVehicle(): void
+}
+class "com.conceptcoding.creationalpatterns.abstractfactory.CarFactoryProvider" as com_conceptcoding_creationalpatterns_abstractfactory_CarFactoryProvider {
+  +getFactory(type: CarType, brand: String): CarFactory
+}
+interface "com.conceptcoding.creationalpatterns.abstractfactory.CarInterior" as com_conceptcoding_creationalpatterns_abstractfactory_CarInterior {
+  ~addInteriorComponents(): void
+}
+enum "com.conceptcoding.creationalpatterns.abstractfactory.CarType" as com_conceptcoding_creationalpatterns_abstractfactory_CarType {
+}
+class "com.conceptcoding.creationalpatterns.abstractfactory.EconomyCarExterior" as com_conceptcoding_creationalpatterns_abstractfactory_EconomyCarExterior {
+  +addExteriorComponents(): void
+}
+class "com.conceptcoding.creationalpatterns.abstractfactory.EconomyCarFactory" as com_conceptcoding_creationalpatterns_abstractfactory_EconomyCarFactory {
+  -brand: String
+  --
+  +EconomyCarFactory(brand: String)
+  +createInterior(): CarInterior
+  +createExterior(): CarExterior
+}
+class "com.conceptcoding.creationalpatterns.abstractfactory.EconomyCarInterior" as com_conceptcoding_creationalpatterns_abstractfactory_EconomyCarInterior {
+  +addInteriorComponents(): void
+}
+class "com.conceptcoding.creationalpatterns.abstractfactory.LuxuryCarExterior" as com_conceptcoding_creationalpatterns_abstractfactory_LuxuryCarExterior {
+  +addExteriorComponents(): void
+}
+class "com.conceptcoding.creationalpatterns.abstractfactory.LuxuryCarFactory" as com_conceptcoding_creationalpatterns_abstractfactory_LuxuryCarFactory {
+  -brand: String
+  --
+  +LuxuryCarFactory(brand: String)
+  +createInterior(): CarInterior
+  +createExterior(): CarExterior
+}
+class "com.conceptcoding.creationalpatterns.abstractfactory.LuxuryCarInterior" as com_conceptcoding_creationalpatterns_abstractfactory_LuxuryCarInterior {
+  +addInteriorComponents(): void
+}
+com_conceptcoding_creationalpatterns_abstractfactory_CarExterior <|.. com_conceptcoding_creationalpatterns_abstractfactory_EconomyCarExterior : implements
+com_conceptcoding_creationalpatterns_abstractfactory_CarExterior <|.. com_conceptcoding_creationalpatterns_abstractfactory_LuxuryCarExterior : implements
+com_conceptcoding_creationalpatterns_abstractfactory_CarFactory <|.. com_conceptcoding_creationalpatterns_abstractfactory_EconomyCarFactory : implements
+com_conceptcoding_creationalpatterns_abstractfactory_CarFactory <|.. com_conceptcoding_creationalpatterns_abstractfactory_LuxuryCarFactory : implements
+com_conceptcoding_creationalpatterns_abstractfactory_CarInterior <|.. com_conceptcoding_creationalpatterns_abstractfactory_EconomyCarInterior : implements
+com_conceptcoding_creationalpatterns_abstractfactory_CarInterior <|.. com_conceptcoding_creationalpatterns_abstractfactory_LuxuryCarInterior : implements
+@enduml

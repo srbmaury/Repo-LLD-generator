@@ -1,0 +1,71 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-couponappln
+class "com.conceptcoding.interviewquestions.couponappln.Demo" as com_conceptcoding_interviewquestions_couponappln_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.interviewquestions.couponappln.ShoppingCart" as com_conceptcoding_interviewquestions_couponappln_ShoppingCart {
+  ~productList: List<Product>
+  --
+  +ShoppingCart()
+  +addToCart(product: Product): void
+  +getTotalPrice(): double
+}
+class "com.conceptcoding.interviewquestions.couponappln.coupons.CouponDecorator" as com_conceptcoding_interviewquestions_couponappln_coupons_CouponDecorator {
+  ~product: Product
+  ~discountPercentage: int
+  --
+  +CouponDecorator(product: Product, discountPercentage: int)
+}
+class "com.conceptcoding.interviewquestions.couponappln.coupons.PercentageCouponDecorator" as com_conceptcoding_interviewquestions_couponappln_coupons_PercentageCouponDecorator {
+  +PercentageCouponDecorator(product: Product, percentage: int)
+  +getPrice(): double
+}
+class "com.conceptcoding.interviewquestions.couponappln.coupons.TypeCouponDecorator" as com_conceptcoding_interviewquestions_couponappln_coupons_TypeCouponDecorator {
+  ~eligibleTypes: List<ProductType>
+  --
+  +TypeCouponDecorator(product: Product, percentage: int)
+  +getPrice(): double
+}
+class "com.conceptcoding.interviewquestions.couponappln.product.Item1" as com_conceptcoding_interviewquestions_couponappln_product_Item1 {
+  +Item1(name: String, price: double, type: ProductType)
+  +getPrice(): double
+}
+class "com.conceptcoding.interviewquestions.couponappln.product.Item2" as com_conceptcoding_interviewquestions_couponappln_product_Item2 {
+  +Item2(name: String, price: double, type: ProductType)
+  +getPrice(): double
+}
+class "com.conceptcoding.interviewquestions.couponappln.product.Item3" as com_conceptcoding_interviewquestions_couponappln_product_Item3 {
+  +Item3(name: String, price: double, type: ProductType)
+  +getPrice(): double
+}
+class "com.conceptcoding.interviewquestions.couponappln.product.Item4" as com_conceptcoding_interviewquestions_couponappln_product_Item4 {
+  +Item4(name: String, price: double, type: ProductType)
+  +getPrice(): double
+}
+class "com.conceptcoding.interviewquestions.couponappln.product.Product" as com_conceptcoding_interviewquestions_couponappln_product_Product {
+  ~name: String
+  ~originalPrice: double
+  ~type: ProductType
+  --
+  +Product(name: String, price: double, type: ProductType)
+  +getPrice(): double {abstract}
+  +getType(): ProductType
+  +getName(): String
+}
+enum "com.conceptcoding.interviewquestions.couponappln.product.ProductType" as com_conceptcoding_interviewquestions_couponappln_product_ProductType {
+}
+com_conceptcoding_interviewquestions_couponappln_ShoppingCart o-- "*" com_conceptcoding_interviewquestions_couponappln_product_Product : has-a (productList)
+com_conceptcoding_interviewquestions_couponappln_coupons_CouponDecorator <|-- com_conceptcoding_interviewquestions_couponappln_coupons_PercentageCouponDecorator : is-a
+com_conceptcoding_interviewquestions_couponappln_coupons_CouponDecorator <|-- com_conceptcoding_interviewquestions_couponappln_coupons_TypeCouponDecorator : is-a
+com_conceptcoding_interviewquestions_couponappln_coupons_CouponDecorator o-- com_conceptcoding_interviewquestions_couponappln_product_Product : has-a (product)
+com_conceptcoding_interviewquestions_couponappln_coupons_TypeCouponDecorator o-- "*" com_conceptcoding_interviewquestions_couponappln_product_ProductType : has-a (eligibleTypes)
+com_conceptcoding_interviewquestions_couponappln_product_Product <|-- com_conceptcoding_interviewquestions_couponappln_coupons_CouponDecorator : is-a
+com_conceptcoding_interviewquestions_couponappln_product_Product <|-- com_conceptcoding_interviewquestions_couponappln_product_Item1 : is-a
+com_conceptcoding_interviewquestions_couponappln_product_Product <|-- com_conceptcoding_interviewquestions_couponappln_product_Item2 : is-a
+com_conceptcoding_interviewquestions_couponappln_product_Product <|-- com_conceptcoding_interviewquestions_couponappln_product_Item3 : is-a
+com_conceptcoding_interviewquestions_couponappln_product_Product <|-- com_conceptcoding_interviewquestions_couponappln_product_Item4 : is-a
+com_conceptcoding_interviewquestions_couponappln_product_Product o-- com_conceptcoding_interviewquestions_couponappln_product_ProductType : has-a (type)
+@enduml

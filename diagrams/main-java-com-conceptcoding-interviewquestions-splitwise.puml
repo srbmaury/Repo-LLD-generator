@@ -1,0 +1,149 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-interviewquestions-splitwise
+class "com.conceptcoding.interviewquestions.splitwise.Balance" as com_conceptcoding_interviewquestions_splitwise_Balance {
+  ~amountOwe: double
+  ~amountGetBack: double
+  --
+  +getAmountOwe(): double
+  +setAmountOwe(amountOwe: double): void
+  +getAmountGetBack(): double
+  +setAmountGetBack(amountGetBack: double): void
+}
+class "com.conceptcoding.interviewquestions.splitwise.BalanceSheetController" as com_conceptcoding_interviewquestions_splitwise_BalanceSheetController {
+  +updateUserExpenseBalanceSheet(expensePaidBy: User, splits: List<Split>, totalExpenseAmount: double): void
+  +showBalanceSheetOfUser(user: User): void
+}
+class "com.conceptcoding.interviewquestions.splitwise.Demo" as com_conceptcoding_interviewquestions_splitwise_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.interviewquestions.splitwise.Expense.Expense" as com_conceptcoding_interviewquestions_splitwise_Expense_Expense {
+  ~expenseId: String
+  ~description: String
+  ~expenseAmount: double
+  ~paidByUser: User
+  ~splitType: ExpenseSplitType
+  ~splitDetails: List<Split>
+  --
+  +Expense(expenseId: String, expenseAmount: double, description: String, paidByUser: User, splitType: ExpenseSplitType, splitDetails: List<Split>)
+}
+class "com.conceptcoding.interviewquestions.splitwise.Expense.ExpenseController" as com_conceptcoding_interviewquestions_splitwise_Expense_ExpenseController {
+  ~balanceSheetController: BalanceSheetController
+  --
+  +ExpenseController()
+  +createExpense(expenseId: String, description: String, expenseAmount: double, splitDetails: List<Split>, splitType: ExpenseSplitType, paidByUser: User): Expense
+}
+enum "com.conceptcoding.interviewquestions.splitwise.Expense.ExpenseSplitType" as com_conceptcoding_interviewquestions_splitwise_Expense_ExpenseSplitType {
+}
+class "com.conceptcoding.interviewquestions.splitwise.Expense.Split.EqualExpenseSplit" as com_conceptcoding_interviewquestions_splitwise_Expense_Split_EqualExpenseSplit {
+  +validateSplitRequest(splitList: List<Split>, totalAmount: double): void
+}
+interface "com.conceptcoding.interviewquestions.splitwise.Expense.Split.ExpenseSplit" as com_conceptcoding_interviewquestions_splitwise_Expense_Split_ExpenseSplit {
+  +validateSplitRequest(splitList: List<Split>, totalAmount: double): void
+}
+class "com.conceptcoding.interviewquestions.splitwise.Expense.Split.PercentageExpenseSplit" as com_conceptcoding_interviewquestions_splitwise_Expense_Split_PercentageExpenseSplit {
+  +validateSplitRequest(splitList: List<Split>, totalAmount: double): void
+}
+class "com.conceptcoding.interviewquestions.splitwise.Expense.Split.Split" as com_conceptcoding_interviewquestions_splitwise_Expense_Split_Split {
+  ~user: User
+  ~amountOwe: double
+  --
+  +Split(user: User, amountOwe: double)
+  +getUser(): User
+  +setUser(user: User): void
+  +getAmountOwe(): double
+  +setAmountOwe(amountOwe: double): void
+}
+class "com.conceptcoding.interviewquestions.splitwise.Expense.Split.UnequalExpenseSplit" as com_conceptcoding_interviewquestions_splitwise_Expense_Split_UnequalExpenseSplit {
+  +validateSplitRequest(splitList: List<Split>, totalAmount: double): void
+}
+class "com.conceptcoding.interviewquestions.splitwise.Expense.SplitFactory" as com_conceptcoding_interviewquestions_splitwise_Expense_SplitFactory {
+  +getSplitObject(splitType: ExpenseSplitType): ExpenseSplit {static}
+}
+class "com.conceptcoding.interviewquestions.splitwise.Group.Group" as com_conceptcoding_interviewquestions_splitwise_Group_Group {
+  ~groupId: String
+  ~groupName: String
+  ~groupMembers: List<User>
+  ~expenseList: List<Expense>
+  ~expenseController: ExpenseController
+  --
+  ~Group()
+  +addMember(member: User): void
+  +getGroupId(): String
+  +setGroupId(groupId: String): void
+  +setGroupName(groupName: String): void
+  +createExpense(expenseId: String, description: String, expenseAmount: double, splitDetails: List<Split>, splitType: ExpenseSplitType, paidByUser: User): Expense
+}
+class "com.conceptcoding.interviewquestions.splitwise.Group.GroupController" as com_conceptcoding_interviewquestions_splitwise_Group_GroupController {
+  ~groupList: List<Group>
+  --
+  +GroupController()
+  +createNewGroup(groupId: String, groupName: String, createdByUser: User): void
+  +getGroup(groupId: String): Group
+}
+class "com.conceptcoding.interviewquestions.splitwise.Splitwise" as com_conceptcoding_interviewquestions_splitwise_Splitwise {
+  ~userController: UserController
+  ~groupController: GroupController
+  ~balanceSheetController: BalanceSheetController
+  --
+  ~Splitwise()
+  +demo(): void
+  +setupUserAndGroup(): void
+  -addUsersToSplitwiseApp(): void
+}
+class "com.conceptcoding.interviewquestions.splitwise.User.User" as com_conceptcoding_interviewquestions_splitwise_User_User {
+  ~userId: String
+  ~userName: String
+  ~userExpenseBalanceSheet: UserExpenseBalanceSheet
+  --
+  +User(id: String, userName: String)
+  +getUserId(): String
+  +getUserExpenseBalanceSheet(): UserExpenseBalanceSheet
+}
+class "com.conceptcoding.interviewquestions.splitwise.User.UserController" as com_conceptcoding_interviewquestions_splitwise_User_UserController {
+  ~userList: List<User>
+  --
+  +UserController()
+  +addUser(user: User): void
+  +getUser(userID: String): User
+  +getAllUsers(): List<User>
+}
+class "com.conceptcoding.interviewquestions.splitwise.UserExpenseBalanceSheet" as com_conceptcoding_interviewquestions_splitwise_UserExpenseBalanceSheet {
+  ~userVsBalance: Map<String, Balance>
+  ~totalYourExpense: double
+  ~totalPayment: double
+  ~totalYouOwe: double
+  ~totalYouGetBack: double
+  --
+  +UserExpenseBalanceSheet()
+  +getUserVsBalance(): Map<String, Balance>
+  +getTotalYourExpense(): double
+  +setTotalYourExpense(totalYourExpense: double): void
+  +getTotalYouOwe(): double
+  +setTotalYouOwe(totalYouOwe: double): void
+  +getTotalYouGetBack(): double
+  +setTotalYouGetBack(totalYouGetBack: double): void
+  +getTotalPayment(): double
+  +setTotalPayment(totalPayment: double): void
+}
+com_conceptcoding_interviewquestions_splitwise_Expense_Expense o-- "*" com_conceptcoding_interviewquestions_splitwise_Expense_Split_Split : has-a (splitDetails)
+com_conceptcoding_interviewquestions_splitwise_Expense_Expense o-- com_conceptcoding_interviewquestions_splitwise_Expense_ExpenseSplitType : has-a (splitType)
+com_conceptcoding_interviewquestions_splitwise_Expense_Expense o-- com_conceptcoding_interviewquestions_splitwise_User_User : has-a (paidByUser)
+com_conceptcoding_interviewquestions_splitwise_Expense_ExpenseController o-- com_conceptcoding_interviewquestions_splitwise_BalanceSheetController : has-a (balanceSheetController)
+com_conceptcoding_interviewquestions_splitwise_Expense_Split_ExpenseSplit <|.. com_conceptcoding_interviewquestions_splitwise_Expense_Split_EqualExpenseSplit : implements
+com_conceptcoding_interviewquestions_splitwise_Expense_Split_ExpenseSplit <|.. com_conceptcoding_interviewquestions_splitwise_Expense_Split_PercentageExpenseSplit : implements
+com_conceptcoding_interviewquestions_splitwise_Expense_Split_ExpenseSplit <|.. com_conceptcoding_interviewquestions_splitwise_Expense_Split_UnequalExpenseSplit : implements
+com_conceptcoding_interviewquestions_splitwise_Expense_Split_Split o-- com_conceptcoding_interviewquestions_splitwise_User_User : has-a (user)
+com_conceptcoding_interviewquestions_splitwise_Group_Group o-- "*" com_conceptcoding_interviewquestions_splitwise_Expense_Expense : has-a (expenseList)
+com_conceptcoding_interviewquestions_splitwise_Group_Group o-- "*" com_conceptcoding_interviewquestions_splitwise_User_User : has-a (groupMembers)
+com_conceptcoding_interviewquestions_splitwise_Group_Group o-- com_conceptcoding_interviewquestions_splitwise_Expense_ExpenseController : has-a (expenseController)
+com_conceptcoding_interviewquestions_splitwise_Group_GroupController o-- "*" com_conceptcoding_interviewquestions_splitwise_Group_Group : has-a (groupList)
+com_conceptcoding_interviewquestions_splitwise_Splitwise o-- com_conceptcoding_interviewquestions_splitwise_BalanceSheetController : has-a (balanceSheetController)
+com_conceptcoding_interviewquestions_splitwise_Splitwise o-- com_conceptcoding_interviewquestions_splitwise_Group_GroupController : has-a (groupController)
+com_conceptcoding_interviewquestions_splitwise_Splitwise o-- com_conceptcoding_interviewquestions_splitwise_User_UserController : has-a (userController)
+com_conceptcoding_interviewquestions_splitwise_UserExpenseBalanceSheet o-- "*" com_conceptcoding_interviewquestions_splitwise_Balance : has-a (userVsBalance)
+com_conceptcoding_interviewquestions_splitwise_User_User o-- com_conceptcoding_interviewquestions_splitwise_UserExpenseBalanceSheet : has-a (userExpenseBalanceSheet)
+com_conceptcoding_interviewquestions_splitwise_User_UserController o-- "*" com_conceptcoding_interviewquestions_splitwise_User_User : has-a (userList)
+@enduml

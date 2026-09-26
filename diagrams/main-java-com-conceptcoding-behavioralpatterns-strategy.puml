@@ -1,0 +1,101 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-behavioralpatterns-strategy
+class "com.conceptcoding.behavioralpatterns.strategy.paymentmethods.problem.Demo" as com_conceptcoding_behavioralpatterns_strategy_paymentmethods_problem_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.strategy.paymentmethods.solution.Demo" as com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.strategy.paymentmethods.solution.ShoppingCart" as com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_ShoppingCart {
+  -paymentStrategy: PaymentStrategy
+  --
+  +setPaymentStrategy(strategy: PaymentStrategy): void
+  +checkout(amount: double): void
+}
+class "com.conceptcoding.behavioralpatterns.strategy.paymentmethods.solution.strategy.CreditCardPayment" as com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_strategy_CreditCardPayment {
+  -cardNumber: String
+  --
+  +CreditCardPayment(cardNumber: String)
+  +pay(amount: double): void
+}
+class "com.conceptcoding.behavioralpatterns.strategy.paymentmethods.solution.strategy.PayPalPayment" as com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_strategy_PayPalPayment {
+  -email: String
+  --
+  +PayPalPayment(email: String)
+  +pay(amount: double): void
+}
+interface "com.conceptcoding.behavioralpatterns.strategy.paymentmethods.solution.strategy.PaymentStrategy" as com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_strategy_PaymentStrategy {
+  ~pay(amount: double): void
+}
+class "com.conceptcoding.behavioralpatterns.strategy.paymentmethods.solution.strategy.UPIPayment" as com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_strategy_UPIPayment {
+  -upiId: String
+  --
+  +UPIPayment(upiId: String)
+  +pay(amount: double): void
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.problem.Demo" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_problem_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.problem.OffRoadVehicle" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_problem_OffRoadVehicle {
+  +drive(): void
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.problem.PassengerVehicle" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_problem_PassengerVehicle {
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.problem.SportsVehicle" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_problem_SportsVehicle {
+  +drive(): void
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.problem.Vehicle" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_problem_Vehicle {
+  +drive(): void
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.solution.Demo" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_Demo {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.solution.context.GoodsVehicle" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_GoodsVehicle {
+  +GoodsVehicle(driveStrategy: DriveStrategy)
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.solution.context.HybridVehicle" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_HybridVehicle {
+  +HybridVehicle(driveStrategy: DriveStrategy)
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.solution.context.OffRoadVehicle" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_OffRoadVehicle {
+  ~OffRoadVehicle(driveStrategy: DriveStrategy)
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.solution.context.SportsVehicle" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_SportsVehicle {
+  +SportsVehicle(driveStrategy: DriveStrategy)
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.solution.context.Vehicle" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_Vehicle {
+  ~driveStrategy: DriveStrategy
+  --
+  +Vehicle(driveStrategy: DriveStrategy)
+  +drive(): void
+}
+interface "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.solution.strategies.DriveStrategy" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_strategies_DriveStrategy {
+  +drive(): void
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.solution.strategies.EVDrive" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_strategies_EVDrive {
+  +drive(): void
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.solution.strategies.NormalDrive" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_strategies_NormalDrive {
+  +drive(): void
+}
+class "com.conceptcoding.behavioralpatterns.strategy.vehicledrivemodes.solution.strategies.SportsDrive" as com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_strategies_SportsDrive {
+  +drive(): void
+}
+com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_ShoppingCart o-- com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_strategy_PaymentStrategy : has-a (paymentStrategy)
+com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_strategy_PaymentStrategy <|.. com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_strategy_CreditCardPayment : implements
+com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_strategy_PaymentStrategy <|.. com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_strategy_PayPalPayment : implements
+com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_strategy_PaymentStrategy <|.. com_conceptcoding_behavioralpatterns_strategy_paymentmethods_solution_strategy_UPIPayment : implements
+com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_problem_Vehicle <|-- com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_problem_OffRoadVehicle : is-a
+com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_problem_Vehicle <|-- com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_problem_PassengerVehicle : is-a
+com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_problem_Vehicle <|-- com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_problem_SportsVehicle : is-a
+com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_Vehicle <|-- com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_GoodsVehicle : is-a
+com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_Vehicle <|-- com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_HybridVehicle : is-a
+com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_Vehicle <|-- com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_OffRoadVehicle : is-a
+com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_Vehicle <|-- com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_SportsVehicle : is-a
+com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_context_Vehicle o-- com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_strategies_DriveStrategy : has-a (driveStrategy)
+com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_strategies_DriveStrategy <|.. com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_strategies_EVDrive : implements
+com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_strategies_DriveStrategy <|.. com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_strategies_NormalDrive : implements
+com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_strategies_DriveStrategy <|.. com_conceptcoding_behavioralpatterns_strategy_vehicledrivemodes_solution_strategies_SportsDrive : implements
+@enduml

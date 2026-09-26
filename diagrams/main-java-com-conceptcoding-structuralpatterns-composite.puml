@@ -1,0 +1,75 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title main-java-com-conceptcoding-structuralpatterns-composite
+class "com.conceptcoding.structuralpatterns.composite.filestructure.problem.Client" as com_conceptcoding_structuralpatterns_composite_filestructure_problem_Client {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.structuralpatterns.composite.filestructure.problem.Directory" as com_conceptcoding_structuralpatterns_composite_filestructure_problem_Directory {
+  ~directoryName: String
+  ~objectList: List<Object>
+  --
+  +Directory(name: String)
+  +add(object: Object): void
+  +remove(object: Object): void
+  +printContents(): void
+}
+class "com.conceptcoding.structuralpatterns.composite.filestructure.problem.File" as com_conceptcoding_structuralpatterns_composite_filestructure_problem_File {
+  ~fileName: String
+  --
+  +File(name: String)
+  +printContents(): void
+}
+class "com.conceptcoding.structuralpatterns.composite.filestructure.solution.Directory" as com_conceptcoding_structuralpatterns_composite_filestructure_solution_Directory {
+  ~directoryName: String
+  ~children: List<FileSystemComponent>
+  --
+  +Directory(name: String)
+  +add(fileSystemComponent: FileSystemComponent): void
+  +remove(fileSystemComponent: FileSystemComponent): void
+  +printContents(): void
+}
+class "com.conceptcoding.structuralpatterns.composite.filestructure.solution.File" as com_conceptcoding_structuralpatterns_composite_filestructure_solution_File {
+  ~fileName: String
+  --
+  +File(name: String)
+  +printContents(): void
+}
+interface "com.conceptcoding.structuralpatterns.composite.filestructure.solution.FileSystemComponent" as com_conceptcoding_structuralpatterns_composite_filestructure_solution_FileSystemComponent {
+  ~printContents(): void
+}
+class "com.conceptcoding.structuralpatterns.composite.filestructure.solution.FileSystemDemo" as com_conceptcoding_structuralpatterns_composite_filestructure_solution_FileSystemDemo {
+  +main(args: String[]): void {static}
+}
+interface "com.conceptcoding.structuralpatterns.composite.mathexpression.ArithmeticExpression" as com_conceptcoding_structuralpatterns_composite_mathexpression_ArithmeticExpression {
+  ~evaluate(): int
+}
+class "com.conceptcoding.structuralpatterns.composite.mathexpression.Expression" as com_conceptcoding_structuralpatterns_composite_mathexpression_Expression {
+  ~leftExpression: ArithmeticExpression
+  ~rightExpression: ArithmeticExpression
+  ~operation: OperationType
+  --
+  +Expression(leftPart: ArithmeticExpression, rightPart: ArithmeticExpression, operation: OperationType)
+  +evaluate(): int
+}
+class "com.conceptcoding.structuralpatterns.composite.mathexpression.MathExpressionEvaluator" as com_conceptcoding_structuralpatterns_composite_mathexpression_MathExpressionEvaluator {
+  +main(args: String[]): void {static}
+}
+class "com.conceptcoding.structuralpatterns.composite.mathexpression.Number" as com_conceptcoding_structuralpatterns_composite_mathexpression_Number {
+  ~value: int
+  --
+  +Number(value: int)
+  +evaluate(): int
+}
+enum "com.conceptcoding.structuralpatterns.composite.mathexpression.OperationType" as com_conceptcoding_structuralpatterns_composite_mathexpression_OperationType {
+}
+com_conceptcoding_structuralpatterns_composite_filestructure_solution_Directory o-- "*" com_conceptcoding_structuralpatterns_composite_filestructure_solution_FileSystemComponent : has-a (children)
+com_conceptcoding_structuralpatterns_composite_filestructure_solution_FileSystemComponent <|.. com_conceptcoding_structuralpatterns_composite_filestructure_solution_Directory : implements
+com_conceptcoding_structuralpatterns_composite_filestructure_solution_FileSystemComponent <|.. com_conceptcoding_structuralpatterns_composite_filestructure_solution_File : implements
+com_conceptcoding_structuralpatterns_composite_mathexpression_ArithmeticExpression <|.. com_conceptcoding_structuralpatterns_composite_mathexpression_Expression : implements
+com_conceptcoding_structuralpatterns_composite_mathexpression_ArithmeticExpression <|.. com_conceptcoding_structuralpatterns_composite_mathexpression_Number : implements
+com_conceptcoding_structuralpatterns_composite_mathexpression_Expression o-- com_conceptcoding_structuralpatterns_composite_mathexpression_ArithmeticExpression : has-a (leftExpression)
+com_conceptcoding_structuralpatterns_composite_mathexpression_Expression o-- com_conceptcoding_structuralpatterns_composite_mathexpression_ArithmeticExpression : has-a (rightExpression)
+com_conceptcoding_structuralpatterns_composite_mathexpression_Expression o-- com_conceptcoding_structuralpatterns_composite_mathexpression_OperationType : has-a (operation)
+@enduml
