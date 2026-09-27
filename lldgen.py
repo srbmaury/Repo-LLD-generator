@@ -128,15 +128,32 @@ def plantuml(types: list[JavaType], title: str) -> str:
         same_package = [x for x in choices if x.package == owner.package]
         return (same_package or choices)[0] if len(same_package or choices) == 1 else None
 
+    # Show simple class names grouped by package, with the package prefix the
+    # whole diagram shares moved into the title; full names make boxes too wide.
+    packages = [x.package.split(".") if x.package else [] for x in types]
+    shared = []
+    for parts in zip(*packages):
+        if len(set(parts)) != 1: break
+        shared.append(parts[0])
+    base = ".".join(shared)
     lines = ["@startuml", "hide empty members", "skinparam classAttributeIconSize 0",
-             "skinparam linetype ortho", f"title {title}"]
-    for item in sorted(types, key=lambda x: x.qualified_name):
-        stereotype = " <<annotation>>" if item.kind == "annotation" else ""
-        lines.append(f'{item.kind if item.kind != "annotation" else "interface"} "{item.qualified_name}" as {safe_id(item.qualified_name)}{stereotype} {{')
-        lines.extend(f"  {vis}{name}: {typ}" for name, typ, vis in item.fields)
-        if item.fields and item.methods: lines.append("  --")
-        lines.extend(f"  {method}" for method in item.methods)
-        lines.append("}")
+             "skinparam packageStyle rectangle", "skinparam nodesep 40", "skinparam ranksep 50",
+             f"title {title}" + (f"\\n<size:11>{base}</size>" if base else "")]
+    by_package: dict[str, list[JavaType]] = {}
+    for item in types:
+        by_package.setdefault(item.package[len(base):].lstrip("."), []).append(item)
+    for package in sorted(by_package):
+        indent = "  " if package else ""
+        if package: lines.append(f'package "{package}" {{')
+        for item in sorted(by_package[package], key=lambda x: x.name):
+            keyword = "interface" if item.kind == "annotation" else item.kind
+            stereotype = " <<annotation>>" if item.kind == "annotation" else ""
+            lines.append(f'{indent}{keyword} "{item.name}" as {safe_id(item.qualified_name)}{stereotype} {{')
+            lines.extend(f"{indent}  {vis}{name}: {typ}" for name, typ, vis in item.fields)
+            if item.fields and item.methods: lines.append(f"{indent}  --")
+            lines.extend(f"{indent}  {method}" for method in item.methods)
+            lines.append(f"{indent}}}")
+        if package: lines.append("}")
     edges = set()
     for item in types:
         child = safe_id(item.qualified_name)

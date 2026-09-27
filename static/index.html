@@ -7,115 +7,299 @@
 <style>
   :root {
     --bg: #f7f7f5; --panel: #ffffff; --text: #1d1d1b; --muted: #6b6b66;
-    --border: #e2e1dc; --accent: #2f5bd3; --accent-text: #fff; --error: #b3261e;
-    --diagram-bg: #ffffff;
+    --border: #e2e1dc; --accent: #2f5bd3; --accent-soft: #e8eefc; --accent-text: #fff;
+    --error: #b3261e; --canvas: #fbfbfa;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #161615; --panel: #1f1f1d; --text: #ececea; --muted: #a09f99;
-      --border: #33322f; --accent: #7a9bff; --accent-text: #0d0d0c; --error: #ff8a80;
+      --border: #33322f; --accent: #7a9bff; --accent-soft: #252c40; --accent-text: #0d0d0c;
+      --error: #ff8a80; --canvas: #2a2a28;
     }
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text);
-         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  main { max-width: 1100px; margin: 0 auto; padding: 40px 16px 80px; }
-  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; }
-  .lede { color: var(--muted); margin: 0 0 24px; }
-  form { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
-         padding: 16px; display: grid; gap: 12px; }
-  .row { display: flex; gap: 8px; flex-wrap: wrap; }
-  input[type=url] { flex: 1 1 320px; min-width: 0; padding: 10px 12px; font: inherit;
-         border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); }
-  button { font: inherit; border-radius: 8px; border: 1px solid var(--border); cursor: pointer;
-           padding: 8px 14px; background: var(--panel); color: var(--text); }
-  button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent);
-           padding: 10px 18px; font-weight: 600; }
-  button:disabled { opacity: .6; cursor: progress; }
-  .options { display: flex; gap: 20px; flex-wrap: wrap; color: var(--muted); font-size: 14px; }
-  .options label { display: flex; align-items: center; gap: 6px; }
-  .options input[type=number] { width: 56px; padding: 4px 6px; font: inherit; border-radius: 6px;
-         border: 1px solid var(--border); background: var(--bg); color: var(--text); }
-  #status { margin: 20px 0 0; color: var(--muted); min-height: 1.5em; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); display: flex; flex-direction: column;
+         font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  button, input { font: inherit; color: inherit; }
+  button { border-radius: 7px; border: 1px solid var(--border); background: var(--panel);
+           padding: 6px 11px; cursor: pointer; white-space: nowrap; }
+  button:hover { border-color: var(--accent); }
+  button:disabled { opacity: .55; cursor: progress; }
+  button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 600; }
+
+  header.top { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 12px 16px;
+               border-bottom: 1px solid var(--border); background: var(--panel); }
+  header.top h1 { font-size: 16px; margin: 0; letter-spacing: -0.01em; }
+  form { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; flex: 1; min-width: 0; }
+  #url { flex: 1 1 300px; min-width: 0; padding: 7px 10px; border: 1px solid var(--border);
+         border-radius: 7px; background: var(--bg); }
+  .opt { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; }
+  .opt input[type=number] { width: 48px; padding: 4px 6px; border: 1px solid var(--border);
+         border-radius: 6px; background: var(--bg); }
+
+  .layout { flex: 1; min-height: 0; display: grid; grid-template-columns: 280px 1fr; }
+  aside { border-right: 1px solid var(--border); display: flex; flex-direction: column; min-height: 0;
+          background: var(--panel); }
+  aside .head { padding: 12px; border-bottom: 1px solid var(--border); display: grid; gap: 8px; }
+  #status { color: var(--muted); font-size: 13px; }
   #status.error { color: var(--error); }
-  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
-          margin-top: 20px; overflow: hidden; }
-  .card header { display: flex; justify-content: space-between; align-items: center; gap: 8px;
-                 flex-wrap: wrap; padding: 12px 16px; border-bottom: 1px solid var(--border); }
-  .card h2 { font-size: 15px; margin: 0; word-break: break-all; }
-  .card .meta { color: var(--muted); font-size: 13px; }
-  .diagram { background: var(--diagram-bg); padding: 16px; overflow: auto; max-height: 75vh; }
-  .diagram img { display: block; max-width: none; }
-  .diagram .note { color: #6b6b66; font-size: 14px; }
-  pre { margin: 0; padding: 16px; overflow: auto; max-height: 60vh; font-size: 12.5px;
-        border-top: 1px solid var(--border); }
+  #filter { width: 100%; padding: 6px 9px; border: 1px solid var(--border); border-radius: 7px; background: var(--bg); }
+  #list { list-style: none; margin: 0; padding: 6px; overflow: auto; flex: 1; }
+  #list li button { width: 100%; text-align: left; border: 0; background: none; padding: 7px 9px;
+          display: flex; justify-content: space-between; gap: 8px; border-radius: 6px; white-space: normal; }
+  #list li button:hover { background: var(--bg); }
+  #list li button.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  #list .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #list .count { color: var(--muted); font-size: 12px; font-weight: 400; flex-shrink: 0; }
+
+  .viewer { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+  .toolbar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 8px 12px;
+             border-bottom: 1px solid var(--border); background: var(--panel); }
+  .toolbar .name { font-weight: 600; margin-right: auto; overflow: hidden; text-overflow: ellipsis;
+                   white-space: nowrap; min-width: 0; }
+  .toolbar .name small { font-weight: 400; color: var(--muted); margin-left: 6px; }
+  .toolbar .sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+  #zoomLabel { min-width: 48px; text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
+  #canvas { flex: 1; position: relative; overflow: hidden; background: var(--canvas); cursor: grab;
+            touch-action: none; }
+  #canvas.dragging { cursor: grabbing; }
+  #canvas img { position: absolute; left: 0; top: 0; transform-origin: 0 0; background: #fff;
+                box-shadow: 0 1px 3px rgba(0,0,0,.12); user-select: none; -webkit-user-drag: none; }
+  .empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted);
+           text-align: center; padding: 24px; }
+  #source { flex: 1; margin: 0; padding: 16px; overflow: auto; font-size: 12.5px; background: var(--panel); }
+  .hint { color: var(--muted); font-size: 12px; padding: 6px 12px; border-top: 1px solid var(--border); background: var(--panel); }
+
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    aside { border-right: 0; border-bottom: 1px solid var(--border); max-height: 34vh; }
+    #canvas { min-height: 60vh; }
+    header.top h1, .toolbar .name { flex-basis: 100%; }
+    form { flex-basis: 100%; }
+    .hint { display: none; }
+  }
 </style>
 </head>
 <body>
-<main>
+<header class="top">
   <h1>Repository LLD Generator</h1>
-  <p class="lede">Paste a public GitHub or GitLab Java repository (or a folder URL inside one) to get PlantUML class diagrams.</p>
   <form id="form">
-    <div class="row">
-      <input id="url" type="url" required placeholder="https://github.com/owner/repository" autocomplete="off">
-      <button class="primary" id="go" type="submit">Generate</button>
-    </div>
-    <div class="options">
-      <label>Package depth <input id="depth" type="number" min="1" max="6" value="2"></label>
-      <label><input id="single" type="checkbox"> Single combined diagram</label>
-    </div>
+    <input id="url" type="url" required placeholder="Public GitHub/GitLab repo or folder URL" autocomplete="off">
+    <label class="opt">Depth <input id="depth" type="number" min="1" max="6" value="2"></label>
+    <label class="opt"><input id="single" type="checkbox"> Single diagram</label>
+    <button class="primary" id="go" type="submit">Generate</button>
   </form>
-  <p id="status"></p>
-  <div id="results"></div>
-</main>
+</header>
+
+<div class="layout">
+  <aside>
+    <div class="head">
+      <div id="status">Paste a Java repository URL to begin.</div>
+      <input id="filter" type="search" placeholder="Filter diagrams" hidden>
+    </div>
+    <ul id="list"></ul>
+  </aside>
+
+  <section class="viewer">
+    <div class="toolbar">
+      <div class="name" id="name">No diagram selected</div>
+      <button id="zoomOut" title="Zoom out (-)" disabled>−</button>
+      <span id="zoomLabel">—</span>
+      <button id="zoomIn" title="Zoom in (+)" disabled>+</button>
+      <button id="fit" title="Fit to screen (0)" disabled>Fit</button>
+      <button id="actual" title="Actual size (1)" disabled>100%</button>
+      <span class="sep"></span>
+      <button id="toggleSource" disabled>Source</button>
+      <button id="dlPuml" disabled>.puml</button>
+      <button id="dlSvg" disabled>.svg</button>
+      <button id="dlAll" hidden>Download all</button>
+    </div>
+    <div id="canvas"><div class="empty">Diagrams appear here. Scroll to zoom, drag to pan.</div></div>
+    <pre id="source" hidden></pre>
+    <div class="hint">Scroll or pinch to zoom · drag to pan · ↑/↓ switch diagram · 0 fit · 1 actual size</div>
+  </section>
+</div>
+
 <script>
 const $ = (id) => document.getElementById(id);
+const canvas = $("canvas");
+const state = { diagrams: [], labels: [], current: -1, svgs: new Map(), scale: 1, x: 0, y: 0, img: null };
 
-function download(name, text) {
+function download(name, text, type = "text/plain") {
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
+  a.href = URL.createObjectURL(new Blob([text], { type }));
   a.download = name;
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
-async function render(source, target) {
+function shortNames(diagrams) {
+  const split = diagrams.map((d) => d.path.split("/"));
+  let shared = 0;
+  while (split.length > 1 && split.every((p) => p.length > shared + 1 && p[shared] === split[0][shared])) shared++;
+  return split.map((p) => p.slice(shared).join("/") || p.at(-1) || "root");
+}
+
+async function svgFor(index) {
+  if (!state.svgs.has(index)) {
+    state.svgs.set(index, fetch("https://kroki.io/plantuml/svg", {
+      method: "POST", headers: { "Content-Type": "text/plain" }, body: state.diagrams[index].source,
+    }).then((res) => { if (!res.ok) throw new Error(res.status); return res.text(); })
+      .catch((err) => { state.svgs.delete(index); throw err; }));
+  }
+  return state.svgs.get(index);
+}
+
+function applyTransform() {
+  if (!state.img) return;
+  state.img.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+  $("zoomLabel").textContent = `${Math.round(state.scale * 100)}%`;
+}
+
+function zoomTo(scale, cx = canvas.clientWidth / 2, cy = canvas.clientHeight / 2) {
+  scale = Math.min(8, Math.max(0.05, scale));
+  state.x = cx - (cx - state.x) * (scale / state.scale);
+  state.y = cy - (cy - state.y) * (scale / state.scale);
+  state.scale = scale;
+  applyTransform();
+}
+
+function fit(maxScale = 1) {
+  if (!state.img) return;
+  const pad = 24, w = state.img.naturalWidth, h = state.img.naturalHeight;
+  state.scale = Math.min((canvas.clientWidth - pad * 2) / w, (canvas.clientHeight - pad * 2) / h, maxScale);
+  state.x = (canvas.clientWidth - w * state.scale) / 2;
+  state.y = Math.max(pad, (canvas.clientHeight - h * state.scale) / 2);
+  applyTransform();
+}
+
+async function show(index) {
+  if (index < 0 || index >= state.diagrams.length) return;
+  state.current = index;
+  const d = state.diagrams[index];
+  document.querySelectorAll("#list button").forEach((b) => b.classList.toggle("active", Number(b.dataset.i) === index));
+  document.querySelector(`#list button[data-i="${index}"]`)?.scrollIntoView({ block: "nearest" });
+  $("name").textContent = state.labels[index];
+  const small = document.createElement("small");
+  small.textContent = `${d.types} types`;
+  $("name").append(small);
+  $("source").textContent = d.source;
+  ["zoomOut", "zoomIn", "fit", "actual", "toggleSource", "dlPuml", "dlSvg"].forEach((id) => $(id).disabled = false);
+  state.img = null;
+  canvas.innerHTML = '<div class="empty">Rendering…</div>';
   try {
-    const res = await fetch("https://kroki.io/plantuml/svg", {
-      method: "POST", headers: { "Content-Type": "text/plain" }, body: source,
-    });
-    if (!res.ok) throw new Error(res.status);
+    const svg = await svgFor(index);
+    if (state.current !== index) return;
     const img = new Image();
-    img.alt = "Class diagram";
-    img.src = URL.createObjectURL(new Blob([await res.text()], { type: "image/svg+xml" }));
-    target.replaceChildren(img);
+    img.alt = `${state.labels[index]} class diagram`;
+    img.draggable = false;
+    img.onload = () => { state.img = img; canvas.replaceChildren(img); fit(); };
+    img.src = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+    svgFor(index + 1).catch(() => {});
   } catch {
-    target.innerHTML = '<p class="note">Preview unavailable. Download the .puml file or view the source below.</p>';
+    if (state.current === index)
+      canvas.innerHTML = '<div class="empty">Preview unavailable. Use Source or download the .puml file.</div>';
   }
 }
 
-function card(d) {
-  const el = document.createElement("section");
-  el.className = "card";
-  el.innerHTML = `<header><div><h2></h2><div class="meta"></div></div>
-    <div class="row"><button data-act="src">Source</button><button data-act="dl">Download .puml</button></div></header>
-    <div class="diagram"><p class="note">Rendering…</p></div><pre hidden></pre>`;
-  el.querySelector("h2").textContent = d.filename;
-  el.querySelector(".meta").textContent = `${d.types} types · ${d.path}`;
-  el.querySelector("pre").textContent = d.source;
-  el.querySelector('[data-act="dl"]').onclick = () => download(d.filename, d.source);
-  el.querySelector('[data-act="src"]').onclick = () => { const p = el.querySelector("pre"); p.hidden = !p.hidden; };
-  render(d.source, el.querySelector(".diagram"));
-  return el;
+function buildList() {
+  const list = $("list");
+  list.replaceChildren();
+  state.diagrams.forEach((d, i) => {
+    const li = document.createElement("li");
+    const b = document.createElement("button");
+    b.dataset.i = i;
+    b.innerHTML = '<span class="label"></span><span class="count"></span>';
+    b.querySelector(".label").textContent = state.labels[i];
+    b.title = state.labels[i];
+    b.querySelector(".count").textContent = d.types;
+    b.onclick = () => show(i);
+    li.append(b);
+    list.append(li);
+  });
 }
+
+$("filter").addEventListener("input", (e) => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll("#list li").forEach((li, i) => li.hidden = !state.labels[i].toLowerCase().includes(q));
+});
+
+$("zoomIn").onclick = () => zoomTo(state.scale * 1.25);
+$("zoomOut").onclick = () => zoomTo(state.scale / 1.25);
+$("fit").onclick = () => fit(Infinity);
+$("actual").onclick = () => zoomTo(1);
+$("toggleSource").onclick = () => {
+  const showing = $("source").hidden;
+  $("source").hidden = !showing;
+  canvas.hidden = showing;
+  $("toggleSource").textContent = showing ? "Diagram" : "Source";
+};
+$("dlPuml").onclick = () => { const d = state.diagrams[state.current]; download(d.filename, d.source); };
+$("dlSvg").onclick = async () => {
+  const d = state.diagrams[state.current];
+  download(d.filename.replace(/\.puml$/, ".svg"), await svgFor(state.current), "image/svg+xml");
+};
+$("dlAll").onclick = () => state.diagrams.forEach((d) => download(d.filename, d.source));
+
+canvas.addEventListener("wheel", (e) => {
+  if (!state.img) return;
+  e.preventDefault();
+  const r = canvas.getBoundingClientRect();
+  zoomTo(state.scale * Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015)), e.clientX - r.left, e.clientY - r.top);
+}, { passive: false });
+
+const pointers = new Map();
+let pinch = null;
+canvas.addEventListener("pointerdown", (e) => {
+  if (!state.img) return;
+  canvas.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  canvas.classList.add("dragging");
+});
+canvas.addEventListener("pointermove", (e) => {
+  const prev = pointers.get(e.pointerId);
+  if (!prev) return;
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    const dist = Math.hypot(a.x - b.x, a.y - b.y);
+    const r = canvas.getBoundingClientRect();
+    if (pinch) zoomTo(state.scale * dist / pinch, (a.x + b.x) / 2 - r.left, (a.y + b.y) / 2 - r.top);
+    pinch = dist;
+    return;
+  }
+  state.x += e.clientX - prev.x;
+  state.y += e.clientY - prev.y;
+  applyTransform();
+});
+const release = (e) => {
+  pointers.delete(e.pointerId);
+  pinch = null;
+  if (!pointers.size) canvas.classList.remove("dragging");
+};
+canvas.addEventListener("pointerup", release);
+canvas.addEventListener("pointercancel", release);
+window.addEventListener("resize", () => state.img && fit());
+
+document.addEventListener("keydown", (e) => {
+  if (e.target.matches("input") || !state.diagrams.length) return;
+  const visible = [...document.querySelectorAll("#list li")].map((li, i) => li.hidden ? -1 : i).filter((i) => i >= 0);
+  const pos = visible.indexOf(state.current);
+  if (e.key === "ArrowDown" || e.key === "j") { e.preventDefault(); show(visible[Math.min(pos + 1, visible.length - 1)]); }
+  else if (e.key === "ArrowUp" || e.key === "k") { e.preventDefault(); show(visible[Math.max(pos - 1, 0)]); }
+  else if (e.key === "+" || e.key === "=") zoomTo(state.scale * 1.25);
+  else if (e.key === "-") zoomTo(state.scale / 1.25);
+  else if (e.key === "0") fit(Infinity);
+  else if (e.key === "1") zoomTo(1);
+});
 
 $("form").addEventListener("submit", async (event) => {
   event.preventDefault();
   const status = $("status");
   $("go").disabled = true;
   status.className = "";
-  status.textContent = "Cloning and parsing… (the first request after idle can take ~1 minute while the server wakes up)";
-  $("results").replaceChildren();
+  status.textContent = "Cloning and parsing… the first request after idle can take about a minute while the server wakes up.";
   try {
     const res = await fetch("/api/generate", {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -123,15 +307,17 @@ $("form").addEventListener("submit", async (event) => {
     });
     const body = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(typeof body.detail === "string" ? body.detail : `Request failed (${res.status})`);
-    const diagrams = body.diagrams;
-    status.textContent = diagrams.length ? `Generated ${diagrams.length} diagram(s).` : "No Java types found at that URL.";
-    if (diagrams.length > 1) {
-      const all = document.createElement("button");
-      all.textContent = "Download all";
-      all.onclick = () => diagrams.forEach((d) => download(d.filename, d.source));
-      status.append(" ", all);
-    }
-    diagrams.forEach((d) => $("results").append(card(d)));
+    Object.assign(state, { diagrams: body.diagrams, labels: shortNames(body.diagrams), current: -1, svgs: new Map(), img: null });
+    status.textContent = state.diagrams.length ? `${state.diagrams.length} diagram(s)` : "No Java types found at that URL.";
+    $("filter").hidden = state.diagrams.length < 2;
+    $("filter").value = "";
+    $("dlAll").hidden = state.diagrams.length < 2;
+    $("source").hidden = true;
+    canvas.hidden = false;
+    $("toggleSource").textContent = "Source";
+    buildList();
+    if (state.diagrams.length) show(0);
+    else canvas.innerHTML = '<div class="empty">Nothing to show.</div>';
   } catch (err) {
     status.className = "error";
     status.textContent = err.message;
