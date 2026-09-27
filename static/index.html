@@ -35,6 +35,16 @@
   #url { flex: 1 1 300px; min-width: 0; padding: 7px 10px; border: 1px solid var(--border);
          border-radius: 7px; background: var(--bg); }
   .opt { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; }
+  .opt:has(input:disabled) { opacity: .5; }
+  .help-btn { width: 22px; height: 22px; padding: 0; border-radius: 50%; font-size: 12px; font-weight: 600;
+              color: var(--muted); }
+  .help-btn[aria-expanded=true] { border-color: var(--accent); color: var(--accent); }
+  #depthHelp { flex-basis: 100%; font-size: 13px; color: var(--muted); background: var(--bg);
+               border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+  #depthHelp p { margin: 0 0 6px; }
+  #depthHelp p:last-child { margin: 0; }
+  #depthHelp b, #depthHelp code { color: var(--text); }
+  #depthHelp code { font-size: 12px; }
   .opt input[type=number] { width: 48px; padding: 4px 6px; border: 1px solid var(--border);
          border-radius: 6px; background: var(--bg); }
 
@@ -87,9 +97,20 @@
   <form id="form">
     <input id="url" type="url" required placeholder="Public GitHub/GitLab repo or folder URL" autocomplete="off">
     <label class="opt">Depth <input id="depth" type="number" min="1" max="6" value="2"></label>
+    <button type="button" class="help-btn" id="depthHelpBtn" aria-expanded="false" aria-controls="depthHelp"
+            title="What is depth?">?</button>
     <label class="opt"><input id="single" type="checkbox"> Single diagram</label>
     <button class="primary" id="go" type="submit">Generate</button>
   </form>
+  <div id="depthHelp" hidden>
+    <p><b>Depth decides how the code is split into diagrams.</b> The generator finds the folder that all
+      <code>.java</code> files share, goes down that many folder levels, and draws one diagram per folder there.</p>
+    <p>Example, under <code>com/conceptcoding/</code>: <b>1</b> → one diagram per category
+      (<code>behavioralpatterns</code>) · <b>2</b> → one per example (<code>behavioralpatterns/observer</code>) ·
+      <b>3</b> → one per layer inside an example (<code>book_my_show/service</code>), losing links between layers.</p>
+    <p>Use <b>2</b> for repos of independent examples, <b>1</b> or <b>Single diagram</b> for one application.
+      Depth is ignored when the repo has Maven/Gradle modules (one diagram per module) or Single diagram is checked.</p>
+  </div>
 </header>
 
 <div class="layout">
@@ -219,6 +240,13 @@ function buildList() {
     list.append(li);
   });
 }
+
+$("depthHelpBtn").onclick = () => {
+  const open = $("depthHelp").hidden;
+  $("depthHelp").hidden = !open;
+  $("depthHelpBtn").setAttribute("aria-expanded", open);
+};
+$("single").onchange = () => $("depth").disabled = $("single").checked;
 
 $("filter").addEventListener("input", (e) => {
   const q = e.target.value.toLowerCase();
