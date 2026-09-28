@@ -29,9 +29,12 @@ class GenerateRequest(BaseModel):
     single_diagram: bool = False
 
 
-@app.get("/", include_in_schema=False)
+STATIC_DIR = (Path(__file__).parent / "static").resolve()
+
+
+@app.api_route("/", methods=["GET", "HEAD"], include_in_schema=False)
 def index() -> FileResponse:
-    return FileResponse(Path(__file__).parent / "static" / "index.html")
+    return FileResponse(STATIC_DIR / "index.html")
 
 
 @app.get("/healthz", include_in_schema=False)
@@ -68,3 +71,12 @@ def generate_diagrams(request: GenerateRequest) -> dict:
         {"filename": d.filename, "source": d.source, "types": d.type_count, "path": d.relative}
         for d in diagrams
     ]}
+
+
+@app.api_route("/{name}", methods=["GET", "HEAD"], include_in_schema=False)
+def static_file(name: str) -> FileResponse:
+    """Favicons, the social preview image, robots.txt, and the web manifest."""
+    path = (STATIC_DIR / name).resolve()
+    if path.parent != STATIC_DIR or not path.is_file() or name == "index.html":
+        raise HTTPException(status_code=404, detail="Not found")
+    return FileResponse(path)
